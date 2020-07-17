@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_access">
+
+    <select id="getAccessSupplierByIdUser"
+                parameterClass="Long"
+                resultClass="com.retailsbs.logistikapp.user.dto.AccessTinyDTO">
+        select su.id_supplier as id, su.name
+        from lgk_access ac
+        join lgk_supplier su on su.id_supplier = ac.id_supplier
+        and su.active = 'S'
+        where ac.active = 'S'
+        and id_user = #id_user:integer#
+        order by su.orderby
+    </select>
+
+    <!-- Se obtiene una lista de todos los supplier y su relacion con el usuario -->    
+    <select id="getAccessSupplierExtByIdUser"
+                parameterClass="Long"
+                resultClass="com.retailsbs.logistikapp.user.dto.AccessTinyExtDTO">
+        select su.id_supplier as id, su.name, ac.id_access, ac.active
+        from lgk_supplier su
+        left join lgk_access ac on ac.id_supplier = su.id_supplier
+        and ac.id_user = #id_user:integer#
+        where su.active = 'S' 
+        order by su.orderby
+    </select>
+    
+    <delete id="deleteAccessByIdStore" parameterClass="Long" >
+		delete from lgk_access
+		where id_store = #id_store:INTEGER#
+  	</delete>
+  	
+    <delete id="deleteAccessByIdRetail" parameterClass="Long" >
+		delete from lgk_access
+		where id_retail = #id_retail:INTEGER#
+  	</delete>
+  	
+  	<delete id="delAccessByIdSupplier" parameterClass="Long">
+  		delete from lgk_access
+  		where id_supplier = #id_supplier:INTEGER#
+  	</delete>
+  	
+  	<delete id="delAccessByIdUser" parameterClass="Long">
+  		delete from lgk_access
+  		where id_user = #id_user:INTEGER#
+  	</delete>
+  	
+</sqlMap>

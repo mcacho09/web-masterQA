@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_user_notification">
+
+
+	<!-- Cambia propiedad Active de las notificaciones por id_user -->
+	<update id="updateActiveByIdUser" parameterClass="Long">
+		update
+		lgk_user_notification
+		SET active='N'
+		where 1=1
+		and id_user = #id_user;integer#
+	</update>
+
+	<!-- Se obtiene listado completo de notificaciones junto con la imagen de 
+		quien la mando -->
+	<select id="selectAllByIdUser" parameterClass="Long"
+		resultClass="com.retailsbs.logistikapp.user.notification.domain.ListNotificationDTO">
+		select message, created, (select image from lgk_user where id_user = nos.id_user) as image,
+		(select username from lgk_user where id_user = nos.id_user) as username, link
+		from lgk_notification nos
+		inner join lgk_user_notification uno
+		on nos.id_notification = uno.id_notification
+		where uno.id_user = #id_user;integer#
+		order by nos.created desc
+	</select>
+
+	<!-- Se obtiene listado de las 5 ultimas notificaciones junto con la imagen de 
+		quien la mando -->
+	<select id="selectTopByIdUser" parameterClass="Long"
+		resultClass="com.retailsbs.logistikapp.user.notification.domain.ListNotificationDTO">
+		select message, created, (select image from lgk_user where id_user = nos.id_user) as image, link
+		from lgk_notification nos
+		inner join lgk_user_notification uno
+		on nos.id_notification = uno.id_notification
+		where uno.id_user = #id_user;integer#
+		order by nos.created desc
+		Limit 5
+	</select>
+	
+	<select id="selectNotificacionsWSByIdUser" parameterClass="Long"
+		resultClass="com.retailsbs.logistikapp.user.notification.domain.ListNotificationDTO">
+		select message, created, (select username from lgk_user where id_user = nos.id_user) as username
+		from lgk_notification nos
+		inner join lgk_user_notification uno
+		on nos.id_notification = uno.id_notification
+		where uno.id_user = #id_user;integer#
+		order by nos.created desc
+		Limit 30
+	</select>
+	
+	<insert id="insertNewNotification" parameterClass="com.retailsbs.logistikapp.user.notification.domain.UsersDTO">
+		
+		INSERT INTO lgk_user_notification(id_user,id_notification) values <iterate property="lista" conjunction=",">(#lista[]#,#id_notification#)</iterate>
+		
+	</insert>
+	
+	<select id="getUsersByIdSupplier" parameterClass="com.retailsbs.logistikapp.user.notification.domain.UsersDTO" resultClass="Object">
+			select usr.id_user as id_user from lgk_user usr 
+ 				join lgk_access acc on usr.id_user = acc.id_user 
+ 				join lgk_supplier sup on acc.id_supplier = sup.id_supplier
+ 			where sup.id_supplier = #id_supplier:integer# 
+ 			AND usr.profile != 'SOP' 
+ 			AND  usr.id_user != #id_user:integer#	
+	</select>
+	
+	<select id="getUsersAndUserByIdSupplier" parameterClass="com.retailsbs.logistikapp.user.notification.domain.UsersDTO" resultClass="Object">
+			select usr.id_user as id_user from lgk_user usr 
+ 				join lgk_access acc on usr.id_user = acc.id_user 
+ 				join lgk_supplier sup on acc.id_supplier = sup.id_supplier
+ 			where sup.id_supplier = #id_supplier:integer# 
+ 			AND usr.profile != 'SOP' 
+	</select>
+	
+	<select id="getUsersByIdSupplierNoDRI" parameterClass="com.retailsbs.logistikapp.user.notification.domain.UsersDTO" resultClass="Object">
+			select usr.id_user as id_user from lgk_user usr 
+ 				join lgk_access acc on usr.id_user = acc.id_user 
+ 				join lgk_supplier sup on acc.id_supplier = sup.id_supplier
+ 			where sup.id_supplier = #id_supplier:integer# 
+ 			AND usr.profile != 'SOP' 
+ 			AND  usr.id_user != #id_user:integer#
+ 			AND usr.profile NOT LIKE 'DRI%'	
+	</select>
+	
+
+	<select id="getUsersByIdSupplierJustSUP" parameterClass="com.retailsbs.logistikapp.user.notification.domain.UsersDTO" resultClass="Object">
+			select usr.id_user as id_user from lgk_user usr 
+ 				join lgk_access acc on usr.id_user = acc.id_user 
+ 				join lgk_supplier sup on acc.id_supplier = sup.id_supplier
+ 			where sup.id_supplier = #id_supplier:integer# 
+ 			AND usr.profile != 'SOP' 
+ 			AND  usr.id_user != #id_user:integer#
+ 			AND usr.profile LIKE 'SUP%'
+	
+	</select>
+
+
+</sqlMap>

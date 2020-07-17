@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE abatorConfiguration PUBLIC "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN"
+  "http://ibatis.apache.org/dtd/abator-config_1_0.dtd">
+
+<abatorConfiguration>
+
+	<abatorContext generatorSet="Java5">
+
+<!--
+        <jdbcConnection driverClass="org.postgresql.Driver"
+                        connectionURL="jdbc:postgresql://localhost:5432/logistikapp"
+                        userId="postgres"
+                        password="postgres">
+			<classPathEntry location="/Library/PostgreSQL/9.1/lib/postgresql-9.1-903.jdbc4.jar" />
+-->
+
+        <jdbcConnection driverClass="org.postgresql.Driver"
+                        connectionURL="jdbc:postgresql://127.0.0.1:5432/logistica"
+                        userId="postgres"
+                        password="Jucaraca34">
+			<classPathEntry location="/Volumes/JUCARACA/Desarrollo/lib/postgresql-9.3-1102.jdbc3.jar" />
+
+		</jdbcConnection>
+
+		
+
+		<javaTypeResolver >
+			<property name="forceBigDecimals" value="false" />
+    	</javaTypeResolver>
+
+	    <javaModelGenerator targetPackage="domain" targetProject="logistikapp-domain/abator" />
+	
+	    <sqlMapGenerator targetPackage="maps" targetProject="logistikapp-domain/abator" />
+	    
+	    <daoGenerator type="SPRING" targetPackage="dao" targetProject="logistikapp-domain/abator">
+	    	<property name="enableSubPackages" value="false" />
+	    </daoGenerator>
+
+<!--
+-->        
+        <table schema="" tableName="lgk_domain" domainObjectName="Domain"
+            enableInsert="true" enableSelectByPrimaryKey="true" enableSelectByExample="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
+            enableDeleteByExample="false" enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" selectByExampleQueryId="false">
+        
+            <generatedKey column="id_domain" sqlStatement="SELECT LASTVAL()" identity="true"/>
+        
+            <columnOverride column="id_domain"   property="id_domain"   javaType="Long" 			jdbcType="INTEGER"/>
+            <columnOverride column="created"     property="created"     javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="modified"    property="modified"    javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="login" 	    property="login" 	   javaType="String" 		jdbcType="VARCHAR"/>
+            <columnOverride column="orderby"     property="orderby" 	   javaType="Integer" 		jdbcType="INT"/>
+            <columnOverride column="active"      property="active" 	   javaType="String" 		jdbcType="VARCHAR"/>
+            <columnOverride column="code"        property="code" 		   javaType="String" 		jdbcType="VARCHAR"/>
+            <columnOverride column="name"    	property="name" 		   javaType="String" 		jdbcType="VARCHAR"/>
+		</table>
+
+<!--
+-->        
+        <table schema="" tableName="lgk_domain_content" domainObjectName="DomainContent"
+            enableInsert="true" enableSelectByPrimaryKey="true" enableSelectByExample="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
+            enableDeleteByExample="false" enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" selectByExampleQueryId="false">
+        
+            <generatedKey column="id_domain_content" sqlStatement="SELECT LASTVAL()" identity="true"/>
+        
+            <columnOverride column="id_domain_content"	property="id_domain_content"	javaType="Long" 			jdbcType="INTEGER"/>
+            <columnOverride column="id_domain"   		property="id_domain"   		javaType="Long" 			jdbcType="INTEGER"/>
+            <columnOverride column="created"     		property="created"     		javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="modified"    		property="modified"    		javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="login" 	    			property="login" 	   		javaType="String" 		jdbcType="VARCHAR"/>
+            <columnOverride column="orderby"     		property="orderby" 	   		javaType="Integer" 		jdbcType="INT"/>
+            <columnOverride column="active"      		property="active" 	   		javaType="String" 		jdbcType="VARCHAR"/>
+            <columnOverride column="code"        		property="code" 		   		javaType="String" 		jdbcType="VARCHAR"/>
+            <columnOverride column="name"    			property="name" 		   		javaType="String" 		jdbcType="VARCHAR"/>
+            <columnOverride column="param"    			property="param" 			javaType="String" 		jdbcType="VARCHAR"/>
+            <columnOverride column="value"    			property="value" 			javaType="String" 		jdbcType="VARCHAR"/>
+		</table>
+
+	</abatorContext>
+  
+</abatorConfiguration>

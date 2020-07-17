@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="finder_configuration_stock_product">
+
+	<select id="configurationStockProductValue" resultClass="Long">
+		select nextval('lgk_configuration_stock_produ_id_configuration_stock_produc_seq'::regclass)
+	</select>
+
+	<select id="getConfigurationStockProductByIdCondigurationStock"
+		parameterClass="com.retailsbs.logistikapp.financial.dto.ConfigurationStockProductByIdCondigurationStockCriteria"
+		resultClass="com.retailsbs.logistikapp.financial.dto.ConfigurationStockProductDTO">
+		select p.id_product,
+			p.id_category_product,
+			p.created,
+			p.modified,
+			p.login,
+			p.orderby,
+			p.active,
+			p.code,
+			p.name_short,
+			p.name_long,
+			p.price_sale,
+			p.price_cost,
+			p.id_brand,
+			p.image,
+			coalesce(p.flag, 'N') as flag,
+			coalesce(p.price_cost_box, 0.0) as price_cost_box,
+			coalesce(p.piece_in_box, 0) as piece_in_box,
+			coalesce(p.type, 'PCS') as type,
+			coalesce(p.price_sale_box, 0.0) as price_sale_box, 
+			coalesce(data.min, 0) as min, 
+			coalesce(data.max, 0) as max, 
+			coalesce(data.qty, 0) as qty,
+			stock.qty as qty_stock_general
+		from lgk_product p
+		left join (
+			select id_product, min, max, qty
+			from lgk_configuration_stock_product
+			where id_configuration_stock = #id_configuration_stock:INTEGER#
+		) data on p.id_product = data.id_product
+		join lgk_category_product cp on cp.id_category_product = p.id_category_product
+		left join (
+			select id_product, qty 
+			from lgk_almacen a 
+			join lgk_product_almacen pa on pa.id_almacen = a.id_almacen 
+			where id_supplier = #id_supplier:INTEGER# and id_user is null 
+		) stock on stock.id_product = p.id_product
+		where id_supplier = #id_supplier:INTEGER# and p.active = 'S'
+		order by orderby, p.name_short
+	</select>
+
+	<delete id="deleteConfigurationStockProductByIdConfigurationStock">
+		delete from lgk_configuration_stock_product where id_configuration_stock = #id_configuration_stock:INTEGER#
+	</delete>
+
+</sqlMap>

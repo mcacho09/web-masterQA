@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_state">
+
+	<!-- Obtiene un listado de los cambios de estado por comercio de una transaccion -->
+	<select id="getState" resultClass="com.retailsbs.logistikapp.retail.dto.StateDTO"
+		parameterClass="com.retailsbs.logistikapp.retail.dto.GetStateSearchCriteria">
+		SELECT res.id_state, res.id_country, res.country_name, res.created,
+		res.modified, res.login,
+		res.orderby, res.active, res.code, res.prefix,
+		res.name
+		FROM (
+		SELECT row_number() over() as r, vrow.*
+		FROM (
+		SELECT
+		stt.id_state, stt.id_country, ctry.name as country_name, stt.created,
+		stt.modified, stt.login, stt.orderby, stt.active,
+		stt.code, stt.prefix,
+		stt.name
+		FROM lgk_state stt
+		JOIN lgk_country ctry ON ctry.id_country =
+		stt.id_country
+		WHERE 1=1
+		<isNotNull property="id_country">
+			AND stt.id_country =
+			#id_country:INTEGER#
+		</isNotNull>
+		<isNotNull property="active">
+			AND stt.active = #active:VARCHAR#
+		</isNotNull>
+		ORDER BY stt.orderby
+		) vrow
+		) res
+		WHERE 1=1
+		<isNotNull property="lim_inf">AND <![CDATA[r >= #lim_inf#]]></isNotNull>
+		<isNotNull property="lim_sup">AND <![CDATA[r <= #lim_sup#]]></isNotNull>
+		ORDER BY orderby, name asc
+	</select>
+
+	<!-- Obtiene un listado de todos los estados de un pais y la cantidad de 
+		ciudades asociadas -->
+	<select id="getAllStateQtyCity"
+		resultClass="com.retailsbs.logistikapp.retail.dto.StateQtyCityDTO">
+		select stt.id_state, stt.orderby, stt.active, stt.name, coalesce(ctt.cities,0) as cities
+        from lgk_state stt
+        left join ( select st.id_state, coalesce(count(ct.id_city),0) as cities
+                       from lgk_state st
+                       left join lgk_city ct on ct.id_state = st.id_state
+                       where st.id_country = #id_country:integer#
+                       group by st.id_state ) ctt on ctt.id_state = stt.id_state
+        where stt.id_country = #id_country:integer#
+        order by stt.orderby
+	</select>
+
+</sqlMap>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_user_message">
+
+	<select id="getRelUserUserto" resultClass="com.retailsbs.logistikapp.user.dto.UserUsertoDTO"
+		parameterClass="com.retailsbs.logistikapp.user.dto.RelUserUsertoDTO">
+		SELECT id_user_message, id_user, id_user_to, created
+		FROM lgk_user_message
+		WHERE 1=1
+		<isNotNull property="id_user">
+			AND id_user = #id_user:INTEGER#
+		</isNotNull>
+		<isNotNull property="id_user_to">
+			AND id_user_to = #id_user_to:INTEGER#
+		</isNotNull>
+	</select>
+	
+	<select id="getUserMessageByIdUser"
+                parameterClass="Long"
+                resultClass="com.retailsbs.logistikapp.user.dto.UserMessageDTO">
+                
+     select um.id_user_message, us.username, coalesce(me.qty,0) as qty, me.since
+       from lgk_user_message um
+       join lgk_user us on us.id_user = um.id_user_to
+  left join (
+              select m.id_user_message, coalesce(count(m.id_message),0) as qty, min(m.created) as since
+                from lgk_message m
+                join lgk_user_message u on u.id_user_message = m.id_user_message
+                 and u.id_user = #id_user:integer#
+               where m.read = 'N'
+               group by m.id_user_message
+            ) me on me.id_user_message = um.id_user_message
+      where um.id_user = #id_user:integer#
+      order by me.since
+       
+	</select>
+	
+	<select id="getAvailableUserByCriteria"
+                parameterClass="com.retailsbs.logistikapp.user.dto.UserSearchCriteria"
+                resultClass="com.retailsbs.logistikapp.user.domain.User">                
+                (select us.id_user, us.username
+				from lgk_user us 
+				join lgk_access ac
+				on ac.id_user = us.id_user and ac.id_supplier = #id_supplier:integer#
+				where us.id_user <![CDATA[<>]]> #id_user:integer#
+				order by us.username)
+				UNION
+				(select id_user,username from lgk_user where profile = 'SOP')
+				
+					
+	</select>
+    <select id="getUserLastMessageByIdUser"
+               	parameterClass="Long"
+                resultClass="com.retailsbs.logistikapp.user.dto.UserMessageDTO">             
+                
+                select msg.id_user_message, msg.username, coalesce(msg.qty,0) as qty, msg.since, mensaje.message, mensaje.read, count(att.id_message) as attachments
+				from lgk_message mensaje
+				join(
+					select um.id_user_message, us.username, coalesce(me.qty,0) as qty, me.since
+					from lgk_user_message um
+					join lgk_user us on us.id_user = um.id_user_to
+					left join (
+						select m.id_user_message, coalesce(count(m.id_message),0) as qty, max((m.created)) as since
+						from lgk_message m
+						join lgk_user_message u on u.id_user_message = m.id_user_message
+						and u.id_user = #id_user:integer#
+						group by m.id_user_message
+					) me 
+					on me.id_user_message = um.id_user_message
+					where um.id_user = #id_user:integer#
+					order by me.since
+				)msg
+				on mensaje.id_user_message = msg.id_user_message and mensaje.created = msg.since
+				left join lgk_attachment att on mensaje.id_message = att.id_message
+				group by msg.id_user_message, msg.username, qty, msg.since, mensaje.message, mensaje.read
+				order by msg.since desc
+                
+               
+	</select>
+    <select id="getUserLastMsgGroByIdUser"
+               	parameterClass="Long"
+                resultClass="com.retailsbs.logistikapp.user.dto.UserMessageGrpDTO">             
+                
+			SELECT msg.id_group, msg.name, msg.qty, msg.since, mensaje.message, usr_create_grp
+			FROM lgk_message mensaje
+			JOIN(
+				SELECT grp.id_group, grp.name, grp.id_user as usr_create_grp, coalesce(count(mgr.id_message_group),0) as qty, max((msg.created)) as since
+				FROM lgk_group grp
+				join lgk_message_group mgr ON mgr.id_group = grp.id_group
+				join lgk_message msg ON msg.id_message = mgr.id_message
+				join lgk_user_group ugr ON ugr.id_group = grp.id_group
+				AND ugr.id_user = #id_user:INTEGER#
+				GROUP BY grp.id_group
+			)msg ON msg.since = mensaje.created 
+
+	</select>
+    <select id="getUserMessageByIdUserId_UserTo"
+               	parameterClass="Long"
+                resultClass="com.retailsbs.logistikapp.user.domain.UserMessage">             
+                
+		SELECT id_user_message, id_user, id_user_to, created
+		FROM lgk_user_message
+		WHERE (id_user = #id_user:INTEGER# OR id_user_to = #id_user:INTEGER#)
+
+	</select>
+	
+	<delete id="delUserMessageByIdUserIdUserTo" parameterClass="Long">
+		delete from lgk_user_message
+		where (id_user = #id_user:INTEGER# OR id_user_to = #id_user:INTEGER#)
+	</delete>
+                
+
+</sqlMap>

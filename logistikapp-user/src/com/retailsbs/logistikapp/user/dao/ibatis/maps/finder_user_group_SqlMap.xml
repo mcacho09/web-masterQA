@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_user_group">
+
+	<!-- Obtiene un listado de los cambios de estado por comercio de una transaccion -->
+    <select id="getUserByIdGroup"
+               parameterClass="Long"
+               resultClass="com.retailsbs.logistikapp.user.dto.UserGroupDTO">
+               
+		SELECT  lgk_user.id_user, lgk_user.username
+		FROM lgk_user 
+		JOIN lgk_user_group 
+			ON lgk_user_group.id_user = lgk_user.id_user
+		WHERE lgk_user_group.id_group = #id_group:integer#
+   	</select>
+
+	<delete id="delUserGrpByIdGrp" 
+			parameterClass="com.retailsbs.logistikapp.user.domain.UserGroup">
+		DELETE FROM lgk_user_group
+		WHERE id_group = #id_group:INTEGER#
+	</delete>
+	
+	<delete id="delUserGrpByIdUser" parameterClass="Long">
+		delete from lgk_user_group
+		where id_user = #id_user:INTEGER#
+	</delete>
+	
+</sqlMap>

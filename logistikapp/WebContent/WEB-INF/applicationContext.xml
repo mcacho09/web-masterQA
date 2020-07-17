@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:aop="http://www.springframework.org/schema/aop"
+         xmlns:tx="http://www.springframework.org/schema/tx"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+
+	<!-- =====================  DEFINICIONES GENERALES  ======================== -->
+
+	<!-- Configurer that replaces ${...} placeholders with values from properties files -->
+	<!-- (in this case, mail and JDBC related properties) -->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>WEB-INF/jdbc.properties</value>
+				<value>WEB-INF/logistikapp.properties</value>
+			</list>
+		</property>
+	</bean>	
+	
+	
+	<!-- ==========================  DATASOURCE  ============================== -->
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+		<property name="testOnBorrow" value="true"/>
+		<property name="validationQuery" value="SELECT 1"/>
+	</bean>
+
+	<!-- Transaction manager for a single JDBC DataSource -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- JDBC Template -->
+	
+	<!--  <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>  -->
+	
+	<!-- / JDBC Template -->
+
+	<!-- =========================  ASPECT CONFIGURATION  ======================== -->
+
+	<aop:config>
+        <aop:advisor pointcut="execution(* *..UserService.*(..))" advice-ref="txAdvice"/>
+	</aop:config>
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<!-- all methods starting with 'get','is','select' are read-only -->
+			<tx:method name="get*" read-only="true"/>
+			<tx:method name="is*" read-only="true"/>
+			<tx:method name="select*" read-only="true"/>
+			<!-- other methods use the default transaction settings (see below) -->
+			<tx:method name="*"/><!-- rollback-for="ParseInputException" -->
+		</tx:attributes>
+	</tx:advice>
+	<tx:advice id="noTxAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRES_NEW" />
+        </tx:attributes>
+    </tx:advice>
+
+
+    <!-- ==========================  DEFINICION DE DAOS  ============================== -->
+    
+    <!-- ==========================  DEFINICION DE BEANS  ============================== -->
+ 
+    <bean id="CalendarAlertaCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.CalendarAlertaCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+    </bean>
+    
+    <bean id="NotificationsTasks" class="com.retailsbs.logistikapp.web.ctrl.communication.NotificationsTasks">
+    	<property name="logisticService" ref="LogisticServiceBean"/>
+    	<property name="userNotificationService" ref="UserNotificationServiceBean"/>
+    	<property name="userService" ref="UserServiceBean"/>
+    </bean>
+    
+    <!-- ================================  TRIGGER  ================================== -->
+    <!-- QUARTZ -->
+    <!-- 
+    <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="CalendarAlertaCtrl"/>
+        <property name="targetMethod" value="alerta"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+        <property name="jobDetail" ref="jobDetail"/>
+        <property name="startDelay" value="${PARAM_TRIGGER_CALENDAR_STARTDELAY}"/>
+        <property name="repeatInterval" value="${PARAM_TRIGGER_CALENDAR_REPEATINTERVAL}"/>
+    </bean>
+    -->
+    
+    <!-- <bean id="notTasksJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="NotificationsTasks"/>
+    	<property name="targetMethod" value="print"/>
+    	<property name="concurrent" value="true"/>
+    </bean>
+    
+    <bean id="notTasksTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+    	<property name="jobDetail" ref="notTasksJob"/>
+    	<property name="startDelay" value="0"/>
+    	<property name="repeatInterval" value="86400000"/>
+    </bean>
+    
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="simpleTrigger"/>
+                <ref bean="notTasksTrigger"/>
+            </list>
+        </property>
+    </bean> -->
+     
+    
+</beans>

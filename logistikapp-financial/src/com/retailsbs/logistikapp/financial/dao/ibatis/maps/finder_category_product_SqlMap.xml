@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="finder_category_product" >
+
+  <select id="selectCategoryProduct"
+              parameterClass="com.retailsbs.logistikapp.financial.dto.CategoryProductSearchCriteria"
+              resultClass="com.retailsbs.logistikapp.financial.dto.CategoryProductDTO">
+    select 'false' as QUERYID, id_category_product, id_supplier, created, modified, login, orderby,
+              active, code, name
+    from lgk_category_product
+    where 1=1
+    <isNotNull property="active">and active = #active:VARCHAR#</isNotNull>
+    and id_supplier = #id_supplier:INTEGER#
+    order by orderby
+  </select>
+ 
+  <delete id="delCategoryProductByIdSupplier" parameterClass="Long">
+  	delete from lgk_category_product
+  	where id_supplier = #id_supplier:INTEGER#
+  </delete>
+
+</sqlMap>

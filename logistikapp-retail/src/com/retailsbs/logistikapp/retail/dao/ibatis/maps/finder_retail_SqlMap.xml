@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_retail">
+
+	<!-- Obtiene un listado de los cambios de estado por comercio de una transaccion -->
+	<select id="getRetail"
+		parameterClass="com.retailsbs.logistikapp.retail.dto.RetailSearchCriteria"
+		resultClass="com.retailsbs.logistikapp.retail.dto.RetailDTO">
+
+		select re.id_retail, re.id_retail_category, cat.name as category,
+			re.id_country, re.created, re.modified, re.login, re.orderby, re.active, re.code,
+			re.name, re.address1, re.address2, re.postal, st.stores
+		from lgk_retail re
+		join lgk_retail_category cat on cat.id_retail_category = re.id_retail_category
+		join ( select ret.id_retail, coalesce(count(sto.id_store),0) as stores
+		         from lgk_retail ret
+		         left join lgk_store sto on sto.id_retail = ret.id_retail
+		         and sto.active = 'S'
+		         where ret.id_supplier = #id_supplier:integer#
+		         group by ret.id_retail
+		       ) st on st.id_retail = re.id_retail
+		where re.id_supplier = #id_supplier:integer#
+		order by re.active desc, re.orderby, re.name
+
+	</select>
+	
+	<!-- Obtiene la cantidad de clientes para verificado de planes -->
+	<select id="getRetailQty"
+		parameterClass="com.retailsbs.logistikapp.retail.dto.RetailSearchCriteria"
+		resultClass="Integer">
+
+		select SUM(st.stores) as cliQty
+		from lgk_retail re
+		join lgk_retail_category cat on cat.id_retail_category = re.id_retail_category
+		join ( select ret.id_retail, coalesce(count(sto.id_store),0) as stores
+		         from lgk_retail ret
+		         left join lgk_store sto on sto.id_retail = ret.id_retail
+		         and sto.active = 'S'
+		         where ret.id_supplier = #id_supplier:integer#
+		         group by ret.id_retail
+		       ) st on st.id_retail = re.id_retail
+		where re.id_supplier = #id_supplier:integer#
+		
+	</select>
+
+	<!-- Obtiene un objeto con informacion extendida del comercio -->
+	<select id="getRetailExtById" parameterClass="Long"
+		resultClass="com.retailsbs.logistikapp.retail.dto.RetailDTO">
+			select ret.id_retail, ret.id_supplier, sup.name as supplier,
+			ret.id_retail_category, rca.name as category, ret.id_country, ctr.name as country,
+			ret.id_state, stt.name as state, ret.id_city, cty.name as city,
+			ret.created, ret.modified, ret.login, ret.orderby, ret.active,
+			ret.code, ret.name, ret.address1, ret.address2, ret.postal
+		from lgk_retail ret
+		join lgk_supplier sup on sup.id_supplier = ret.id_supplier
+		join lgk_retail_category rca on rca.id_retail_category = ret.id_retail_category
+		join lgk_country ctr on ctr.id_country = ret.id_country
+		left join lgk_state stt ON stt.id_state = ret.id_state
+		left join lgk_city cty ON cty.id_city = ret.id_city
+		where ret.id_retail = #id_retail:integer#
+		order by ret.orderby, ret.name
+	</select>
+
+    <select id="getRetailByIds"
+        parameterClass="com.retailsbs.logistikapp.retail.dto.RetailByIdsSearchCriteria"
+        resultClass="com.retailsbs.logistikapp.retail.domain.Retail">
+        select id_retail, name
+        from lgk_retail
+        where id_retail in
+        <iterate property="ids" open="(" close=")" conjunction=",">#ids[]#</iterate>
+        order by orderby
+    </select>
+    
+    <select id="getRetailCountStrCheck"
+        parameterClass="com.retailsbs.logistikapp.retail.dto.QtyStrCheckByRetai"
+        resultClass="com.retailsbs.logistikapp.retail.dto.QtyStrCheckByRetailDTO">
+
+		SELECT ret.id_retail, ret.name, COALESCE(tot.tot,0) AS qty_tot, COALESCE(chec.qty_chec,0) AS qty_chec
+		FROM lgk_retail ret
+		JOIN (
+			SELECT  str.id_retail, count(str.id_store) AS tot
+			FROM lgk_store str
+			JOIN lgk_waybill wbl ON wbl.id_store = str.id_store
+			JOIN lgk_travel tra ON tra.id_travel = wbl.id_travel
+			AND tra.status != 'CRE'
+			JOIN lgk_route rut ON rut.id_route = tra.id_route
+			WHERE rut.id_supplier = #id_supplier:INTEGER#
+			<![CDATA[ AND tra.schedule >= #fini:TIMESTAMP# ]]>
+			<![CDATA[ AND tra.schedule <= #ffin:TIMESTAMP# ]]>
+			GROUP BY str.id_retail
+		)tot ON tot.id_retail = ret.id_retail 
+		LEFT JOIN (
+			SELECT  str.id_retail, count(str.id_store) AS qty_chec
+			FROM lgk_store str
+			JOIN lgk_waybill wbl ON wbl.id_store = str.id_store
+			AND wbl.checkin IS NOT NULL
+			JOIN lgk_travel tra ON tra.id_travel = wbl.id_travel
+			AND tra.status != 'CRE'
+			JOIN lgk_route rut ON rut.id_route = tra.id_route
+			WHERE rut.id_supplier = #id_supplier:INTEGER#
+			<![CDATA[ AND tra.schedule >= #fini:TIMESTAMP# ]]>
+			<![CDATA[ AND tra.schedule <= #ffin:TIMESTAMP# ]]>
+			GROUP BY str.id_retail
+		)chec ON chec.id_retail = ret.id_retail 
+
+    </select>
+    
+    <delete id="delRetailByIdSupplier" parameterClass="Long">
+    	delete from lgk_retail
+    	where id_supplier = #id_supplier:INTEGER#
+    </delete>
+    
+    <update id="changeStoresRetail" parameterClass="com.retailsbs.logistikapp.retail.dto.ChangeRetailCriteria">
+    	update lgk_store set id_retail = #id_retail_to:INTEGER# where id_retail = #id_retail:INTEGER#;
+    </update>
+    
+</sqlMap>

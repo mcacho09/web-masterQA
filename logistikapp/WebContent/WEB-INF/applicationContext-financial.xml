@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xmlns:aop="http://www.springframework.org/schema/aop"
+	     xmlns:tx="http://www.springframework.org/schema/tx"
+	     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+
+	<!-- =====================  DEFINICIONES GENERALES  ======================== -->
+
+
+	<!-- ==========================  DATASOURCE  ============================== -->
+
+	<!-- SqlMap setup for iBATIS Database Layer -->
+	<bean id="sqlMapClient-financial" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:com/retailsbs/logistikapp/financial/dao/ibatis/maps/sql-map-config.xml"/>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+
+	<!-- ==========================  DEFINICION DE DAOS  ============================== -->
+	<bean id="CostDaoBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.CostDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	
+	<bean id="OrderDaoBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.OrderDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+
+	<bean id="OrderDetailDaoBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.OrderDetailDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+
+	<bean id="FinderCostDaoBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.FinderCostDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+
+	<bean id="FinderOrderDetailDaoBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.FinderOrderDetailDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+
+	<bean id="FinderOrderDaoBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.FinderOrderDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	
+	<!-- category product -->
+	<bean id="CategoryProductDaoBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.CategoryProductDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<bean id="FinderCategoryProductDaoBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.FinderCategoryProductDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /category product -->
+	
+		<!-- brand product -->
+	<bean id="BrandDaoBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.BrandDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<bean id="FinderBrandProductDaoBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.FinderBrandProductDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /brand product -->
+	
+	<!-- product -->
+	<bean id="ProductDaoBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.ProductDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<bean id="FinderProductDaoBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.FinderProductDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /product -->
+	
+	<!-- webservice -->
+	<bean id="FinderWebServiceDAOBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.FinderWebServiceDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /webservice -->
+	
+	<!-- StoreCategoryProductBean -->
+	<bean id="StoreCategoryProductBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.StoreCategoryProductDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /StoreCategoryProductBean -->
+	
+	<!-- FinderStoreCategoryProductBean -->
+	<bean id="FinderStoreCategoryProductBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.FinderStoreCategoryProductDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /FinderStoreCategoryProductBean -->
+	
+	<!-- AlmacenBean -->
+	<bean id="AlmacenBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.AlmacenDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /AlmacenBean -->
+
+	<!-- FinderAlmacenBean -->
+	<bean id="FinderAlmacenBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.FinderAlmacenImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /FinderAlmacenBean -->
+
+	<!-- ProductAlmacenBean -->
+	<bean id="ProductAlmacenBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.ProductAlmacenDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /ProductAlmacenBean -->
+
+	<!-- FinderStoreCategoryProductBean -->
+	<bean id="FinderProductAlmacenBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.FinderProductAlmacenImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /FinderProductAlmacenBean -->
+
+	<!-- ConfigurationStockBean -->
+	<bean id="ConfigurationStockBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.ConfigurationStockDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /ConfigurationStockBean -->
+
+	<!-- FinderConfigurationStockBean -->
+	<bean id="FinderConfigurationStockBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.FinderConfigurationStockImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /FinderConfigurationStockBean -->
+
+	<!-- ConfigurationStockProductBean -->
+	<bean id="ConfigurationStockProductBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.ConfigurationStockProductDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /ConfigurationStockProductBean -->
+
+	<!-- FinderConfigurationStockProductBean -->
+	<bean id="FinderConfigurationStockProductBean" class="com.retailsbs.logistikapp.financial.dao.ibatis.FinderConfigurationStockProductImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-financial"/>
+	</bean>
+	<!-- /FinderConfigurationStockProductBean -->
+
+	<!-- ==========================  DEFINICION DE BEANS  ============================== -->
+  	<bean id="FinancialServiceBean" class="com.retailsbs.logistikapp.financial.service.impl.FinancialServiceImpl">
+  		<property name="dao_order" 			     ref="OrderDaoBean"/>
+  		<property name="dao_order_detail" 	     ref="OrderDetailDaoBean"/>
+  		<property name="dao_cost" 			     ref="CostDaoBean"/>
+  		<property name="finder_cost" 		     ref="FinderCostDaoBean"/>
+  		<property name="finder_order_detail"     ref="FinderOrderDetailDaoBean"/>
+  		<property name="finder_order" 		     ref="FinderOrderDaoBean"/>
+  		<property name="dao_category_product"    ref="CategoryProductDaoBean"/>
+  	    <property name="dao_brand_product"       ref="BrandDaoBean"/>
+  		<property name="dao_product" 		     ref="ProductDaoBean"/>
+  		<property name="finder_category_product" ref="FinderCategoryProductDaoBean"/>
+  		<property name="finder_brand_product"    ref="FinderBrandProductDaoBean"/>
+  		<property name="finder_product" 		 ref="FinderProductDaoBean"/>
+  		<property name="dao_store_category_product"	ref="StoreCategoryProductBean"/>
+  		<property name="finder_store_category_product"		 ref="FinderStoreCategoryProductBean"/>
+  		<property name="dao_almacen" 		     ref="AlmacenBean"/>
+  		<property name="finder_almacen" ref="FinderAlmacenBean"/>
+  		<property name="dao_product_almacen"	ref="ProductAlmacenBean"/>
+  		<property name="finder_product_almacen"	ref="FinderProductAlmacenBean"/>
+  		<property name="dao_configuration_stock" 	ref="ConfigurationStockBean"/>
+  		<property name="finder_configuration_stock" ref="FinderConfigurationStockBean"/>
+  		<property name="dao_configuration_stock_product" 	ref="ConfigurationStockProductBean"/>
+  		<property name="finder_configuration_stock_product" ref="FinderConfigurationStockProductBean"/>
+  	</bean>
+  	
+</beans>

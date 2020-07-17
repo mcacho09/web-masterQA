@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_travel">
+
+    <!-- Obtiene un listado de viajes y datos asociados como ruta, chofer, locales, checkin, comentarios, etc -->
+    <select id="getTravelbyCriteria"
+                parameterClass="com.retailsbs.logistikapp.logistic.dto.TravelSearchCriteria"
+                resultClass="com.retailsbs.logistikapp.logistic.dto.TravelDTO">
+    select tv.id_travel, tv.travel, tv.id_user, tv.username, tv.status, tv.log_created as created, tv.schedule, tv.started, tv.finished, 
+           coalesce(wb.qtystore,0) as qtystore, coalesce(wb.qtycheckin,0) as qtycheckin, coalesce(wb.qtynotcheckin,0) as qtynotcheckin, coalesce(wb.qtycomment,0) as qtycomment, tv.km, tv.time,
+           coalesce(wb.qtyimg1,0) as qtyimg1,coalesce(wb.qtyimg2,0) as qtyimg2,coalesce(wb.qtyimg3,0) as qtyimg3
+      from (
+             select tv.id_travel, tv.name as travel, tv.id_user, us.username, tv.status, tv.log_created, tv.schedule, tv.started, tv.finished, tv.schedule as order, tv.km, tv.time
+               from lgk_travel tv join lgk_user us on us.id_user = tv.id_user
+               where us.id_user in( select distinct ur.id_user from lgk_user ur
+                        join lgk_access ac on ur.id_user = ac.id_user
+                        where ac.id_supplier = #id_supplier:INTEGER# 
+                        AND ur.profile != 'SOP'
+                        AND ur.profile LIKE 'DRI%'
+                    ) 
+              and 1=1
+              		<isNotNull property="id_user">and tv.id_user = #id_user:INTEGER#</isNotNull>
+                    <isNotNull property="status">and tv.status in <iterate property="status" open="(" close=")" conjunction=",">#status[]#</iterate></isNotNull>
+                    <isNotNull property="fini">and <![CDATA[ tv.schedule >= #fini:TIMESTAMP# ]]></isNotNull>
+                    <isNotNull property="ffin">and <![CDATA[ tv.schedule <= #ffin:TIMESTAMP# ]]></isNotNull>
+              UNION ALL
+             select tv.id_travel, tv.name as travel, tv.id_user, us.username, tv.status, tv.log_created, tv.schedule, tv.started, tv.finished, tv.log_created as order, tv.km, tv.time
+               from lgk_travel tv join lgk_user us on us.id_user = tv.id_user
+               where us.id_user in( select distinct ur.id_user from lgk_user ur
+                        join lgk_access ac on ur.id_user = ac.id_user
+                        where ac.id_supplier = #id_supplier:INTEGER# 
+                        AND ur.profile != 'SOP'
+                        AND ur.profile LIKE 'DRI%'
+
+                    ) 
+              and 1=1
+              		<isNotNull property="id_user">and tv.id_user = #id_user:INTEGER#</isNotNull>
+                    <isNotNull property="status">and tv.status in <iterate property="status" open="(" close=")" conjunction=",">#status[]#</iterate></isNotNull>
+                    <isNotNull property="fini">and <![CDATA[ tv.log_created >= #fini:TIMESTAMP# ]]></isNotNull>
+                    <isNotNull property="ffin">and <![CDATA[ tv.log_created <= #ffin:TIMESTAMP# ]]></isNotNull>
+                and tv.schedule is null
+           ) tv
+ left join (
+             select tv.id_travel, count(wb.id_store) as qtystore,
+                    count( case when wb.status = 'S' then 1 end ) as qtycheckin,
+                    count( case when wb.status = 'N' then 1 end ) as qtynotcheckin,
+                    count( case when wb.comment != '' then 1 end ) as qtycomment,
+                    count(case when wb.image1 != '' then 1 end ) as qtyimg1,
+                    count(case when wb.image2 != '' then 1 end ) as qtyimg2,
+                    count(case when wb.image3 != '' then 1 end ) as qtyimg3
+               from lgk_travel tv
+               join lgk_waybill wb on tv.id_travel = wb.id_travel
+              and 1=1
+              		<isNotNull property="id_user">and tv.id_user = #id_user:INTEGER#</isNotNull>
+                    <isNotNull property="status">and tv.status in <iterate property="status" open="(" close=")" conjunction=",">#status[]#</iterate></isNotNull>
+                    <isNotNull property="fini">and <![CDATA[ tv.schedule >= #fini:TIMESTAMP# ]]></isNotNull>
+                    <isNotNull property="ffin">and <![CDATA[ tv.schedule <= #ffin:TIMESTAMP# ]]></isNotNull>
+              group by tv.id_travel
+            ) wb on wb.id_travel = tv.id_travel
+      order by tv.order desc
+    </select>    
+    
+    <select id="getTravelByIdStore"
+     		parameterClass="com.retailsbs.logistikapp.logistic.dto.TravelByIdStoreSearch"
+       		resultClass="com.retailsbs.logistikapp.logistic.dto.TravelByIdStoreDTO">
+
+			SELECT  tra.id_travel, tra.name as travel_name, tra.schedule, tra.id_user, usr.username AS chofer, tra.status					
+			FROM lgk_travel tra		
+			JOIN lgk_user usr ON usr.id_user = tra.id_user
+			JOIN lgk_waybill wb ON wb.id_travel = tra.id_travel
+			JOIN lgk_store  sto ON sto.id_store = wb.id_store
+			<isNotNull property="id_store">
+				AND wb.id_store = #id_store:INTEGER#
+			</isNotNull>			
+			WHERE 1=1
+			<isNotNull property="schedule">
+				<![CDATA[ AND tra.schedule >= #schedule:TIMESTAMP# ]]> 
+			</isNotNull>		
+			AND (tra.status != 'FIN' AND tra.status !='CAN' AND tra.status !='CRE' )
+			GROUP BY tra.id_travel, tra.name , tra.schedule, tra.id_user, usr.username, tra.status
+			ORDER BY tra.schedule
+			LIMIT 5
+    </select>
+    
+    <select id="getTravelAndStatusStrByIdStore"
+                parameterClass="com.retailsbs.logistikapp.logistic.dto.TrvStatusStrSearchCriteria"
+                resultClass="com.retailsbs.logistikapp.logistic.dto.TravelAndStatusStr">
+        select res.id_travel, res.estado_travel, res.travel_name, res.schedule, res.id_store, res.checkin, res.status,
+                  res.id_user, res.user_name, res.outrange, res.comment, res.note, res.id_waybill, res.image1, res.image2, 
+                  res.image3, rou.id_route, rou.name as route_name
+        from (
+                select row_number() OVER() AS r, vrow.*
+				from (
+				        select tra.id_travel, tra.status AS estado_travel, tra.name AS travel_name, tra.schedule, wb.id_store, wb.checkin, wb.status,
+				                  tra.id_user, us.username as user_name, wb.outrange, wb.comment, wb.note, wb.id_waybill, wb.image1, wb.image2, wb.image3
+				        from lgk_travel tra
+				        join lgk_waybill wb on wb.id_travel = tra.id_travel
+				        and wb.id_store = #id_store:integer#
+				        join lgk_user us on us.id_user = tra.id_user
+				        order by tra.schedule desc
+				) vrow
+			) res 
+			join (
+				select r.id_route, rs.id_store, r.name
+				from lgk_route_store rs
+				join lgk_route r on r.id_route = rs.id_route
+			) rou on rou.id_store = #id_store:INTEGER#
+			where 1=1
+			<isNotNull property="lim_inf">and <![CDATA[r >= #lim_inf#]]></isNotNull>
+			<isNotNull property="lim_sup">and <![CDATA[r <= #lim_sup#]]></isNotNull>
+            
+    </select>
+    
+    <delete id="delTravelByIdRoute" parameterClass="Long">
+    	delete from lgk_travel
+    	where id_route = #id_route:INTEGER#
+    </delete>
+        
+    <delete id="delTravelByIdUser" parameterClass="Long">
+    	delete from lgk_travel
+    	where id_user = #id_user:INTEGER#
+    </delete>
+    
+    <select id="getMetricsCounter"
+    		   parameterClass="com.retailsbs.logistikapp.logistic.dto.MetricsCounterCriteria"
+               resultClass="com.retailsbs.logistikapp.logistic.dto.MetricsCounterDTO">
+    	select coalesce(count(tt.id),0) AS qty, coalesce(sum(tt.qty1),0) AS total, coalesce(sum(tt.qty2),0) AS visited, coalesce(sum(tt.qty3),0) AS no_visited
+		from (
+       		select tv.id_travel as id,
+            	   count(distinct wb1.id_waybill) as qty1,
+             	   count(distinct wb2.id_waybill) as qty2,
+                   count(distinct wb3.id_waybill) as qty3
+            from lgk_travel tv
+            join lgk_user us on us.id_user = tv.id_user
+            join lgk_access acc on acc.id_user = us.id_user and acc.id_supplier = #id_supplier:INTEGER#
+         	join lgk_waybill wb1 on wb1.id_travel = tv.id_travel
+         	left join lgk_waybill wb2 on wb2.id_travel = tv.id_travel and wb2.status = #statusOne#
+         	left join lgk_waybill wb3 on wb3.id_travel = tv.id_travel and wb3.status = #statusTwo# or wb3.status = ''
+       where 1=1 and tv.status != 'CAN'
+        <isNotNull property="statusTravel"><iterate prepend="and tv.status in " property="statusTravel" open="(" close=")" conjunction=",">#statusTravel[]#</iterate></isNotNull>
+        <isNotNull property="id_user">and tv.id_user = #id_user:INTEGER#</isNotNull>
+        <isNotNull property="schedule"><![CDATA[and tv.schedule >= #schedule:DATE#]]></isNotNull>
+        <isNotNull property="scheduleFin"><![CDATA[and tv.schedule <= #scheduleFin:DATE#]]></isNotNull>
+     	group by tv.id_travel
+     	) tt   
+    
+    </select>
+
+	<select id="getTravelWithPromotion" 
+		parameterClass="com.retailsbs.logistikapp.logistic.dto.ParameterReportPromotion" 
+		resultClass="com.retailsbs.logistikapp.logistic.dto.InfoReportPromotion">
+		select s.code, s.name store, t.name travel, w.status, w.checkin, u.username
+		from lgk_store s 
+		JOIN lgk_waybill w on w.id_store = s.id_store
+		JOIN lgk_travel t on t.id_travel = w.id_travel
+		JOIN lgk_user u on u.id_user = t.id_user
+		where s.shelf = 'S' and s.id_retail = #id_retail:INTEGER# 
+		<isNotNull property="fini">
+			and <![CDATA[w.checkin >= #fini:DATE#]]> 
+		</isNotNull>
+		<isNotNull property="ffin">
+			and <![CDATA[w.checkin <= #ffin:DATE#]]>
+		</isNotNull>
+		order by w.checkin ASC
+	</select>
+	
+	<select id="getLastTravelTRAorFIN"
+		resultClass="com.retailsbs.logistikapp.logistic.domain.Travel">
+	
+		select * 
+		from lgk_travel
+		where id_user = #id_user:INTEGER# and status in ('TRA', 'FIN')
+		order by started DESC, id_travel DESC
+		limit 1
+		
+	</select>
+	
+	<select id="getProgressMetricsOperatives"
+		parameterClass="com.retailsbs.logistikapp.logistic.dto.ProgressMetricsOperativesCriteria"
+		resultClass="com.retailsbs.logistikapp.logistic.dto.ProgressMetricsOperativesDTO">
+		select sc.name as category,
+			count(w.*) as total, 
+			sum(case when w.status = 'S' THEN 1 ELSE 0 END) as visited, 
+			sum(case when w.status != 'S' THEN 1 ELSE 0 END) as not_visited, 
+			round((sum(case when w.status = 'S' THEN 1 ELSE 0 END) * 100.00) / count(w.*), 2) as per_visited,
+			round((sum(case when w.status != 'S' THEN 1 ELSE 0 END) * 100.00) / count(w.*), 2) as per_not_visited
+		from lgk_waybill w
+		join lgk_travel t on t.id_travel = w.id_travel
+		join lgk_access a on a.id_user = t.id_user
+		join lgk_store s on s.id_store = w.id_store
+		join lgk_store_category sc on sc.id_store_category = s.id_store_category
+		where a.id_supplier = #id_supplier:INTEGER# 
+			and t.status not in ('CAN')
+		<isNotNull property="fini">
+			<![CDATA[and t.schedule >= #fini#]]>
+		</isNotNull>
+		<isNotNull property="ffin">
+			<![CDATA[and t.schedule <= #ffin#]]>
+		</isNotNull>
+		<isNotNull property="id_user">
+			and a.id_user = #id_user:INTEGER#
+		</isNotNull>
+		group by sc.name
+	</select>
+	
+	<select id="getTravelsToVisited" parameterClass="com.retailsbs.logistikapp.logistic.dto.TravelsToVisitedCriteria" resultClass="com.retailsbs.logistikapp.logistic.domain.Travel">
+		select *
+		from lgk_travel t
+		join lgk_access a on t.id_user = a.id_user
+		where 1=1 <![CDATA[ and schedule::date >= #date# ]]>
+		 and status in ('TRA', 'PRO')
+		<isNotNull property="id_user">
+			and a.id_user = #id_user:INTEGER#
+		</isNotNull>
+		and a.id_supplier = #id_supplier:INTEGER#
+		order by schedule, t.name
+	</select>
+
+</sqlMap>

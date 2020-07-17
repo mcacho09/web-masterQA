@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN" "http://getahead.org/dwr//dwr20.dtd">
+
+<dwr>
+	<allow>
+	
+		<!-- User -->
+		<create creator="spring" javascript="UserServiceBean">
+			<param name="beanName" value="UserServiceBean"/>
+			<include method="updUser"/>
+			<include method="updToDo"/>
+			<include method="delToDoById"/>
+			<include method="getToDoById"/>
+			<include method="getMessageByIdUserMsg"/>
+			<include method="addMessage"/>
+			<include method="updMessage"/>
+			<include method="addUserMessage"/>
+			<include method="getRelUserUserto"/>
+			<include method="deleteMessageByIdUserMessage"/>
+			<include method="delUserMessage"/>
+			<include method="addNotification"/>
+			<include method="getHeaderNotificationByIdUser"/>
+			<include method="getQtyAlertAndMessagesByIdUser"/>
+			<include method="getCalendarById"/>
+			<include method="getUserById"/>
+			<include method="getDisponibleDrivers"/>
+			<include method="getUserByCriteria"/>
+			<include method="getUserWithOutStockByIdSupplier"/>
+			<include method="getEventByCriteria"/>
+		</create>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.UpdUserDTO"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.UpdToDoDTO"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.domain.ToDo"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.MessageDTO"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.MessageByIdUserMsgDTO"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.AddMessageDTO"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.UpdMessageDTO"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.AddUserMessageDTO"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.UserUsertoDTO"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.RelUserUsertoDTO"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.HeaderNotificationDTO"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.AddNotificationDTO"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.NotificationTodaySearchCriteria"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.domain.Quantities"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.domain.Calendar"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.domain.Notification"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.MessageNoReadDTO"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.domain.User"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.DRICriteria"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.UserSearchCriteria"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.EventSearchCriteria"></convert>
+		<convert converter="bean" match="com.retailsbs.logistikapp.user.dto.CalendarDTO"></convert>
+		
+		<!-- Retail -->
+		<create creator="spring" javascript="RetailServiceBean">
+			<param name="beanName" value="RetailServiceBean"/>
+			<include method="updRetail"/>
+			<include method="updStore"/>
+			<include method="updState"/>
+			<include method="updCity"/>
+			<include method="getStateByCriteria"/>
+			<include method="getLocalityByCriteria"/>
+			<include method="getCityByCriteria"/>
+			<include method="getStoreByIdRetail"/>
+			<include method="getStoreByIdRetailCategory"/>
+			<include method="getAllStoreByIdStoreCategory"/>
+			<include method="getAllCityByIdState"/>
+			<include method="delRetailDeptById"/>
+			<include method="getIdStoresActiveByIdRetail"/>
+			<include method="getIdStoresActiveByIdsRetail"/>
+			<include method="getStoreByRetail"/>
+			<include method="getStoreByRoute"/>
+			<include method="getAllStoreByIdStoreCategory"/>
+			<include method="getAvailableStoreByIdSupplier"/>
+			<include method="getAvailableStoreByIdRetail"/>
+			<include method="getAvailableStoreByIdStoreCategory"/>
+			<include method="getAvailableStoreByIdSupplierAndIdRoute"/>
+			<include method="getAvailableStoreByIdRetailAndIdRoute"/>
+			<include method="getAvailableStoreByIdStoreCategoryAndIdRoute"/>
+			<include method="getAllStoreCategoryByIdSupplier"/>
+			<include method="getStoreByIdSupplier"/>
+			<include method="getRetailByCriteria"/>
+			<include method="getStoreById"/>
+			<include method="getStoreByIds"/>
+			<include method="getAvailableStoreByCriteria"/>
+			<include method="getStoreNotInTravel"/>
+			<include method="getStoreAvailableInTravel"/>
+			<include method="getStoresByIdsRoute"/>
+			<include method="changeStoresRetail"/>
+			<include method="getTotalStore"/>
+			<include method="addActive"/>
+			<include method="updateActive"/>
+			<include method="deleteActive"/>
+			<include method="getActives"/>
+			<include method="getActiveById"/>
+			<include method="addActiveVisited"/>
+			<include method="updateActive"/>
+			<include method="deleteActiveVisited"/>
+			<include method="getActivesVisited"/>
+			<include method="getActiveVisitedById"/>
+			<include method="deleteActivesVisitedByIdActive"/>
+			<include method="transferActive"/>
+			<include method="getVisitedList"/>
+		</create>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.UpdRetailDTO"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.UpdStoreDTO"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.UpdStateDTO"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.UpdCityDTO"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.StateDTO"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.GetStateSearchCriteria"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.LocalityDTO"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.GetLocalitySearchCriteria"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.CityDTO"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.GetCitySearchCriteria"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.StoreByRouteDTO"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.domain.Store"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.domain.City"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.domain.StoreCategory"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.StoreByRetailDTO"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.StoreActiveByIdsRetailSearchCriteria"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.RetailSearchCriteria"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.RetailDTO"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.StoreByIdsSearchCriteria"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.AvailableStoreByIdSupplierIdRoute"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.AvailableStoreByIdRetailIdRoute"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.AvailableStoreByIdStoreCategoryIdRoute"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.AvailableStoreByIdRetail"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.AvailableStoreByIdStoreCategory"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.AvailableStoreDTO"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.AvailableStoreSearchCriteria"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.StoreNotInTravelSearchCriteria"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.StoreAvailableInTravelCriteria"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.StoreRouteDTO"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.ChangeRetailCriteria"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.domain.Actives"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.domain.ActivesVisited"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.ActivesVisitedExt"/>
+		<convert converter="bean" match="com.retailsbs.logistikapp.retail.dto.ActivesVisitedCriteria"/>
+		
+		<!-- Domain -->
+		<create creator="spring" javascript="DomainServiceBean">
+			<param name="beanName" value="DomainServiceBean"/>
+			<include method="updDomain"/>
+		</create>
+		<convert converter="bean" match="com.retailsbs.logistikapp.domain.dto.UpdDomainDTO"></convert>
+        
+        <!-- Logistic -->
+        <create creator="spring" javascript="LogisticServiceBean">
+            <param name="beanName" value="LogisticServiceBean"/>
+            <include method="updWayBillById"/>           
+            <include method="updTravelById"/>
+            <include method="getWayBillById"/>
+            <include method="getTravelByCriteria"/>
+            <include method="addWayBill"/>
+			<include method="delWayBillById"/>
+			<include method="getUserPositionByIdUser"/>
+			<include method="getUserPositionByIdUserAndDate"/>
+			<include method="getUserPositionByIdTravel"/>
+			<include method="getUserPositionByIdTravelAndDate"/>
+			<include method="getMetricsCounter"/>
+			<include method="getProgressMetricsOperatives"/>
+			<include method="getTravelById"/>
+			<include method="getIdsRouteByIdTravel"/>
+			<include method="getWayBillByIdTravel"/>
+			<include method="reasignWaybillFromOldTravel"/>
+        </create>
+        <convert converter="bean" match="com.retailsbs.logistikapp.logistic.domain.WayBill"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.logistic.domain.Travel"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.logistic.domain.UserPosition"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.logistic.dto.TravelDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.logistic.dto.WayBillDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.logistic.dto.TravelSearchCriteria"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.logistic.dto.MetricsCounterDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.logistic.dto.MetricsCounterCriteria"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.logistic.dto.ProgressMetricsOperativesCriteria"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.logistic.dto.ProgressMetricsOperativesDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.logistic.dto.ReasignWaybillFromOldTravelDTO"/>
+        
+        <!-- Suplier -->
+        <create creator="spring" javascript="SupplierServiceBean">
+            <param name="beanName" value="SupplierServiceBean"/>
+            <include method="updSupplier"/>
+            <include method="updSupplierSelective"/>
+            <include method="addPlan"/>
+            <include method="updPlan"/>
+            <include method="getPlanById"/>
+            <include method="delPlanByIdPlan"/>
+            <include method="getTotalSupplier"/>
+            <include method="getAllSupplier"/>
+            <include method="updSupplierPlan"/>
+            <include method="getAllPlans"/>
+            <include method="changeSupplierPlan"/>
+        </create>
+        <convert converter="bean" match="com.retailsbs.logistikapp.supplier.dto.UpdSupplierDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.supplier.domain.Plan"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.supplier.domain.Supplier"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.supplier.dto.AddPlanDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.supplier.dto.UpdPlanDTO"/>
+        
+        <!-- UserNotification -->
+        <create creator="spring" javascript="UserNotificationBean">
+        	<param name="beanName" value="UserNotificationServiceBean"/>
+        	<include method="createNotification"/>
+        	<include method="createNotificationWithList"/>
+        	<include method="searchNotification"/>
+        	<include method="updateNotification"/>
+        	<include method="createNotificationWithIdNotification"></include>
+        </create>
+        <convert converter="bean" match="com.retailsbs.logistikapp.user.notification.domain.ListNotificationDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.user.notification.domain.UserNotification"/>
+        
+         <!-- FinancialService -->
+        <create creator="spring" javascript="FinancialServiceBean">
+        	<param name="beanName" value="FinancialServiceBean"/>
+        	<include method="updCategoryProduct"/>
+        	<include method="getCategoryProductById"/>    
+        	<include method="updBrandProduct"/>
+        	<include method="getBrandById"/>
+        	<include method="updProduct"/>
+        	<include method="getProductById"/>
+        	<include method="getAllOrderDetail"/>
+        	<include method="getOrderById"/>
+        	<include method="getReportByDate"/>
+        	<include method="updOrder"/>
+        	<include method="selectProductByCriteria"/>
+        	<include method="delCategoryProductByIdCategoryProduct"/>
+        	<include method="getMetricsSale"/>
+        	<include method="getMetricsSaleFull"/>
+        	<include method="getProductsUsedsInOrderDetail"/>
+        	<include method="sendTicketByIdOrder"/>
+        	<include method="addStoreCategoryProdut"/>
+        	<include method="updateStoreCategoryProduct"/>
+        	<include method="deleteStoreCategoryProduct"/>
+        	<include method="getTopClients"/>
+        	<include method="getCategoryAndNoStores"/>
+        	<include method="getNoStoreVisitedByIdStoreCategory"/>
+        	<include method="getPerTotalVisited"/>
+        	<include method="addAlmacenFull"/>
+        	<include method="updateAlmacenFull"/>
+        	<include method="getConfigurationStockProductByIdCondigurationStock"/>
+        	<include method="getAlmacenAndProductsByIdAlmacen"/>
+        	<include method="getAlmacenByIdSupplier"/>
+        	<include method="getAlmacenAndProductsByIdSupplier"/>
+        	<include method="addFullConfigurationStockProduct"/>
+        	<include method="getConfigurationsStockByIdSupplier"/>
+        	<include method="addSubAlmacenFull"/>
+        	<include method="getSubAlmacenInfo"/>
+        	<include method="getAlmacenInfoAndProductsByIdAlmacen"/>
+        	<include method="updateSubAlmacenFull"/>
+        	<include method="addProductsToAlmacen"/>
+        	<include method="addProductsToSubAlmacen"/>
+        	<include method="liquidateSubAlmacen"/>
+        	<include method="removeProductsNotSale"/>
+        	<include method="getProductsFromAlmacen"/>
+        	<include method="deleteFullConfigurationStock"/>
+        	<include method="getSaledProductsByIdAlmacen"/>
+        	<include method="addMissingProducts"/>
+        	<include method="removeAlmacen"/>
+        	<include method="getProductsToCreateSubStock"/>
+        	<include method="recoverProductFromSale"/>
+        	<include method="updateOrderAndRecoverToAlmacen"/>
+        </create>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.domain.CategoryProduct"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.CategoryProductDAO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.UpdCategoryProductDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.domain.Brand"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.BrandProductDAO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.UpdBrandProductDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.domain.Product"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.ProductDAO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.ProductDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.UpdProductDTO"/>        
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dao.OrderDetailDAO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.domain.OrderDetail"/>  
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.OrderDetailExample"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.UpdOrder"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.domain.Order"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.ProductSearchCriteria"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.GetMetricsSaleDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.MetricsSaleDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.MetricsSaleFullDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.ProductsUsedsInOrderDetailDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.domain.StoreCategoryProduct"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.TopClientsDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.TopClientsCriteria"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.PerTotalVisitedDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.PerTotalVisitedCriteria"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.NoStoreVisitedByIdStoreCategoryCriteria"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.CategoryAndNoStoresDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.ExtCategoryAndNoStoresDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.AlmacenAndProductsDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.AddAlmacenAndProductsDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.domain.Almacen"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.domain.ProductAlmacen"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.domain.ConfigurationStock"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.domain.ConfigurationStockProduct"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.UpdateAlmacenAndProductsDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.ConfigurationStockProductDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.AddConfigurationStockProductDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.AlmacenInfoDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.AlmacenInfoAndProductsDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.ProductByIdAlmacenCriteria"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.ConfigurationStockProductByIdCondigurationStockCriteria"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.ProductToSubAlmacenDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.RecoverProductFromSaleDTO"/>
+        <convert converter="bean" match="com.retailsbs.logistikapp.financial.dto.UpdateOrderAndRecoverToAlmacenDTO"/>
+        
+        <convert match="java.lang.Exception" converter="exception"/>
+                    
+	</allow>
+</dwr>

@@ -1,0 +1,10 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>Reporte de CRM
+<c:forEach var="str" items="${list}">
+"${str.store_name}"
+"${str.address1} - ${str.address2}. ${str.city_name}"
+"${str.store_code}","${str.retail_name}","${str.store_category_name}",<c:if test="${not empty supplier.shelf && supplier.shelf == 'S' && not empty str.shelf && str.shelf == 'S'}">Promoción</c:if><c:if test="${ useracegi.profile != 'DRI' }">
+
+FECHA,CHECK-IN,VIAJE,ESTATUS,CONDUCTOR,RUTA,COMENTARIO<c:forEach var="tra" items="${str.list_travel}"><c:choose><c:when test="${TRAVEL_CANCEL == tra.estado_travel}"><c:set var="edo_tra" value="${GLO_CANCEL}" /></c:when><c:when test="${TRAVEL_FINISHED == tra.estado_travel}"><c:set var="edo_tra" value="${GLO_FINISHED}" /></c:when><c:when test="${TRAVEL_PROGRAM == tra.estado_travel}"><c:set var="edo_tra" value="${GLO_PROGRAM}" /></c:when><c:when test="${TRAVEL_STARTED == tra.estado_travel}"><c:set var="edo_tra" value="${GLO_STARTED}" /></c:when></c:choose>
+<c:choose><c:when test="${TRAVEL_PROGRAM == tra.estado_travel}"><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${tra.schedule}" />,"${edo_tra}","${fn:replace(tra.travel_name,',','')}",,"${tra.user_name}","${tra.route_name}",</c:when><c:when test="${TRAVEL_STARTED == tra.estado_travel || TRAVEL_CANCEL == tra.estado_travel || TRAVEL_FINISHED == tra.estado_travel}"><fmt:formatDate type="date"	pattern="dd/MM/yyyy" value="${tra.schedule}" />,${tra.checkin != null ? 'Visitado' : 'No visitado'} <fmt:formatDate	value="${tra.checkin}" pattern="dd/MM HH:mm" /><c:if test="${tra.outrange != null && tra.outrange == 'S'}"> (Fuera de rango)</c:if>,"${fn:replace(tra.travel_name,',','')}","${edo_tra}", "${tra.user_name}","${tra.route_name}","${tra.note}"</c:when></c:choose></c:forEach></c:if>
+
+</c:forEach>

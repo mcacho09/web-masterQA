@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_city" >
+
+  <!--
+    Obtiene un listado de los cambios de estado por comercio de una transaccion
+  -->
+  <select id="getCity"
+          resultClass="com.retailsbs.logistikapp.retail.dto.CityDTO" 
+          parameterClass="com.retailsbs.logistikapp.retail.dto.GetCitySearchCriteria" >
+		SELECT  res.id_city, res.id_state, res.state_name, res.created, res.modified, 
+				res.login, res.orderby, res.active, res.code, res.name
+		FROM (
+		     SELECT row_number() over() as r, vrow.*
+		       FROM (
+					SELECT  cty.id_city, cty.id_state, stt.name as state_name, cty.created, cty.modified, 
+							cty.login, cty.orderby, cty.active, cty.code, cty.name
+					FROM lgk_city cty
+					JOIN lgk_state stt ON stt.id_state = cty.id_state
+					WHERE 1=1
+					<isNotNull property="active">
+						AND cty.active = #active:STRING#
+					</isNotNull>
+					<isNotNull property="id_state">
+						AND cty.id_state = #id_state:INTEGER#
+					</isNotNull>
+					order by orderby, name asc
+			    ) vrow
+		   ) res 
+		WHERE 1=1
+		<isNotNull property="lim_inf">AND <![CDATA[r >= #lim_inf#]]></isNotNull>
+		<isNotNull property="lim_sup">AND <![CDATA[r <= #lim_sup#]]></isNotNull>
+
+  </select>
+  
+  <select id="getCityTotalByCriteria"
+          resultClass="Integer" 
+          parameterClass="com.retailsbs.logistikapp.retail.dto.GetCitySearchCriteria" >
+
+		SELECT  COUNT(cty.id_city) as total
+		FROM lgk_city cty
+		JOIN lgk_state stt ON stt.id_state = cty.id_state
+		WHERE 1=1
+		<isNotNull property="active">
+			AND cty.active = #active:STRING#
+		</isNotNull>
+		<isNotNull property="id_state">
+			AND cty.id_state = #id_state:INTEGER#
+		</isNotNull>
+
+  </select>
+  
+</sqlMap>

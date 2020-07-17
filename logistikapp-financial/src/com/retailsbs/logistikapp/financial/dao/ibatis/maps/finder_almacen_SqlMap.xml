@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="finder_almacen" >
+
+  <select id="almacenNextValue" resultClass="Long">
+  	select nextval('lgk_almacen_id_almacen_seq'::regclass)
+  </select>
+  
+  <select id="getSubAlmacenInfo" 
+  	parameterClass="Long" 
+  	resultClass="com.retailsbs.logistikapp.financial.dto.AlmacenInfoDTO">
+  	select a.id_almacen, 
+  		a.code, u.username, 
+  		r.name as retail, 
+  		coalesce(sum(data.qty_pieces), 0) as qty_pieces, 
+  		coalesce(sum(data.qty_package), 0) as qty_package,
+  		coalesce(sum(data.total_pieces), 0) as total_pieces
+	from lgk_almacen a
+	join lgk_user u on u.id_user = a.id_user
+	join lgk_retail r on r.id_retail = a.id_retail
+	left join (
+		select id_almacen, sum( 
+		case coalesce(p.piece_in_box, 0)
+			when 0 then pa.qty 
+			else pa.qty - ((pa.qty / p.piece_in_box) * p.piece_in_box)
+		end
+		) as qty_pieces,
+		sum(
+		case coalesce(p.piece_in_box, 0)
+			when 0 then 0
+			else (pa.qty / p.piece_in_box)
+		end
+		) as qty_package,
+		sum(pa.qty) as total_pieces
+		from lgk_product p
+		join lgk_product_almacen pa on pa.id_product = p.id_product
+		where pa.type = 'VTA'
+		group by id_almacen
+	) data on data.id_almacen = a.id_almacen
+	where a.id_supplier = #id_almacen:INTEGER#
+	group by a.id_almacen, a.code, u.username, r.name
+  </select>
+
+  <select id="getSubAlmacenInfoByIdAlmacen" 
+  		parameterClass="Long" 
+  		resultClass="com.retailsbs.logistikapp.financial.dto.AlmacenInfoDTO">
+  	select a.id_almacen, a.code, u.username, r.name as retail, sum( 
+		case coalesce(p.piece_in_box, 0)
+			when 0 then pa.qty 
+			else pa.qty - ((pa.qty / p.piece_in_box) * p.piece_in_box)
+		end
+		) as qty_pieces,
+		sum(
+		case coalesce(p.piece_in_box, 0)
+			when 0 then 0
+			else (pa.qty / p.piece_in_box)
+		end
+		) as qty_package
+	from lgk_almacen a
+	join lgk_user u on u.id_user = a.id_user
+	join lgk_retail r on r.id_retail = a.id_retail
+	join lgk_product_almacen pa on pa.id_almacen = a.id_almacen
+	join lgk_product p on p.id_product = pa.id_product
+	where a.id_almacen = #id_almacen:INTEGER#
+	group by a.id_almacen, a.code, u.username, r.name
+  </select>
+
+  <update id="recoverProductFromSale" 
+  	parameterClass="com.retailsbs.logistikapp.financial.dto.RecoverProductFromSaleDTO">
+  	
+  	update lgk_product_almacen as lpa
+  	<isEqual property="operator" compareValue="+" >
+	set qty = qty + ord.oqty
+	</isEqual>
+	<isEqual property="operator" compareValue="-">
+	set qty = qty - ord.oqty
+	</isEqual>
+	from (
+	       select
+	         lod.id_product,
+	         case lod.product_type
+	         when 'PKG'
+	           then (select lod.quantity * lp.piece_in_box
+	                 from lgk_product lp
+	                 where lp.id_product = lod.id_product)
+	         else lod.quantity end as oqty
+	       from lgk_order_detail lod
+	       where lod.id_order = #id_order:INTEGER#
+	     ) ord
+	where ord.id_product = lpa.id_product
+	      and lpa.id_almacen = #id_almacen:INTEGER#
+	      and (lgk_product_almacen.type = 'VTA' or lgk_product_almacen.type = 'VDO')
+  	
+  </update>
+
+</sqlMap>

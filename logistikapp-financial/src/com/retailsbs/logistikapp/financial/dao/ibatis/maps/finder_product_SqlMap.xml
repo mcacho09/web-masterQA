@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="finder_product" >
+
+  <select id="selectProduct"
+              parameterClass="com.retailsbs.logistikapp.financial.dto.ProductSearchCriteria"
+              resultClass="com.retailsbs.logistikapp.financial.dto.ProductDTO">
+              
+    SELECT 'false' as QUERYID, pro.id_product, pro.id_category_product, cat.name as category, pro.created, pro.modified, pro.login, pro.orderby,
+              pro.active, pro.code, pro.name_short, pro.name_long, pro.price_sale, pro.price_cost, pro.image, bra.name as brand, pro.flag, 
+              pro.price_cost_box, pro.type, coalesce(pro.piece_in_box, 0) as piece_in_box, pro.price_sale_box, pro.tax  
+    FROM lgk_product pro
+    JOIN lgk_category_product cat on cat.id_category_product = pro.id_category_product
+    JOIN lgk_brand bra on bra.id_brand = pro.id_brand 
+    AND cat.id_supplier = #id_supplier:INTEGER#
+    WHERE 1=1
+    <isNotNull property="id_category_product">
+    	AND pro.id_category_product = #id_category_product:INTEGER#
+    </isNotNull>
+    <isNotNull property="id_brand">
+    	AND pro.id_brand = #id_brand:INTEGER#
+    </isNotNull>
+    <isNotNull property="active">
+    	AND pro.active = #active#
+    </isNotNull>
+    order by pro.active desc, cat.orderby, pro.orderby, pro.name_short
+    
+  </select>
+  
+  <delete id="delProductByIdCategoryProduct"  parameterClass="Long">
+  	delete from lgk_product
+  	where id_category_product = #id_category_product:INTEGER#
+  </delete>
+  
+  <select id="getProductsNameByIdSupplier" parameterClass="Long" resultClass="String">
+  	select p.name_short
+	from lgk_product p
+	join lgk_category_product cp on p.id_category_product = cp.id_category_product
+	where cp.id_supplier = #id_supplier:INTEGER# and p.active = 'S'
+	order by p.name_short asc
+  </select>
+  
+  <select id="getPriceProductsByIdOrder" parameterClass="Long" resultClass="Double">
+  	select sum(coalesce(od.price_sale,0.00)) as sale
+	from lgk_order_detail od
+	left join lgk_product p on p.id_product = od.id_product
+	where od.id_order = #id_order:INTEGER#
+	group by p.name_short
+	order by p.name_short
+  </select>
+  
+  <select id="getProductsToCreateSubStock"
+  	  resultClass="com.retailsbs.logistikapp.financial.dto.ProductToSubAlmacenDTO"
+  	  parameterClass="com.retailsbs.logistikapp.financial.dto.ProductSearchCriteria">
+  	  
+  	select 0 as min, 
+		0 as max, 
+		0 as qty,
+		coalesce(stock_general.qty, 0) as qty_stock_general,
+		p.id_product,
+			p.id_category_product,
+			p.created,
+			p.modified,
+			p.login,
+			p.orderby,
+			p.active,
+			p.code,
+			p.name_short,
+			p.name_long,
+			p.price_sale,
+			p.price_cost,
+			p.id_brand,
+			p.image,
+			p.tax,
+		coalesce(p.flag, 'N') as flag,
+		coalesce(p.price_cost_box, 0.0) as price_cost_box,
+		coalesce(p.piece_in_box, 0) as piece_in_box,
+		coalesce(p.type, 'PCS') as type,
+		coalesce(p.price_sale_box, 0.0) as price_sale_box
+	from lgk_product p
+	join lgk_category_product cp on cp.id_category_product = p.id_category_product
+	left join (
+		select pa.id_product, pa.qty
+		from lgk_product_almacen pa
+		join lgk_almacen a on a.id_almacen = pa.id_almacen
+		where id_user is null and id_retail is null and pa.type = 'VTA'
+	) stock_general on stock_general.id_product = p.id_product
+	where p.active = #active# and id_supplier = #id_supplier:INTEGER#
+  	  
+  </select>
+ 
+</sqlMap>

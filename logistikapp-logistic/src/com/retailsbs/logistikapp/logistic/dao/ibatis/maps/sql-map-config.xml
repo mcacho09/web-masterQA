@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<settings useStatementNamespaces="true"/>
+    <sqlMap resource="com/retailsbs/logistikapp/logistic/dao/ibatis/maps/lgk_route_SqlMap.xml"/>
+    <sqlMap resource="com/retailsbs/logistikapp/logistic/dao/ibatis/maps/lgk_route_store_SqlMap.xml"/>
+    <sqlMap resource="com/retailsbs/logistikapp/logistic/dao/ibatis/maps/lgk_travel_SqlMap.xml"/>
+    <sqlMap resource="com/retailsbs/logistikapp/logistic/dao/ibatis/maps/lgk_waybill_SqlMap.xml"/>
+    <sqlMap resource="com/retailsbs/logistikapp/logistic/dao/ibatis/maps/lgk_user_position_SqlMap.xml"/>
+    <sqlMap resource="com/retailsbs/logistikapp/logistic/dao/ibatis/maps/finder_travel_SqlMap.xml"/>
+    <sqlMap resource="com/retailsbs/logistikapp/logistic/dao/ibatis/maps/finder_waybill_SqlMap.xml"/>
+    <sqlMap resource="com/retailsbs/logistikapp/logistic/dao/ibatis/maps/finder_route_store_SqlMap.xml"/>
+    <sqlMap resource="com/retailsbs/logistikapp/logistic/dao/ibatis/maps/finder_route_SqlMap.xml"/>
+</sqlMapConfig>

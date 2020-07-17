@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_store">
+
+	<select id="getStore"
+		parameterClass="com.retailsbs.logistikapp.retail.dto.StoreSearchCriteria"
+		resultClass="com.retailsbs.logistikapp.retail.dto.StoreDTO">
+		SELECT  sto.id_store, sto.id_retail, sto.id_store_category, stc.name as category,
+				sto.id_country, sto.id_state, stt.name as state, sto.id_city, cty.name as city,
+				sto.id_locality, sto.created, sto.modified, sto.login, sto.orderby, sto.active,
+				sto.code, sto.name, coalesce(sto.latitude,0.0) as latitude, coalesce(sto.longitude, 0.0) as longitude, 
+				sto.address1, sto.address2, sto.postal, sto.shelf,
+				count(act.id_actives) as qty_actives
+		FROM lgk_store sto
+			JOIN lgk_state stt on stt.id_state = sto.id_state
+			JOIN lgk_city cty on cty.id_city = sto.id_city
+			JOIN lgk_store_category stc on stc.id_store_category = sto.id_store_category
+			left join lgk_actives act on act.id_store = sto.id_store
+		WHERE 1=1
+		<isNotNull property="id_retail">
+			AND sto.id_retail = #id_retail:integer#
+		</isNotNull>
+		<isNotNull property="id_store">
+			AND sto.id_store = #id_store:INTEGER#
+		</isNotNull>
+		group by sto.id_store, stc.name, stt.name, cty.name
+		ORDER BY sto.active desc, sto.orderby, sto.id_city, sto.name
+	</select>
+
+
+	<!-- Obtiene una lista de objetos de dominio de store a partir de una lista 
+		de ids -->
+	<select id="getStoreByIds"
+		parameterClass="com.retailsbs.logistikapp.retail.dto.StoreByIdsSearchCriteria"
+		resultClass="com.retailsbs.logistikapp.retail.domain.Store">
+		select id_store, code, name, latitude, longitude, address1, address2, postal, shelf
+		from lgk_store
+		where id_store in
+		<iterate property="ids" open="(" close=")" conjunction=",">#ids[]#</iterate>
+		order by orderby
+	</select>
+
+
+	<!-- Obtiene una lista de objetos de dominio de store de un retail -->
+	<select id="getStoreByIdRetail" parameterClass="Long"
+		resultClass="com.retailsbs.logistikapp.retail.domain.Store">
+		select id_store, code, name, latitude, longitude, address1, address2, postal
+		from lgk_store
+		where id_retail = #id_retail:integer#
+		order by orderby
+	</select>
+
+
+	<!-- Obtiene una lista de objetos de dominio de store de un retail que no esten usados en alguna ruta -->
+	<select id="getAvailableStoreByIdRetail" 
+			parameterClass="com.retailsbs.logistikapp.retail.dto.AvailableStoreByIdRetail"
+			resultClass="com.retailsbs.logistikapp.retail.domain.Store">
+
+			SELECT str.id_store, str.code, str.name, str.latitude, str.longitude, str.address1, str.address2, str.postal
+			FROM lgk_store str
+			JOIN lgk_retail ret ON ret.id_retail = str.id_retail
+				AND ret.id_supplier = #idSupplier:INTEGER#
+			WHERE str.id_retail = #idRetail:INTEGER#
+			AND NOT EXISTS(
+				SELECT id_store 
+				FROM lgk_route_store rst
+				JOIN lgk_route rut ON rut.id_route = rst.id_route
+					AND rut.id_supplier = #idSupplier:INTEGER#
+				WHERE rst.id_store = str.id_store
+			)
+			AND str.active = 'S'
+			ORDER BY str.name
+		
+	</select>
+	
+	<select id="getAvailableStoreByIdRetailAndIdRoute" 
+		parameterClass="com.retailsbs.logistikapp.retail.dto.AvailableStoreByIdRetailIdRoute"
+		resultClass="com.retailsbs.logistikapp.retail.domain.Store">
+
+		SELECT str.id_store, str.code, str.name, str.latitude, str.longitude, str.address1, str.address2, str.postal
+		FROM lgk_store str
+		JOIN lgk_retail ret ON ret.id_retail = str.id_retail
+			AND ret.id_supplier = #id_supplier:INTEGER#
+		WHERE str.id_retail = #id_retail:INTEGER#
+		AND NOT EXISTS(
+			SELECT id_store 
+			FROM lgk_route_store rst
+			JOIN lgk_route rut ON rut.id_route = rst.id_route
+				AND rut.id_supplier = #id_supplier:INTEGER#
+			WHERE rst.id_store = str.id_store
+			AND rst.id_route != #id_route:INTEGER#
+		)
+		AND str.active = 'S'
+		ORDER BY str.name
+		
+	</select>
+	
+	<!-- Obtiene una lista de objetos de dominio de store de un storeCategory que no esten usados en alguna ruta -->
+	<select id="getAvailableStoreByIdStoreCategory" 
+			parameterClass="com.retailsbs.logistikapp.retail.dto.AvailableStoreByIdStoreCategory"
+			resultClass="com.retailsbs.logistikapp.retail.domain.Store">
+		
+		SELECT  str.id_store, str.code, str.name, str.latitude, str.longitude, 
+				str.address1, str.address2, str.postal
+		FROM lgk_store str
+		JOIN lgk_retail ret ON ret.id_retail = str.id_retail
+			AND ret.id_supplier = #idSuppler:INTEGER#
+		WHERE str.id_store_category =  #idStorecategory:INTEGER#
+		AND NOT EXISTS(
+			SELECT id_store 
+			FROM lgk_route_store rst
+			JOIN lgk_route rut ON rut.id_route = rst.id_route
+				AND rut.id_supplier = #idSuppler:INTEGER#
+			WHERE rst.id_store = str.id_store
+		)
+		AND str.active = 'S'
+		ORDER BY str.name
+		
+	</select>
+	
+	<select id="getAvailableStoreByIdStoreCategoryAndIdRoute" 
+			parameterClass="com.retailsbs.logistikapp.retail.dto.AvailableStoreByIdStoreCategoryIdRoute"
+			resultClass="com.retailsbs.logistikapp.retail.domain.Store">
+		
+			SELECT str.id_store, str.code, str.name, str.latitude, str.longitude, str.address1, str.address2, str.postal
+			FROM lgk_store str
+			JOIN lgk_retail ret ON ret.id_retail = str.id_retail
+				AND ret.id_supplier = #idSupplier:INTEGER#
+			WHERE str.id_store_category =  #idStorecategory:INTEGER#
+			AND NOT EXISTS(
+				SELECT id_store 
+				FROM lgk_route_store rst
+				JOIN lgk_route rut ON rut.id_route = rst.id_route
+					AND rut.id_supplier = #idSupplier:INTEGER#
+				WHERE rst.id_store = str.id_store
+				AND rst.id_route != #idRoute:INTEGER#
+			)
+			AND str.active = 'S'
+			ORDER BY str.name
+		
+	</select>
+	
+	<!-- Obtiene una lista de objetos de dominio de store activos de un retail -->
+	
+	<select id="getIdStoresActiveByIdRetail" parameterClass="Long" resultClass="Long">
+		select id_store
+		from lgk_store
+		where active = 'S'
+		and id_retail = #id_retail:integer#
+		order by orderby, name
+	</select>
+	
+	<!-- Obtiene una lista de objetos de dominio de store activos de  retail -->
+    <select id="getIdStoresActiveByIdsRetail" parameterClass="com.retailsbs.logistikapp.retail.dto.StoreActiveByIdsRetailSearchCriteria" resultClass="Long">
+        select id_store
+        from lgk_store
+        where active = 'S'
+        <isNotNull property="ids">
+            and id_retail in
+            <iterate property="ids" open="(" close=")" conjunction=",">#ids[]#</iterate>       
+            order by orderby, name
+        </isNotNull>
+        
+    </select>
+	
+
+	<!-- Obtiene una lista de objetos de dominio de store de un retail category -->
+	<select id="getStoreByIdRetailCategory" parameterClass="Long"
+		resultClass="com.retailsbs.logistikapp.retail.domain.Store">
+		select sto.id_store, sto.code, sto.name, sto.latitude, sto.longitude,
+		sto.address1, sto.address2, sto.postal
+		from lgk_retail ret
+		join lgk_store sto on sto.id_retail = ret.id_retail
+		where ret.id_retail_category = #id_retail_category:integer#
+		order by ret.orderby, sto.orderby
+	</select>
+
+	<!-- Obtiene un objeto con informacion extendida del local -->
+	<select id="getStoreExtById" parameterClass="Long"
+		resultClass="com.retailsbs.logistikapp.retail.dto.StoreDTO">
+		select sto.id_store, sto.id_store_category, stc.name as category, sto.id_retail,
+		sto.id_country, sto.id_state, stt.name as state, sto.id_city, cty.name as city,
+		sto.id_locality, sto.created, sto.modified, sto.login, sto.orderby, sto.active,
+		sto.code, sto.name, sto.latitude, sto.longitude, sto.address1, sto.address2, sto.postal
+		from lgk_store sto
+		join lgk_store_category stc on stc.id_store_category = sto.id_store_category
+		join lgk_state stt on stt.id_state = sto.id_state
+		join lgk_city cty on cty.id_city = sto.id_city
+		where sto.id_store = #id_store:INTEGER#
+	</select>
+	
+	<select id="getTotalStoreByIdSupplier"
+			parameterClass="Long"
+			resultClass="Integer">
+
+		SELECT COUNT(*)
+		FROM lgk_store str
+		JOIN lgk_retail ret ON ret.id_retail = str.id_retail
+			AND ret.id_supplier = #id_supplier:INTEGER#			
+
+	</select>	
+	
+	<select id="getStoreByIdSupplier"
+			parameterClass="Long"
+			resultClass="com.retailsbs.logistikapp.retail.domain.Store">
+
+		SELECT sto.id_store, sto.code, sto.name, sto.latitude, sto.longitude,
+		sto.address1, sto.address2, sto.postal
+		FROM lgk_store sto
+		JOIN lgk_retail ret ON ret.id_retail = sto.id_retail
+			AND ret.id_supplier = #id_supplier:INTEGER#	
+	</select>
+	
+	<!-- Obtiene un listado retail y la cantidad total de locales para cada uno -->
+    <select id="getStoreByRetail"
+                 parameterClass="Long"
+                 resultClass="com.retailsbs.logistikapp.retail.dto.StoreByRetailDTO">
+		select ret.id_retail, ret.name as retail_name, coalesce(count(str.id_store),0) as tot_store
+		from lgk_store str
+		right join lgk_retail ret on ret.id_retail = str.id_retail
+		where ret.id_supplier = #id_supplier:INTEGER#
+		group by ret.id_retail, ret.name
+		order by ret.name
+	</select>
+	
+	<!-- Obtiene un listado de categorias de local y la cantidad de local para cada una -->
+    <select id="getStoreByCategory"
+                 parameterClass="Long"
+                 resultClass="com.retailsbs.logistikapp.retail.dto.StoreByCategoryDTO">
+		select cat.id_store_category as id, cat.name, coalesce(count(sto.id_store),0) as qty
+		from lgk_store_category cat
+		left join lgk_store sto on sto.id_store_category = cat.id_store_category
+		where cat.id_supplier = #id_supplier:INTEGER#
+		group by cat.id_store_category, cat.name
+		order by cat.name
+	</select>
+	
+   <select id="getStoreByRoute"
+        parameterClass="Long"
+        resultClass="com.retailsbs.logistikapp.retail.dto.StoreByRouteDTO">
+        SELECT st.id_store, st.name, st.code, st.latitude, st.longitude, st.address1, st.address2, st.postal, rut.color, st.shelf, st.id_retail
+        FROM lgk_store st  
+        INNER JOIN lgk_route_store rst
+		JOIN lgk_route rut ON rut.id_route = rst.id_route
+        ON st.id_store = rst.id_store
+        AND rst.id_route = #id_route:INTEGER#
+        ORDER BY st.name
+    </select>    
+    <select id="getStoreNotInTravel"
+            parameterClass="com.retailsbs.logistikapp.retail.dto.StoreNotInTravelSearchCriteria"
+            resultClass="com.retailsbs.logistikapp.retail.dto.StoreByRouteDTO">
+            SELECT st.id_store id_store, st.name,  st.latitude, st.longitude, st.code, st.address1, st.address2, st.postal, st.id_retail, st.postal, st.shelf       
+            FROM lgk_store st
+            INNER JOIN (
+                SELECT rt_st.id_store id_store, wb.id_waybill id_waybill, wb.id_travel id_travel,  wb.orderby orderby, wb.status, wb.comment, wb.checkin
+                FROM (select id_store from lgk_route_store where id_route =  #id_route:INTEGER#) rt_st
+                LEFT JOIN 
+                (SELECT id_waybill, id_travel, id_store, orderby, status, comment, checkin  from lgk_waybill where id_travel =  #id_travel:INTEGER#) wb
+                ON rt_st.id_store = wb.id_store
+                WHERE id_waybill IS NULL) wb_route
+            ON st.id_store = wb_route.id_store                         
+    </select>  
+    
+    <select id="getStoreAvailableInTravel"
+            parameterClass="com.retailsbs.logistikapp.retail.dto.StoreAvailableInTravelCriteria"
+            resultClass="com.retailsbs.logistikapp.retail.dto.StoreByRouteDTO">
+            select st.id_store id_store, st.name,  st.latitude, st.longitude, st.code, st.address1, st.address2, st.postal, st.id_retail, st.postal, st.shelf
+            from lgk_store  st
+            where id_store not in (
+            	select id_store from lgk_waybill where id_travel = #id_travel:integer#) 
+            and id_retail in (
+            	select id_retail from lgk_retail where id_supplier = #id_supplier:integer#) 
+            	<isNotNull property="store_name">and st.name ilike '%$store_name$%'</isNotNull>                  
+           
+           <!-- 
+            select st.id_store id_store, st.name,  st.latitude, st.longitude, st.code, st.address1, st.address2, st.postal, st.id_retail, st.postal, st.shelf 
+            from lgk_route_store rs
+			JOIN lgk_store st on st.id_store = rs.id_store
+			where rs.id_route = #id_route:integer# and st.id_store not in (
+				select w.id_store from lgk_waybill w
+				join lgk_travel t on t.id_travel = w.id_travel
+				where t.id_travel = #id_travel:integer#
+			)
+			order by st.name ASC
+			-->
+    </select>  
+        	
+	<select id="getStoreAvailableByRoute"
+            parameterClass="com.retailsbs.logistikapp.retail.dto.StoreAvailableInRouteCriteria"
+            resultClass="com.retailsbs.logistikapp.retail.dto.StoreDTO">
+            
+            SELECT distinct st.id_store, st.name, st.address1, st.address2, st.code, st.latitude, st.longitude, st.postal, st.shelf, stores.color, stores.name as route
+             FROM lgk_store st
+             JOIN (
+                    SELECT rst.id_store, rt.color, rt.name
+                      FROM lgk_route_store rst
+                      JOIN lgk_route rt ON rt.id_route = rst.id_route
+                       AND rt.id_route in <iterate property="id_route" open="(" close=")" conjunction="," >#id_route[]#</iterate>
+                     WHERE 1=1
+                       AND rst.id_store NOT IN (
+                                                 SELECT rs.id_store
+                                                   FROM lgk_route_store rs
+                                                   JOIN lgk_route rt ON rt.id_route = rs.id_route
+                                                    AND rt.id_route in <iterate property="id_route" open="(" close=")" conjunction="," >#id_route[]#</iterate>
+                                                   JOIN lgk_waybill wb ON wb.id_store = rs.id_store
+                                                   JOIN lgk_travel tv ON tv.id_travel = wb.id_travel
+                                                   AND tv.status in ('PRO','TRA')
+                                               )
+                       
+                 GROUP BY rst.id_store, rt.color, rt.name
+                  ) stores ON stores.id_store = st.id_store
+         ORDER BY st.name
+			                         
+    </select>
+    <select id="getStoreInTravelByRoute"
+            parameterClass="com.retailsbs.logistikapp.retail.dto.StoreAvailableInRouteCriteria"
+            resultClass="com.retailsbs.logistikapp.retail.dto.StoreDTO">
+
+            SELECT distinct st.id_store, st.name, st.address1, st.address2, st.code, st.latitude, st.longitude, st.postal, st.shelf, stores.color, stores.name as route, st.email
+             FROM lgk_store st
+             JOIN (
+                    SELECT rst.id_store, rt.color, rt.name
+                      FROM lgk_route_store rst
+                      JOIN lgk_route rt ON rt.id_route = rst.id_route
+                       AND rt.id_route in <iterate property="id_route" open="(" close=")" conjunction="," >#id_route[]#</iterate>
+                     WHERE 1=1
+                       AND rst.id_store IN (
+                                             SELECT rs.id_store
+                                               FROM lgk_route_store rs
+                                               JOIN lgk_route rt ON rt.id_route = rs.id_route
+                                                AND rt.id_route in <iterate property="id_route" open="(" close=")" conjunction="," >#id_route[]#</iterate>
+                                               JOIN lgk_waybill wb ON wb.id_store = rs.id_store
+                                               JOIN lgk_travel tv ON tv.id_travel = wb.id_travel
+                                               AND tv.status in ('PRO','TRA')
+                                           )
+                       
+                 GROUP BY rst.id_store, rt.color, rt.name
+                  ) stores ON stores.id_store = st.id_store
+         ORDER BY st.name
+             
+    </select>
+    
+	<select id="getStoreInOtherTravelByCriteria"
+            parameterClass="com.retailsbs.logistikapp.retail.dto.StoreSearchCriteria"
+            resultClass="com.retailsbs.logistikapp.retail.dto.StoreDTO">
+
+            SELECT st.id_store, st.name, st.address1, st.address2, st.code, st.latitude, st.longitude, st.postal, st.shelf, rt.name as route, rt.color
+            FROM lgk_store st
+            JOIN 
+                 (
+                   SELECT stores.id_store 
+                   FROM (
+                          SELECT rst.id_store from lgk_route_store rst
+                          JOIN lgk_waybill wb ON rst.id_store = wb.id_store
+                          WHERE rst.id_route IN <iterate property="idsrt" open="(" close=")" conjunction="," >#idsrt[]#</iterate>
+                          GROUP BY rst.id_store
+                        ) stores
+                   LEFT JOIN (
+                               SELECT wb.id_store
+                               FROM lgk_waybill wb
+                               WHERE wb.id_travel = #id_travel:integer#
+                             ) tv ON stores.id_store = tv.id_store
+                   WHERE tv.id_store IS NULL
+                 ) stores ON stores.id_store = st.id_store      
+            JOIN lgk_route_store rst ON rst.id_store = stores.id_store
+            JOIN lgk_route rt ON rt.id_route = rst.id_route
+            ORDER BY st.name   
+	                   
+    </select>
+	
+	<select id="getAvailableStoreByIdSupplier"
+			parameterClass="Long"
+			resultClass="com.retailsbs.logistikapp.retail.domain.Store">
+			
+			SELECT sto.id_store, sto.code, sto.name, sto.latitude, sto.longitude,
+			sto.address1, sto.address2, sto.postal, st.shelf
+			FROM lgk_store sto
+			JOIN lgk_retail ret ON ret.id_retail = sto.id_retail
+				AND ret.id_supplier = #id_supplier:INTEGER#
+			WHERE NOT EXISTS(
+				SELECT id_store 
+				FROM lgk_route_store rst
+				JOIN lgk_route rut ON rut.id_route = rst.id_route
+					AND rut.id_supplier = #id_supplier:INTEGER#
+				WHERE rst.id_store = sto.id_store
+			)
+			AND sto.active = 'S'
+			ORDER BY sto.name			                   
+		
+	</select>
+	
+	<select id="getAvailableStoreByIdSupplierAndIdRoute"
+			parameterClass="com.retailsbs.logistikapp.retail.dto.AvailableStoreByIdSupplierIdRoute"
+			resultClass="com.retailsbs.logistikapp.retail.domain.Store">
+			
+			SELECT sto.id_store, sto.code, sto.name, sto.latitude, sto.longitude, sto.address1, sto.address2, sto.postal, sto.shelf
+			FROM lgk_store sto
+			JOIN lgk_retail ret ON ret.id_retail = sto.id_retail
+				AND ret.id_supplier = #id_supplier:INTEGER#
+			WHERE NOT EXISTS(
+				SELECT id_store 
+				FROM lgk_route_store rst
+				JOIN lgk_route rut ON rut.id_route = rst.id_route
+					AND rut.id_supplier = #id_supplier:INTEGER#
+				WHERE rst.id_store = sto.id_store
+				AND rut.id_route != #id_route:INTEGER#
+			)
+			AND sto.active = 'S'
+			ORDER BY sto.name
+
+	</select>
+	
+	<select id="getTotalStoreByCriteria" 
+		parameterClass="com.retailsbs.logistikapp.retail.dto.TotalStoreCreateCriteria"
+		resultClass="Integer">
+
+		SELECT COUNT(*)
+		FROM lgk_store str
+		JOIN lgk_waybill wbl ON wbl.id_store = str.id_store
+		<isEqual property="check" compareValue="true">
+			AND wbl.checkin IS NOT NULL
+		</isEqual>
+		<isEqual property="noCheck" compareValue="true">
+			AND wbl.checkin IS NULL
+		</isEqual>
+		JOIN lgk_travel tra ON tra.id_travel = wbl.id_travel
+			AND tra.status != 'CRE'
+		JOIN lgk_route rut ON rut.id_route = tra.id_route
+		WHERE 1=1
+		<isNotNull property="schedule">
+			<![CDATA[ AND tra.schedule = #schedule:TIMESTAMP# ]]> 
+		</isNotNull>
+		<isNotNull property="id_supplier">
+			AND rut.id_supplier = #id_supplier:INTEGER#
+		</isNotNull>
+		<isNotNull property="fini">
+			<![CDATA[ AND tra.schedule >= #fini:TIMESTAMP# ]]>
+		</isNotNull>
+		<isNotNull property="ffin">
+			<![CDATA[ AND tra.schedule <= #ffin:TIMESTAMP# ]]>
+		</isNotNull>
+	
+
+	</select>
+
+    <select id="getStoreInfo"
+                parameterClass="com.retailsbs.logistikapp.retail.dto.StoreInfoSearchCriteria"
+                resultClass="com.retailsbs.logistikapp.retail.dto.StoreInfoDTO">
+		
+        select str.id_store, str.code as store_code, str.name as store_name, str.latitude, 
+                  str.longitude, str.address1, str.address2, str.id_city, cty.name as city_name,
+                  str.id_retail, ret.name as retail_name, 
+                  str.id_store_category, stc.name as store_category_name, str.shelf, str.email
+		from lgk_store str
+		join lgk_store_category stc on stc.id_store_category = str.id_store_category
+		<isNotNull property="id_supplier">and stc.id_supplier = #id_supplier:integer#</isNotNull>
+		join lgk_retail ret on ret.id_retail = str.id_retail
+		<isNotNull property="id_supplier">and ret.id_supplier = #id_supplier:integer#</isNotNull>
+		join lgk_city cty on cty.id_city = str.id_city		
+		where 1=1
+		<isNotNull property="active">and str.active = #active:varchar#</isNotNull>
+		<isNotNull property="store_name">and str.name ilike '%$store_name$%'</isNotNull>
+		<isNotNull property="store_code">and str.code ilike '%$store_code$%'</isNotNull>
+
+	</select>
+
+	<select id="getStoreByNameAddress"
+		parameterClass="com.retailsbs.logistikapp.retail.dto.StoreByNameAddress"
+		resultClass="com.retailsbs.logistikapp.retail.dto.StoreCallCenterDTO">
+		SELECT st.id_store, st.name as store_name, st.latitude, st.longitude, st.address1, st.address2, st.active, s.id_supplier
+		FROM lgk_supplier s
+		JOIN lgk_retail r    on r.id_supplier = s.id_supplier
+		LEFT JOIN lgk_store st    on st.id_retail  = r.id_retail
+		LEFT JOIN lgk_waybill way on way.id_store  = st.id_store
+		LEFT JOIN lgk_travel tra  on tra.id_travel = way.id_travel		
+		where 1 = 1
+		<isNotNull property="id_supplier">
+				AND s.id_supplier = #id_supplier:INTEGER#
+		</isNotNull>
+		<isNotNull property="direccion">
+				AND (st.address1 ILIKE '%$direccion$%' OR st.address2 ILIKE '%$direccion$%' OR CAST(st.postal AS text) ILIKE '%$direccion$%')
+		</isNotNull>
+		<isNotNull property="nombre">
+				AND st.name ILIKE '%$nombre$%'
+		</isNotNull>
+		<!--isNotNull property="schedule">
+				 <![CDATA[ AND (tra.schedule >= #schedule:TIMESTAMP# OR tra.schedule IS NULL) ]]>
+		</isNotNull-->
+		GROUP BY st.id_store, st.name, st.latitude, st.longitude, st.address1, st.address2, st.active, s.id_supplier
+		ORDER BY st.name		   
+	</select>
+	
+	<delete id="delStoreByIdStoreCategory" parameterClass="Long">
+		delete from lgk_store
+		where id_store_category = #id_store_category:INTEGER#
+	</delete>
+	
+	<select id="getAvailableStoreByCriteria"
+			parameterClass="com.retailsbs.logistikapp.retail.dto.AvailableStoreSearchCriteria"
+			resultClass="com.retailsbs.logistikapp.retail.dto.AvailableStoreDTO">
+
+			SELECT  sto.id_store, sto.code, sto.name, sto.latitude, sto.longitude,
+					sto.address1, sto.address2, sto.postal, sto.shelf
+			FROM lgk_store sto
+			JOIN lgk_retail ret ON ret.id_retail = sto.id_retail
+				AND ret.id_supplier = #idSupplier:INTEGER#
+			WHERE NOT EXISTS(
+				SELECT id_store 
+				FROM lgk_route_store rst
+				JOIN lgk_route rut ON rut.id_route = rst.id_route
+					AND rut.id_supplier = #idSupplier:INTEGER#
+				WHERE rst.id_store = sto.id_store
+				<isNotNull property="idRoute">
+					AND rut.id_route != #idRoute:INTEGER#
+				</isNotNull>
+			)
+			AND sto.active = 'S'
+			<isNotNull property="idRetail">
+				AND sto.id_retail = #idRetail:INTEGER#
+			</isNotNull>
+			<isNotNull property="idStorecategory">
+				AND sto.id_store_category = #idStorecategory:INTEGER#
+			</isNotNull>
+			ORDER BY sto.name			                   
+
+	</select>
+	
+	<select id="getStoresByIdsRoute"
+		parameterClass="com.retailsbs.logistikapp.retail.dto.StoreByIdsSearchCriteria"
+		resultClass="com.retailsbs.logistikapp.retail.dto.StoreRouteDTO">
+		select s.*, r.color, r.name as route
+		from lgk_store s
+		join lgk_route_store rs on rs.id_store = s.id_store
+		join lgk_route r on r.id_route = rs.id_route
+		where rs.id_route in
+		<iterate property="ids" open="(" close=")" conjunction=",">#ids[]#</iterate>
+		group by s.id_store, r.color, r.name
+	</select>
+	
+	<select id="getTotalStore" resultClass="Long">
+		select count(id_store) from lgk_store where id_retail = #id_retail:INTEGER#
+	</select>
+
+</sqlMap>

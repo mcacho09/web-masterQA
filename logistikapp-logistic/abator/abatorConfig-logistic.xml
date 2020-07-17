@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE abatorConfiguration PUBLIC "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN"
+  "http://ibatis.apache.org/dtd/abator-config_1_0.dtd">
+<abatorConfiguration>
+
+
+	<abatorContext generatorSet="Java5">
+        <jdbcConnection driverClass="org.postgresql.Driver"
+                                    connectionURL="jdbc:postgresql://174.142.6.164:5432/logistikapp"
+                                    userId="postgres"
+                                    password="kz8WmkTHFG">
+            <classPathEntry location="C:\Users\01936\Downloads\postgresql-9.1-903.jdbc4.jar" />
+		</jdbcConnection>
+
+		
+
+		<javaTypeResolver >
+			<property name="forceBigDecimals" value="false" />
+    	</javaTypeResolver>
+
+	    <javaModelGenerator targetPackage="domain" targetProject="logistikapp-logistic/abator" />
+	
+	    <sqlMapGenerator targetPackage="maps" targetProject="logistikapp-logistic/abator" />
+	    
+	    <daoGenerator type="SPRING" targetPackage="dao" targetProject="logistikapp-logistic/abator">
+	    	<property name="enableSubPackages" value="false" />
+	    </daoGenerator>
+
+
+<table schema="" tableName="lgk_product" domainObjectName="Product"
+               enableInsert="true" enableSelectByPrimaryKey="true" enableSelectByExample="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
+               enableDeleteByExample="false" enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" selectByExampleQueryId="false">
+        
+            <generatedKey column="id_product" sqlStatement="SELECT LASTVAL()" identity="true"/>
+        
+            <columnOverride column="id_product" 			property="id_product"			javaType="Long" 			jdbcType="SERIAL"/>
+            <columnOverride column="id_category_product"	property="id_category_product"	javaType="Long" 			jdbcType="INTEGER"/>
+            <columnOverride column="id_brand"				property="id_brand"				javaType="Long"				jdbcType="INTEGER"/>
+            <columnOverride column="created" 				property="created" 				javaType="java.util.Date" 	jdbcType="TIMESTAMP"/>
+            <columnOverride column="modified" 				property="modified" 			javaType="java.util.Date" 	jdbcType="TIMESTAMP"/>
+            <columnOverride column="login" 					property="login" 				javaType="String" 			jdbcType="VARCHAR"/>
+            <columnOverride column="orderby"     			property="orderby" 			   	javaType="Integer" 			jdbcType="INT"/>
+            <columnOverride column="active" 				property="active" 				javaType="String" 			jdbcType="VARCHAR"/>
+            <columnOverride column="code"        			property="code" 		   		javaType="String" 			jdbcType="VARCHAR"/>
+            <columnOverride column="name_short" 			property="name_short" 			javaType="String" 			jdbcType="VARCHAR"/>
+            <columnOverride column="name_long" 				property="name_long" 			javaType="String" 			jdbcType="VARCHAR"/>
+            <columnOverride column="price_sale"				property="price_sale"			javaType="Double"			jdbcType="DECIMAL"/>
+            <columnOverride column="price_cost"				property="price_cost"			javaType="Double"			jdbcType="DECIMAL"/>
+            <columnOverride column="image"					property="image"				javaType="String" 			jdbcType="VARCHAR"/>
+            <columnOverride column="flag"					property="flag"					javaType="String"			jdbcType="VARCHAR"/>
+            <columnOverride column="price_cost_box"			property="price_cost_box"		javaType="Double"			jdbcType="DECIMAL"/>
+            <columnOverride column="price_sale_box"			property="price_sale_box"		javaType="Double"			jdbcType="DECIMAL"/>
+            <columnOverride column="piece_in_box"			property="piece_in_box"			javaType="Long"				jdbcType="INT"/>
+            <columnOverride column="type"					property="type"					javaType="String"			jdbcType="VARCHAR"/>
+            <columnOverride column="tax"					property="tax"					javaType="Integer"				jdbcType="INTEGER"/>
+        </table>
+
+	</abatorContext>
+  
+</abatorConfiguration>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_actives_visited" >
+
+  <delete id="deleteActivesVisitedByIdActive" parameterClass="Long">
+  	delete from lgk_actives_visited where id_actives = #id_active:INTEGER#
+  </delete>
+  
+  <select id="getVisitedList" 
+  	parameterClass="com.retailsbs.logistikapp.retail.dto.ActivesVisitedCriteria" 
+  	resultClass="com.retailsbs.logistikapp.retail.dto.ActivesVisitedExt">
+  	
+  	select av.*, s.name as store, s.latitude as store_lat, s.longitude as store_lng
+  	from lgk_actives_visited av
+  	join lgk_store s on s.id_store = av.id_store
+  	where 1=1 
+	  	<isNotNull property="id_active">and av.id_actives = #id_active:INTEGER#</isNotNull>
+	  	<isNotNull property="id_store">and av.id_store = #id_store:INTEGER#</isNotNull>
+	  	<isNotNull property="dateInit"><![CDATA[ and av.created::date >= #dateInit:DATE# ]]></isNotNull>
+	  	<isNotNull property="dateEnd"><![CDATA[ and av.created::date <= #dateEnd:DATE# ]]></isNotNull>
+  		
+  </select>
+  
+  <select id="getActivesAndVisits" 
+  	parameterClass="com.retailsbs.logistikapp.retail.dto.ActivesAndVisitsCriteria" 
+  	resultClass="com.retailsbs.logistikapp.retail.dto.ActivesAndVisitsDTO">
+
+	select a.id_actives as idActives, 
+		a.code, 
+		a.image, 
+		coalesce(av.visited, 'N') as visited, 
+		av.created::date as last_visited,
+		coalesce(av.problems, 'N') as problems
+	from lgk_actives a
+	left join (
+		select id_actives, 
+			created::date, 
+			case count(id_actives_visited) when 0 then 'N' else 'S' end visited, 
+			case comment is not null or image1 is not null or image2 is not null when true then 'S' else 'N' end as problems
+		from lgk_actives_visited
+		where 1=1 
+			<isNotNull property="date">
+			and created::date = #date:DATE#
+		</isNotNull>
+		<isNotNull property="id_user">
+			and id_user = #id_user:INTEGER#
+		</isNotNull>
+		group by id_actives, created::date, comment, image1, image2
+	) av on av.id_actives = a.id_actives
+	where 1=1 
+		<isNotNull property="id_store">
+			and a.id_store = #id_store:INTEGER# 
+		</isNotNull>
+	group by a.id_actives, av.visited, av.created::date, av.problems
+	order by a.code
+	
+  </select>
+  
+  <select id="verifyAndRegistCheckIn" parameterClass="com.retailsbs.logistikapp.retail.dto.VerifyAndRegistCheckInCriteria" resultClass="String">
+  	select case (coalesce(sum(av.visited), 0) >= count(a.id_actives) and coalesce(sum(av.visited), 0) + count(a.id_actives) > 0) when true then 'S' else 'N' end
+	from lgk_actives a
+	left join (
+		select a.id_actives, count(a.id_actives) as visited
+		from lgk_actives a
+		join lgk_actives_visited av on av.id_actives = a.id_actives
+		where av.created::date = #date:DATE#
+		group by a.id_actives
+	) av on av.id_actives = a.id_actives
+	where id_store = #id_store:INTEGER#
+  </select>
+  
+</sqlMap>

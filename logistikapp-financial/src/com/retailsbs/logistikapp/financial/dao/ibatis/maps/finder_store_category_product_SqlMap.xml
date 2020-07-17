@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_store_category_product">
+
+	<select id="getProductByCategoryStoreToUpdate" 
+		parameterClass="com.retailsbs.logistikapp.financial.dto.ProductByCategoryStoreToUpdateCriteria" 
+		resultClass="com.retailsbs.logistikapp.financial.dto.ProductByCategoryStoreToUpdateDTO">
+	
+		select p.id_product, p.code, p.name_short, p.name_long, p.price_sale, p.price_cost, data.id_store_category_product, data.id_store_category, data.price_sale_category
+		from lgk_product p
+		left join lgk_category_product cp on cp.id_category_product = p.id_category_product
+		left join (
+			select id_store_category_product, scp.id_store_category, scp.price_sale as price_sale_category, id_product
+			from lgk_store_category_product scp
+			where id_store_category = #id_store_category:INTEGER#
+		) data on data.id_product = p.id_product
+		where id_supplier = #id_supplier:INTEGER#
+		order by p.name_short ASC
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_user">
+
+	<select id="getUserByCriteria"
+                 parameterClass="com.retailsbs.logistikapp.user.dto.UserSearchCriteria"
+                 resultClass="com.retailsbs.logistikapp.user.dto.UserDTO">
+        select usr.id_user, usr.created, usr.modified, usr.login, usr.orderby,
+                   usr.active, usr.username, usr.userlogin, usr.passwd, usr.profile,
+                   usr.superuser, usr.email, usr.image, usr.phone1, usr.phone2, usr.job
+		  from lgk_user usr
+		    join lgk_access acc on acc.id_user = usr.id_user
+		    <isNotNull property="id_supplier">
+		   		and acc.id_supplier = #id_supplier:integer#
+            </isNotNull>
+		    <isNotNull property="profile">
+		        where 1 = 1
+                and usr.profile = #profile:VARCHAR#
+            </isNotNull>
+            <isNotNull property="username">
+                and usr.username = #username:VARCHAR#
+            </isNotNull>
+		 order by usr.orderby, usr.username
+	</select>
+
+    <select id="getAdminUserList" parameterClass="com.retailsbs.logistikapp.user.dto.AdminUserSearchCriteria"
+    	resultClass="com.retailsbs.logistikapp.user.dto.AdminUserDTO">
+    	select usr.id_user, usr.created, usr.modified, usr.login, usr.orderby, usr.active, usr.username,
+    		usr.userlogin, usr.passwd, usr.profile, usr.superuser, usr.email, usr.image, usr.phone1, usr.phone2, usr.job,
+    		acc.id_access, sup.id_supplier, sup.name supplier
+    	from lgk_user usr
+	    left join lgk_access acc on acc.id_user = usr.id_user
+	    left join lgk_supplier sup on sup.id_supplier = acc.id_supplier 
+	    where 1 = 1
+	    <isNotNull property="id_supplier">
+	    	and acc.id_supplier = #id_supplier:INTEGER#
+	    </isNotNull>
+	    order by usr.username
+    </select>
+	
+	<select id="getQtyAlertAndMessagesByIdUser"
+			parameterClass="com.retailsbs.logistikapp.user.dto.NotificationTodaySearchCriteria"
+			resultClass="com.retailsbs.logistikapp.user.domain.Quantities">
+
+    	select COUNT(*) as alert_qty, (select coalesce(count(ms.id_message),0) as message_qty
+	    from lgk_user_message um
+	    join lgk_message ms on ms.id_user_message = um.id_user_message
+	    and ms.read = 'N'
+	    where um.id_user = #id_user:integer#),(
+		select COUNT(*) as todo_qty
+		from lgk_todo         
+		where active = 'S'         
+		and id_user = #id_user:integer#)
+		from lgk_user_notification n
+		inner join lgk_notification nk on n.id_notification = nk.id_notification
+		where 1=1 and n.id_user = #id_user:integer#
+		AND n.active = 'S'
+		<isNotNull property="id_supplier">and (nk.id_supplier = #id_supplier:integer#)</isNotNull>
+		<isNotNull property="fecha">and <![CDATA[ created > CURRENT_DATE ]]></isNotNull>		
+        <isEqual property="profile" compareValue="ADM">and ( nk.profile is null or profile in ('ADM', 'SUP', 'RET', 'STO','CAL') )</isEqual>
+        <isEqual property="profile" compareValue="SUP">and ( nk.profile is null or profile in ('SUP', 'RET', 'STO','CAL') )</isEqual>
+        <isEqual property="profile" compareValue="RET">and ( nk.profile is null or profile in ('RET', 'STO','CAL') )</isEqual>
+        <isEqual property="profile" compareValue="STO">and ( nk.profile is null or profile in ('STO','CAL' ) )</isEqual>
+        <isEqual property="profile" compareValue="SOP">and ( nk.profile is null or profile in ('SOP' ) )</isEqual>
+		<isNotNull property="id_user">and (nk.level is null or (nk.id_user=#id_user:integer# and nk.level ='P'))</isNotNull>
+    </select>
+	
+	<select id="getDisponibleDrivers"
+                 parameterClass="com.retailsbs.logistikapp.user.dto.DRICriteria"
+                 resultClass="com.retailsbs.logistikapp.user.dto.UserDTO">
+        select u.*
+		from lgk_user u
+		join lgk_access a on u.id_user = a.id_user
+		where a.id_supplier = #id_supplier:INTEGER# and profile = 'DRI' and u.id_user not in (
+			select u.id_user from lgk_travel t
+			join lgk_user u on t.id_user = u.id_user
+			join lgk_access a on a.id_user = u.id_user
+			where a.id_supplier = #id_supplier:INTEGER# and schedule::date = #date:TIMESTAMP#::date and t.status in ('PRO', 'TRA') 
+			order by id_travel DESC
+		)
+	</select>
+	
+	<select id="getMetricsAdm" resultClass="com.retailsbs.logistikapp.user.dto.MetricsAdm">
+		select (select count(id_waybill) from lgk_waybill where status = 'S') as checkinsadm, 
+			(select count(id_user) from lgk_user) as usersadm, 
+			(select count(id_order) from lgk_order) as trxsadmin,
+			(select count(id_supplier) from lgk_supplier) as suppliers
+	</select>
+	
+	<select id="getSupIdsBySuppliers" parameterClass="Long" resultClass="Long">
+		select u.id_user
+		from lgk_user u
+		join lgk_access a on a.id_user = u.id_user
+		where a.id_supplier = #id_supplier:INTEGER# and u.profile not ilike 'DRI%' and u.profile != 'SOP'
+	</select>
+	
+	<select id="getUserWithOutStockByIdSupplier" parameterClass="Long" resultClass="com.retailsbs.logistikapp.user.domain.User">
+		select u.* 
+		from lgk_user u
+		join lgk_access a on u.id_user = a.id_user
+		where id_supplier = #id_supplier:INTEGER# and u.profile = 'DRI' and u.id_user not in (
+			select coalesce(id_user, 0)
+			from lgk_almacen
+			where id_supplier = #id_supplier:INTEGER#
+		)
+	</select>
+	
+</sqlMap>

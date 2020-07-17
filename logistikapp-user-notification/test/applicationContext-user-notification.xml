@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+       
+       <!-- =====================  DEFINICIONES GENERALES  ======================== -->
+
+
+		<!-- ==========================  DATASOURCE  ============================== -->
+		
+		<!-- SqlMap setup for iBATIS Database Layer -->
+		<bean id="sqlMapClient-user-notification" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+			<property name="configLocation" value="classpath:com/retailsbs/logistikapp/user/notification/maps/sql-map-config.xml"/>
+			<property name="dataSource" ref="dataSource"/>
+		</bean>
+		
+		<!-- ==========================  DEFINICION DE DAOS  ============================== -->
+	
+	<bean id="UserNotificationDaoBean" class="com.retailsbs.logistikapp.user.notification.dao.UserNotificationDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user-notification"/>
+	</bean>
+	<bean id="FinderUserNotificationDaoBean" class="com.retailsbs.logistikapp.user.notification.dao.FinderUserNotificationDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user-notification"/>
+	</bean>
+	
+	<!-- ==========================  DEFINICION DE BEANS  ============================== -->
+	<bean id="UserNotificationServiceBean" class="com.retailsbs.logistikapp.user.notification.service.impl.UserNotificationServiceImpl">
+		<property name="dao_finder_user_notification" ref="FinderUserNotificationDaoBean"/>
+		<property name="dao_user_notification" ref="UserNotificationDaoBean"></property>
+		<property name="userservice" ref="UserServiceBean"/>
+	</bean>
+
+</beans>

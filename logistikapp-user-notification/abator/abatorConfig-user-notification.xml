@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE abatorConfiguration PUBLIC "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN"
+  "http://ibatis.apache.org/dtd/abator-config_1_0.dtd">
+
+<abatorConfiguration>
+
+	<abatorContext generatorSet="Java5">
+        <jdbcConnection driverClass="org.postgresql.Driver"
+                                    connectionURL="jdbc:postgresql://174.142.6.164:5432/logistikapp"
+                                    userId="postgres"
+                                    password="kz8WmkTHFG">
+                                    <classPathEntry location="/Users/01936/Downloads/postgresql-9.1-903.jdbc4.jar" />
+		</jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+	    <javaModelGenerator targetPackage="domain" targetProject="logistikapp-user-notification/abator" />
+	
+	    <sqlMapGenerator targetPackage="maps" targetProject="logistikapp-user-notification/abator" />
+	    
+	    <daoGenerator type="SPRING" targetPackage="dao" targetProject="logistikapp-user-notification/abator">
+            <property name="enableSubPackages" value="false" />
+	    </daoGenerator>
+
+
+        
+        <table schema="" tableName="lgk_user_notification" domainObjectName="UserNotification" 
+                   enableInsert="true" enableSelectByPrimaryKey="true" enableSelectByExample="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
+                   enableDeleteByExample="true" enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" selectByExampleQueryId="false">
+        
+            <generatedKey column="id" sqlStatement="SELECT LASTVAL()" identity="true"/>
+        
+            <columnOverride column="id"              property="id"              javaType="Long"   jdbcType="SERIAL"/>
+            <columnOverride column="id_user" 		 property="id_user" 		javaType="Long"   jdbcType="INTEGER"/>
+            <columnOverride column="id_notification" property="id_notification"	javaType="Long"   jdbcType="INTEGER"/>
+            <columnOverride column="active" 		 property="active" 	  	    javaType="String" jdbcType="VARCHAR"/>
+
+        </table>
+        
+      
+	</abatorContext>
+  
+</abatorConfiguration>

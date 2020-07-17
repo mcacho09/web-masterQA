@@ -1,0 +1,1974 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+    
+        
+    <!-- ========================== CONFIGURACION GENERAL ============================== -->
+    
+    <bean id="propertyConfigurer2" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>WEB-INF/logistikapp.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- ========================== BEANS CONTROLLERS ============================== -->
+    <!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />-->  
+       
+    <bean id="multipartResolver" class="com.retailsbs.logistikapp.web.ctrl.communication.MultiCommonsMultipartResolver">
+		<!--  <property name="maxUploadSize" value="5000000" />
+		<property name="maxInMemorySize" value="5000000" /> -->
+	</bean>
+	
+    
+    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+
+                <!-- home -->
+                <prop key="home.htm">HomeViewCtrl</prop>
+                <prop key="metricssalereport.htm">SaleMetricsDocCtrl</prop>
+
+                <!-- customer -->
+                <prop key="customer.htm">CustomerViewListCtrl</prop>
+                <prop key="customeradd.htm">CustomerViewAddCtrl</prop>
+
+                <prop key="store.htm">StoreViewListCtrl</prop>
+                <prop key="storeadd.htm">StoreViewAddCtrl</prop>
+                <prop key="storeupd.htm">StoreViewUpdCtrl</prop>
+                <prop key="storedel.htm">StoreDelCtrl</prop>
+                
+                <prop key="storesearch.htm">StoreSearchViewListCtrl</prop>
+                <prop key="storesearchdoc.htm">StoreSearchDocCtrl</prop>
+                
+                <prop key="reppromotionvisited.htm">RepPromotionVisited</prop>
+                <prop key="actives_list.htm">ActivesViewListCtrl</prop>
+                <prop key="active_visited_list.htm">ActivesVisitedListViewListCtrl</prop>
+                <!-- /customer -->
+                
+                <!-- maps -->
+                <prop key="geocustomer.htm">GeoCustomerViewCtrl</prop>
+                <prop key="geolocation.htm">GeolocationViewCtrl</prop>
+                <prop key="geostore.htm">GeoStoreViewCtrl</prop>
+                <prop key="geocategory.htm">GeoCategoryViewCtrl</prop>
+                <prop key="geotravel.htm">GeoTravelViewCtrl</prop>
+                <prop key="geocallcenter.htm">GeoCallCenterViewCtrl</prop>
+                <prop key="geoclientlocation.htm">GeoClientLocationViewCtrl</prop>
+                
+                <!-- sales -->
+                <prop key="categoryproductlist.htm">CategoryProductViewListCtrl</prop>
+                <prop key="categoryproductadd.htm">CategoryProductViewAddCtrl</prop>
+                <prop key="categoryproductupd.htm">CategoryProductViewUpdCtrl</prop>
+                <prop key="categoryproductdoactive.htm">CategoryProductDoActiveCtrl</prop>
+                <prop key="categoryproductdel.htm">CategoryProductViewDelCtrl</prop>
+                
+                <prop key="markproductlist.htm">MarkProductViewListCtrl</prop>
+                <prop key="markproductadd.htm">MarkProductViewAddCtrl</prop>
+                <prop key="markproductupd.htm">MarkProductViewUpdCtrl</prop>
+                <prop key="markproductdoactive.htm">MarkProductDoActiveCtrl</prop>                
+                <prop key="markproductdel.htm">MarkProductViewDelCtrl</prop>
+                
+                <prop key="productlist.htm">ProductViewListCtrl</prop>
+                <prop key="productreport.htm">ProductViewReportCtrl</prop>
+                <prop key="productreportfromtrans.htm">ProductReportFromTransCtrl</prop>
+                <prop key="productadd.htm">ProductViewAddCtrl</prop>
+                <prop key="productupd.htm">ProductViewUpdCtrl</prop>
+                <prop key="productdoactive.htm">ProductDoActiveCtrl</prop>
+                <prop key="productcategory">ProductDoActiveCtrl</prop>
+                <prop key="productdet.htm">ProductDetailViewCtrl</prop>
+                <prop key="productimport.htm">ProductImportViewCtrl</prop>
+                <prop key="importproduct.htm">ProductImportCtrl</prop>
+                <prop key="productdel.htm">ProductViewDelCtrl</prop>
+                <prop key="reportbydri.htm">ReportByDriViewCtrl</prop>
+                <prop key="saledetail.htm">SaleDetailViewCtrl</prop>
+                
+                <prop key="reporttrxproduct.htm">ReportTrxProductCtrl</prop>
+                
+                <prop key="productmix.htm">ProductMixViewCtrl</prop>
+                
+                <prop key="pos.htm">POSViewCtrl</prop>
+                
+                <prop key="stock.htm">StockViewCtrl</prop>
+                <prop key="newstock.htm">NewStockViewCtrl</prop>
+                <prop key="updstock.htm">UpdStockViewCtrl</prop>
+                <prop key="admtemplatestock.htm">AdmTemplateStockViewCtrl</prop>
+                <prop key="userstock.htm">UserStockViewCtrl</prop>
+                <!-- /sales -->
+                
+                <!-- logistic -->
+                <prop key="retailcategorylist.htm">RetailCategoryViewListCtrl</prop>
+                <prop key="retailcategoryadd.htm">RetailCategoryViewAddCtrl</prop>
+                <prop key="retailcategoryupd.htm">RetailCategoryViewUpdCtrl</prop>
+                <prop key="retailcategoryfromretailadd.htm">RetailCategoryFromRetailViewAddCtrl</prop>
+                
+                <prop key="travellist.htm">TravelViewListCtrl</prop>
+                <prop key="travelhistorylist.htm">TravelHistoryViewListCtrl</prop>               
+                <prop key="traveladd.htm">TravelViewAddCtrl</prop>
+                <prop key="travelupd.htm">TravelViewUpdCtrl</prop>
+                <prop key="travelconfirm.htm">TravelConfirmViewCtrl</prop>
+                <prop key="confirmtravel.htm">TravelConfirmCtrl</prop>
+                <prop key="travelaction.htm">TravelCtrl</prop>
+                <prop key="travelonway.htm">TravelViewOnWayCtrl</prop>
+                <prop key="travelreport.htm">TravelReportCtrl</prop>
+                <prop key="travelreportdoc.htm">TravelReportDocCtrl</prop>
+                <prop key="travelreportfromhistorico.htm">TravelReportFromHistoricoCtrl</prop>
+                <prop key="travelrepeat.htm">TravelRepeatCtrl</prop>
+
+                <prop key="travelwaybill.htm">WayBillViewCtrl</prop>
+                <prop key="actionwaybill.htm">WayBillCtrl</prop>
+                <prop key="waybillcsv.htm">WayBillCsvCtrl</prop>
+
+                <prop key="retaildeptadd.htm">RetailDeptViewAddCtrl</prop>
+                <prop key="retaildeptupd.htm">RetailDeptViewUpdCtrl</prop>
+
+                <prop key="storedoactive.htm">StoreDoActiveCtrl</prop>
+                <prop key="storedetail.htm">StoreDetailViewCtrl</prop>
+                <prop key="storeimport.htm">StoreImportViewCtrl</prop>
+                <prop key="importstore.htm">StoreImportCtrl</prop> 
+                
+                <prop key="rutas.htm">RutasViewCtrl</prop>
+                <prop key="rutasadd.htm">RutasViewAddCtrl</prop>
+                <prop key="rutasupd.htm">RutasViewUpdCtrl</prop>
+                <prop key="rutasdel.htm">RutasDelCtrl</prop>
+                <prop key="routedel.htm">RouteDelCtrl</prop>
+                <prop key="usersnotvisited.htm">UsersNotVisitedViewCtrl</prop>
+                <!-- prop key="todoupd.htm">ToDoViewUpdCtrl</prop> -->
+                <!-- /logistic -->
+               
+                <!-- communication -->
+                <prop key="alertlist.htm">AlertViewListCtrl</prop>
+	            <prop key="alertadd.htm">AlertViewAddCtrl</prop>
+	            
+                <prop key="todolist.htm">ToDoViewListCtrl</prop>
+                <prop key="todoadd.htm">ToDoViewAddCtrl</prop>
+                <prop key="todoupd.htm">ToDoViewUpdCtrl</prop>
+                <prop key="todoprocess.htm">ToDoProcessCtrl</prop>
+
+                <prop key="inboxlist.htm">InboxViewListCtrl</prop>
+                <prop key="inboxmsg.htm">InboxViewListMsgCtrl</prop>
+                <prop key="inboxadd.htm">InboxViewAddCtrl</prop>
+                <prop key="inboxnew.htm">InboxViewNewCtrl</prop>
+                <prop key="inboxdosend.htm">InboxDoSendCtrl</prop>
+                <prop key="inboxmsgdosend.htm">InboxMsgDoSendCtrl</prop>
+                <prop key="inboxmsggroupdosend.htm">InboxMsgGroupDoSendCtrl</prop>
+                <prop key="inboxprocess.htm">InboxProcessCtrl</prop>
+                <prop key="msgdel.htm">MsgDelCtrl</prop>
+                <prop key="inboxdel.htm">InboxDelCtrl</prop>
+                <prop key ="inbox.htm">InboxViewCtrl</prop>
+                <prop key ="inboxmsge.htm">InboxMsgeViewCtrl</prop>
+                <prop key ="inboxmsggroup.htm">InboxMsgGroupViewCtrl</prop>
+                <prop key ="inboxgroup.htm">InboxGroupViewCtrl</prop>
+                <prop key ="delmsggroup.htm">DelMsgGroupCtrl</prop>
+                
+                <prop key="calendar.htm">CalendarViewCtrl</prop>
+                <!-- /communication -->
+                
+                <!-- call center -->
+                <prop key="callcenter.htm">CallCenterViewCtrl</prop>
+                <prop key="callcenteradm.htm">CallCenterAddStoreCtrl</prop>
+                <!-- /call center -->
+                
+                <!-- user -->
+                <prop key="profile.htm">ProfileViewCtrl</prop>
+                <prop key="user-profileupd.htm">UserProfileViewUpdCtrl</prop>
+                <prop key="profileupd.htm">ProfileViewUpdCtrl</prop>
+                <prop key="passwdprofileupd.htm">PasswdProfileViewUpdCtrl</prop>
+                
+                <prop key="forgotpasswd.htm">ForgotPasswdViewCtrl</prop>
+                <prop key="registration-full.htm">UserAutoAddCtrl</prop>
+                <!-- /user -->
+                
+                <!-- configuration -->
+                <prop key="cfgsupplier.htm">CfgSupplierViewListCtrl</prop>
+                
+                <prop key="cfguserlist.htm">CfgUserViewListCtrl</prop>
+                <prop key="cfguseradd.htm">CfgUserViewAddCtrl</prop>
+                <prop key="cfguserupd.htm">CfgUserViewUpdCtrl</prop>
+                <prop key="userdoactive.htm">UserDoActiveCtrl</prop>
+                <prop key="passwdconfigupd.htm">PasswdConfigViewUpdCtrl</prop>
+                <prop key="userdel.htm">UserDoDeleteCtrl</prop>
+                
+                <prop key="useraccesslist.htm">UserAccessViewListCtrl</prop>
+                <prop key="useraccessdo.htm">UserAccessDoCtrl</prop>
+                
+                <prop key="cfgretaillist.htm">CfgRetailViewListCtrl</prop>
+                <prop key="cfgretailadd.htm">CfgRetailViewAddCtrl</prop>
+                <prop key="cfgretailupd.htm">CfgRetailViewUpdCtrl</prop>
+                <prop key="cfgretaildel.htm">CfgRetailViewDelCtrl</prop>
+                <prop key="retaildetail.htm">RetailDetailViewListCtrl</prop>
+                <prop key="retaildoactive.htm">RetailDoActiveCtrl</prop>
+                
+                <prop key="cfgstorecatlist.htm">CfgStoreCategoryViewListCtrl</prop>
+                <prop key="storecategoryadd.htm">StoreCategoryViewAddCtrl</prop>
+                <prop key="storecategoryupd.htm">StoreCategoryViewUpdCtrl</prop>
+                <prop key="storecategorydel.htm">StoreCategoryViewDelCtrl</prop>
+                <prop key="storecategoryfromstoreadd.htm">StoreCategoryFromStoreViewAddCtrl</prop>
+                <prop key="storecategoryfromstoreupd.htm">StoreCategoryFromStoreViewUpdCtrl</prop>
+                
+                <prop key="citylist.htm">CityViewListCtrl</prop>
+                <prop key="cityadd.htm">CityViewAddCtrl</prop>
+                <prop key="cityupd.htm">CityViewUpdCtrl</prop>
+                <prop key="citydoactive.htm">CityDoActiveCtrl</prop>
+                
+                <prop key="localitylist.htm">LocalityViewListCtrl</prop>
+                <prop key="localityadd.htm">LocalityViewAddCtrl</prop>
+                <prop key="localityupd.htm">LocalityViewUpdCtrl</prop>
+                <prop key="localitydoactive.htm">LocalityDoActiveCtrl</prop>
+                
+                <prop key="domainlist.htm">DomainViewListCtrl</prop>
+                <prop key="domainadd.htm">DomainViewAddCtrl</prop>
+                <prop key="domainupd.htm">DomainViewUpdCtrl</prop>
+                <prop key="domaindoactive.htm">DomainDoActiveCtrl</prop>
+                
+                <prop key="domaincontentlist.htm">DomainContentViewListCtrl</prop>
+                <prop key="domaincontentadd.htm">DomainContentViewAddCtrl</prop>
+                <prop key="domaincontentupd.htm">DomainContentViewUpdCtrl</prop>
+                <prop key="domaincontentdoactive.htm">DomainContentDoActiveCtrl</prop>
+                <!-- /configuration -->
+
+                <!-- administration -->
+                <prop key="admuserlist.htm">AdmUserViewListCtrl</prop>
+                <prop key="admuseradd.htm">AdmUserViewAddCtrl</prop>
+                <prop key="admuserupd.htm">AdmUserViewUpdCtrl</prop>
+                <prop key="admdeluser.htm">AdmUserDelCtrl</prop>
+                
+                <prop key="admsupplierlist.htm">AdmSupplierViewListCtrl</prop>
+                <prop key="admsupplieradd.htm">AdmSupplierViewAddCtrl</prop>
+                <prop key="admsupplierupd.htm">AdmSupplierViewUpdCtrl</prop>
+                <prop key="admsupplierdoactive.htm">AdmSupplierDoActiveCtrl</prop>
+                <prop key="admdelsupplier.htm">AdmSupplierDelCtrl</prop>
+
+                <prop key="countrylist.htm">CountryViewListCtrl</prop>
+                <prop key="countryadd.htm">CountryViewAddCtrl</prop>
+                <prop key="countryupd.htm">CountryViewUpdCtrl</prop>
+                <prop key="countrydoactive.htm">CountryDoActiveCtrl</prop>
+                
+                <prop key="statelist.htm">StateViewListCtrl</prop>
+                <prop key="stateadd.htm">StateViewAddCtrl</prop>
+                <prop key="stateupd.htm">StateViewUpdCtrl</prop>
+                <prop key="statedoactive.htm">StateDoActiveCtrl</prop>
+                
+                <prop key="planslist.htm">PlansListViewCtrl</prop>
+                <!-- /administration -->
+                
+                <!-- Pagos -->
+                <prop key="planpayment.htm">PlanPaymentCtrl</prop>
+                <!-- /pagos -->
+
+                <prop key="fileupload.htm">FileUploadController</prop>
+                
+            </props>
+        </property>
+    </bean>
+
+    <bean id="urlFilenameController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
+
+
+    <!-- ========================== BEANS CONTROLLERS ============================== -->
+
+	<!-- Control de Pagos -->
+	<bean id="PlanPaymentCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.PlanPaymentCtrl">
+        <property name="viewsup" value="admin/payment"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="PERSONAL" value="${LABEL_PERSONAL}" />
+        <property name="GLOBAL" value="${LABEL_GLOBAL}" />
+    </bean>
+	<!-- /Control de Pagos -->
+	
+	<!-- PAGINA FILE UPLOAD -->
+
+	<bean id="FileUploadController" class="com.retailsbs.logistikapp.web.ctrl.upload.FileUploadController">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.web.ctrl.upload.FileUpload"/>
+		<property name="formView" value="fileupload/fileupload" />
+		<property name="successView" value="redirect:fileupload.htm" />
+        <property name="PATH_ROOT" value="${PATH_ROOT}" />
+        <property name="PATH_IMAGES" value="${PATH_IMAGES}" />
+        <property name="IMG_PRODUCT" value="${IMG_PRODUCT}" />
+	</bean>
+	
+    <!-- ========== GEOLOCATION ========== -->
+    
+    <!-- geocustomer -->
+    <bean id="GeoCustomerViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.maps.GeoCustomerViewCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="maps/geocustomer"/>
+    </bean>
+    <!-- /geolocation -->
+    
+    <!-- geolocation -->
+    <bean id="GeolocationViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.maps.GeolocationViewCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="maps/geolocation"/>
+    </bean>
+    <!-- /geolocation -->
+    
+    <!-- geostore -->
+    <bean id="GeoStoreViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.maps.GeoStoreViewCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="maps/geostore"/>
+    </bean>
+    <!-- /geostore -->
+    
+    <!-- geocategory -->
+    <bean id="GeoCategoryViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.maps.GeoCategoryViewCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="maps/geocategory"/>
+    </bean>
+    <!-- /geocategory -->
+    
+	<!-- /geotravel -->
+	<bean id="GeoTravelViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.maps.GeoTravelViewCtrl">
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="maps/geotravel"/>
+    </bean>
+	<!-- /geotravel -->
+	
+	<!-- /geocallcenter -->
+	<bean id="GeoCallCenterViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.maps.GeoCallCenterViewCtrl">
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="maps/geocallcenter"/>
+    </bean>
+    
+	<!-- /geocallcenter -->
+	
+	<!-- geoclientlocation -->
+	<bean id="GeoClientLocationViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.maps.GeoClientLocationViewCtrl">
+		<property name="view" value="maps/geoclientlocation"/>
+		<property name="userService" ref="UserServiceBean"/>
+	</bean>
+	<!-- /geoclientlocation -->
+
+    <!-- ========== HOME ========== -->
+    
+    <bean id="HomeViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.home.HomeViewCtrl">
+        <property name="viewsup" value="home/home"/>
+        <property name="viewadm" value="home/admin"/>
+        <property name="viewdem" value="home/demo"/>
+        <property name="viewdri" value="home/home"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="PERSONAL" value="${LABEL_PERSONAL}" />
+        <property name="GLOBAL" value="${LABEL_GLOBAL}" />
+    </bean>
+    
+    <bean id="SaleMetricsDocCtrl" class="com.retailsbs.logistikapp.web.ctrl.home.SaleMetricsDocCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="home/reportmetricssale"/>
+    </bean>
+
+    <!-- ========== CUSTOMER ========== -->
+    
+    <!-- customer -->
+    <bean id="CustomerViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.customer.CustomerViewListCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="view" value="customer/customer"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="CustomerViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.customer.CustomerViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddStoreDTO"/>
+        <property name="formView" value="customer/customeradd"/>
+        <property name="successView" value="redirect:customer.htm"/>
+        <property name="validator" ref="StoreValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="SHELF" value="${SHELF}" />
+        <property name="NO_SHELF" value="${NO_SHELF}" />
+        <property name="PAIS" value="${MEXICO}" />
+    </bean>
+    <!-- /customer -->
+    
+    <!-- store -->
+    <bean id="StoreViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.customer.StoreViewListCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="view" value="customer/store"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="StoreValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.StoreValidatorAddCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="StoreValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.StoreValidatorUpdCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="StoreViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.customer.StoreViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddStoreDTO"/>
+        <property name="formView" value="customer/storeadm"/>
+        <property name="successView" value="redirect:store.htm"/>
+        <property name="validator" ref="StoreValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="SHELF" value="${SHELF}" />
+        <property name="NO_SHELF" value="${NO_SHELF}" />
+    </bean>
+    <bean id="StoreViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.customer.StoreViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.UpdStoreDTO"/>
+        <property name="formView" value="customer/storeadm"/>
+        <property name="successView" value="redirect:store.htm"/>
+        <property name="validator" ref="StoreValidatorUpdCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="SHELF" value="${SHELF}" />
+        <property name="NO_SHELF" value="${NO_SHELF}" />
+    </bean>
+    <bean id="StoreDelCtrl" class="com.retailsbs.logistikapp.web.ctrl.customer.StoreDelCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="view" value="redirect:store.htm"/>
+    </bean>
+    <!-- /store -->
+
+    <bean id="StoreSearchViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.customer.StoreSearchViewListCtrl">
+        <property name="view" value="customer/storesearch"/>
+        <!--property name="view" value="customer/search"/-->
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="managerlogisticService" ref="ManagerLogisticBean"/>
+        <property name="TRAVEL_CREATED" value="${TRAVEL_CREATED}" />
+        <property name="TRAVEL_PROGRAM" value="${TRAVEL_PROGRAM}" />
+        <property name="TRAVEL_REVIEWED" value="${TRAVEL_REVIEWED}" />
+        <property name="TRAVEL_STARTED" value="${TRAVEL_STARTED}" />
+        <property name="TRAVEL_CANCEL" value="${TRAVEL_CANCEL}" />
+        <property name="TRAVEL_FINISHED" value="${TRAVEL_FINISHED}" />
+        <property name="GLO_CREATED" value="${GLO_CREATED}" />
+        <property name="GLO_PROGRAM" value="${GLO_PROGRAM}" />
+        <property name="GLO_REVIEWED" value="${GLO_REVIEWED}" />
+        <property name="GLO_STARTED" value="${GLO_STARTED}" />
+        <property name="GLO_CANCEL" value="${GLO_CANCEL}" />
+        <property name="GLO_FINISHED" value="${GLO_FINISHED}" />
+    </bean>
+    <bean id="StoreSearchDocCtrl" class="com.retailsbs.logistikapp.web.ctrl.customer.StoreSearchDocCtrl">
+        <property name="view" value="customer/storesearchdoc"/>
+        <!--property name="view" value="customer/search"/-->
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="managerlogisticService" ref="ManagerLogisticBean"/>
+        <property name="TRAVEL_CREATED" value="${TRAVEL_CREATED}" />
+        <property name="TRAVEL_PROGRAM" value="${TRAVEL_PROGRAM}" />
+        <property name="TRAVEL_REVIEWED" value="${TRAVEL_REVIEWED}" />
+        <property name="TRAVEL_STARTED" value="${TRAVEL_STARTED}" />
+        <property name="TRAVEL_CANCEL" value="${TRAVEL_CANCEL}" />
+        <property name="TRAVEL_FINISHED" value="${TRAVEL_FINISHED}" />
+        <property name="GLO_CREATED" value="${GLO_CREATED}" />
+        <property name="GLO_PROGRAM" value="${GLO_PROGRAM}" />
+        <property name="GLO_REVIEWED" value="${GLO_REVIEWED}" />
+        <property name="GLO_STARTED" value="${GLO_STARTED}" />
+        <property name="GLO_CANCEL" value="${GLO_CANCEL}" />
+        <property name="GLO_FINISHED" value="${GLO_FINISHED}" />
+    </bean>
+    
+    <bean id="RepPromotionVisited" class="com.retailsbs.logistikapp.web.ctrl.customer.RepPromotionVisited">
+    	<property name="view" value="customer/reppromotionvisited"/>
+    	<property name="logisticService" ref="LogisticServiceBean"/>
+    </bean>
+
+    <bean id="ActivesViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.customer.ActivesViewListCtrl">
+    	<property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="view" value="actives/actives_list"></property>
+    </bean>
+    <bean id="ActivesVisitedListViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.customer.ActivesVisitedListViewListCtrl">
+    	<property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="view" value="actives/active_visited_list"></property>
+    </bean>
+
+    <!-- ========== SALES ========== -->
+
+    <!-- category-product -->
+    <bean id="CategoryProductValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.CategoryProductValidatorAddCtrl"/>
+    <bean id="CategoryProductValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.CategoryProductValidatorUpdCtrl"/>
+    <bean id="CategoryProductViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.CategoryProductViewListCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="config/categoryproductlist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="CategoryProductViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.CategoryProductViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.financial.dto.AddCategoryProductDTO"/>
+        <property name="formView" value="config/categoryproductadm"/>
+        <property name="successView" value="redirect:categoryproductlist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="validator" ref="CategoryProductValidatorAddCtrl"/>
+    </bean>
+    <bean id="CategoryProductViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.CategoryProductViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.financial.dto.UpdCategoryProductDTO"/>
+        <property name="formView" value="config/categoryproductadm"/>
+        <property name="successView" value="redirect:categoryproductlist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="validator" ref="CategoryProductValidatorUpdCtrl"/>
+    </bean>
+    <bean id="CategoryProductDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.CategoryProductDoActiveCtrl">
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="redirect:categoryproductlist.htm"/>
+    </bean>
+     <bean id="CategoryProductViewDelCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.CategoryProductViewDelCtrl">
+        <property name="view" value="redirect:categoryproductlist.htm"/> 
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+    </bean>
+    <bean id="ReportByDriViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ReportByDriViewCtrl">
+    	<property name="view" value="sales/reportbydri"/>
+        <property name="userService" ref="UserServiceBean"/>
+    	<property name="financialService" ref="FinancialServiceBean"/>
+    </bean>
+    <bean id="SaleDetailViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.SaleDetailViewCtrl">
+    	<property name="view" value="sales/salesdetail"/>
+    	<property name="userService" ref="UserServiceBean"/>
+    	<property name="financialService" ref="FinancialServiceBean"/>
+    </bean>
+    <!-- /category-product -->
+    
+      <!--mark-product -->
+    <bean id="MarkProductValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.MarkProductValidatorAddCtrl"/>
+    <bean id="MarkProductValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.MarkProductValidatorUpdCtrl"/>
+    <bean id="MarkProductViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.MarkProductViewListCtrl">
+       <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="config/markproductlist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="MarkProductViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.MarkProductViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.financial.dto.AddBrandProductDTO"/>
+        <property name="formView" value="config/markproductadm"/>
+        <property name="successView" value="redirect:markproductlist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="validator" ref="MarkProductValidatorAddCtrl"/>
+    </bean>
+       <bean id="MarkProductViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.MarkProductViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.financial.dto.UpdBrandProductDTO"/>
+        <property name="formView" value="config/markproductadm"/>
+        <property name="successView" value="redirect:markproductlist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="validator" ref="MarkProductValidatorUpdCtrl"/>
+    </bean>
+    <bean id="MarkProductDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.MarkProductDoActiveCtrl">
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="redirect:markproductlist.htm"/>
+    </bean>
+      <bean id="MarkProductViewDelCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.MarkProductViewDelCtrl">
+        <property name="view" value="redirect:markproductlist.htm"/> 
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+    </bean>
+    <!-- /mark-product -->
+    
+    <!-- product -->
+    <bean id="ProductViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ProductViewListCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="sales/productlist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="ProductViewReportCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ProductViewReportCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="sales/productreport"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="ProductReportFromTransCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ProductReportDocCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="sales/productreportdoc"/>
+    </bean>
+    <bean id="ReportTrxProductCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ReportTrxProductCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="sales/reporttrxproduct"/>
+    </bean>
+    
+    <bean id="ProductViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ProductViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.financial.dto.AddProductDTO"/>
+        <property name="formView" value="sales/productadm"/>
+        <property name="successView" value="redirect:productlist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="validator" ref="ProductValidatorAddCtrl"/>
+    </bean>
+    <bean id="ProductViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ProductViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.financial.dto.UpdProductDTO"/>
+        <property name="formView" value="sales/productadm"/>
+        <property name="successView" value="redirect:productlist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="validator" ref="ProductValidatorUpdCtrl"/>
+    </bean>
+    <bean id="ProductDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ProductDoActiveCtrl">
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="redirect:productlist.htm"/>
+    </bean>
+    <bean id="ProductDetailViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ProductDetailViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="sales/productdet"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="IMG_PRODUCT" value="${IMG_PRODUCT}" />
+    </bean>
+    <bean id="ProductValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.ProductValidatorAddCtrl">
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="ProductValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.ProductValidatorUpdCtrl"/>
+    <bean id="ProductImportViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ProductImportViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.web.ctrl.upload.FileUpload"/>
+        <property name="formView" value="sales/productimport"/>
+        <property name="successView" value="redirect:productlist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="IMPORT_FILE" value="${IMPORT_FILE}" />
+        <property name="IMG_PRODUCT_DEFAULT" value="${IMG_PRODUCT_DEFAULT}" />
+    </bean>
+    <bean id="ProductImportCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ProductImportCtrl">
+        <property name="view" value="logistic/storeimport"/>
+        <property name="IMPORT_FILE" value="${IMPORT_FILE}" />
+    </bean>
+    <bean id="ProductMixViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ProductMixViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="sales/productmix"/>
+    </bean>
+    <bean id="ProductViewDelCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ProductViewDelCtrl">
+        <property name="view" value="redirect:productlist.htm"/> 
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+    </bean>    
+    <!-- /product -->
+    
+    <!-- stock -->
+    <bean id="StockViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.StockViewCtrl">
+    	<property name="userService" ref="UserServiceBean"/>
+    	<property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="sales/stock"/>
+    </bean>
+    <bean id="NewStockViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.NewStockViewCtrl">
+    	<property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="sales/newstock"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="update" value="N"/>
+    </bean>
+    <bean id="UpdStockViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.NewStockViewCtrl">
+    	<property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="sales/newstock"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="update" value="S" />
+    </bean>
+    <bean id="AdmTemplateStockViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.AdmTemplateStockViewCtrl">
+    	<property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="sales/admtemplatestock"/>
+    </bean>
+    <bean id="UserStockViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.UserStockViewCtrl">
+    	<property name="userService" ref="UserServiceBean"/>
+    	<property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="sales/userstock"/>
+    </bean>
+    <!-- /stock -->
+
+	
+	<!-- ========== LOGISTIC ========== -->
+    <!-- retail category -->
+    <bean id="RetailCategoryViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RetailCategoryViewListCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="view" value="logistic/retailcategorylist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>    
+    <bean id="RetailCategoryViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RetailCategoryViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddRetailCategoryDTO"/>
+        <property name="formView" value="logistic/retailcategoryadm"/>
+        <property name="successView" value="redirect:retaillist.htm"/>
+        <property name="cancelView" value="location.href = 'retaillist.htm';"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="validator" ref="RetailCategoryValidatorAddCtrl"/>
+    </bean>
+    <bean id="RetailCategoryViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RetailCategoryViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.UpdRetailCategoryDTO"/>
+        <property name="formView" value="logistic/retailcategoryadm"/>
+        <property name="successView" value="redirect:retaillist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="validator" ref="RetailCategoryValidatorUpdCtrl"/>
+    </bean>
+    <bean id="RetailCategoryFromRetailViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RetailCategoryViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddRetailCategoryDTO"/>
+        <property name="formView" value="logistic/retailcategoryadm"/>
+        <property name="successView" value="redirect:retailadd.htm"/>
+        <property name="cancelView" value="retailadd.htm?accion="/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="validator" ref="RetailCategoryValidatorAddCtrl"/>
+    </bean>    
+    <bean id="RetailCategoryValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.RetailCategoryValidatorAddCtrl"/>
+    <bean id="RetailCategoryValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.RetailCategoryValidatorUpdCtrl"/>
+    <!-- /retail category -->
+    
+    <!-- retail -->
+    <bean id="TravelViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.TravelViewListCtrl">
+        <property name="view" value="logistic/travellist"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="TRAVEL_PROGRAM" value="${TRAVEL_PROGRAM}" />
+        <property name="TRAVEL_REVIEWED" value="${TRAVEL_REVIEWED}" />
+        <property name="TRAVEL_STARTED" value="${TRAVEL_STARTED}" />        
+        <property name="TRAVEL_CREATED" value="${TRAVEL_CREATED}" />        
+    </bean>
+    <bean id="TravelHistoryViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.TravelHistoryViewListCtrl">
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="view" value="logistic/travelhistorylist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="TravelConfirmViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.TravelConfirmViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="view" value="logistic/travelconfirm"/>
+    </bean>
+    <bean id="TravelConfirmCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.TravelConfirmCtrl">
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="view" value="redirect:travelwaybill.htm"/>
+        <property name="TRAVEL_REVIEWED" value="${TRAVEL_REVIEWED}"/>
+    </bean>
+   <bean id="TravelViewOnWayCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.TravelViewOnWayCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+		<property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="view" value="logistic/travelonway"/>
+        <property name="TRAVEL_TIME" value="${TRAVEL_TIME}"/>
+    </bean>
+     <bean id="TravelReportCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.TravelReportCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="view" value="logistic/travelreport"/>
+        <property name="TRAVEL_TIME" value="${TRAVEL_TIME}"/>
+    </bean>
+    <bean id="TravelReportDocCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.TravelReportDocCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="view" value="logistic/travelreportdoc"/>
+    </bean>
+    <bean id="TravelReportFromHistoricoCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.TravelReportDocCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="view" value="logistic/travelreportdoc"/>
+    </bean>
+    
+    <bean id="TravelRepeatCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.TravelRepeatCtrl">
+    	<property name="logisticService" ref="LogisticServiceBean"/>
+    </bean>
+    
+    <bean id="WayBillViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.WayBillViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+		<property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="view" value="logistic/travelwaybill"/>
+        <property name="TRAVEL_TIME" value="${TRAVEL_TIME}"/>
+    </bean>
+    <bean id="WayBillCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.WayBillCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="view" value="redirect:travellist.htm"/>
+        <property name="TRAVEL_CANCEL" value="${TRAVEL_CANCEL}" />
+        <property name="TRAVEL_FINISHED" value="${TRAVEL_FINISHED}" />
+    </bean>
+    <bean id="WayBillCsvCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.WayBillCsvCtrl">
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="view" value="logistic/waybillcsv"/>        
+    </bean>
+    
+    <bean id="TravelCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.TravelCtrl">
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="view" value="redirect:travellist.htm"/>
+        <property name="TRAVEL_CREATED" value="${TRAVEL_CREATED}" />
+        <property name="TRAVEL_CANCEL" value="${TRAVEL_CANCEL}" />        
+    </bean>    
+    <!-- /retail -->
+    <!-- retail dept -->
+    <bean id="RetailDeptViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RetailDeptViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddRetailDeptDTO"/>
+        <property name="formView" value="logistic/retaildeptadm"/>
+        <property name="successView" value="redirect:retaildetail.htm"/>
+        <property name="validator" ref="RetailDeptValidatorAddCtrl"/>
+        <property name="ORDERBY" value="${ORDERBY}" />
+    </bean>
+    <bean id="RetailDeptValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.RetailDeptValidatorAddCtrl"/>
+    <bean id="RetailDeptViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RetailDeptViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.UpdRetailDeptDTO"/>
+        <property name="formView" value="logistic/retaildeptadm"/>
+        <property name="successView" value="redirect:retaildetail.htm"/>
+        <property name="validator" ref="RetailDeptValidatorUpdCtrl"/>
+        <property name="ORDERBY" value="${ORDERBY}" />
+    </bean>
+    <bean id="RetailDeptValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.RetailDeptValidatorUpdCtrl"/>
+    <!-- /retail dept-->
+    <!-- store -->
+    <bean id="StoreDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.StoreDoActiveCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="view" value="redirect:storelist.htm"/>
+    </bean>
+    <bean id="StoreDetailViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.StoreDetailViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="view" value="logistic/storedetail"/>
+    </bean>
+    <bean id="StoreImportViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.StoreImportViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.web.ctrl.upload.FileUpload"/>
+        <property name="formView" value="logistic/storeimport"/>
+        <property name="successView" value="redirect:store.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="IMPORT_FILE" value="${IMPORT_FILE}" />
+    </bean>
+    <bean id="StoreImportCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.StoreImportCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="view" value="logistic/storeimport"/>
+        <property name="IMPORT_FILE" value="${IMPORT_FILE}" />
+    </bean>
+    <!-- /store -->
+    
+    <!-- rutas -->
+    <bean id="RutasViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RutasViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="managerlogisticService" ref="ManagerLogisticBean"/>
+        <property name="view" value="logistic/rutas"/>
+    </bean>
+    <bean id="RutasViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RutasViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="formView" value="logistic/rutasadd"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.logistic.dto.AddRouteDTO"/>
+        <property name="successView" value="redirect:rutas.htm"/>
+        <property name="validator" ref="RutasValidatorAddCtrl"/>
+    </bean> 
+    <bean id="RutasValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.RutasValidatorAddCtrl">
+        <property name="logisticService" ref="LogisticServiceBean"/>
+    </bean>
+       
+    <bean id="RutasViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RutasViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="formView" value="logistic/rutasupd"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.logistic.dto.UpdRouteDTO"/>
+        <property name="successView" value="redirect:rutas.htm"/>
+        <property name="validator" ref="RutasValidatorUpdCtrl"/>
+    </bean>
+    <bean id="RutasValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.RutasValidatorUpdCtrl">
+        <property name="logisticService" ref="LogisticServiceBean"/>
+    </bean>
+    <bean id="RutasDelCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RutasDelCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="view" value="redirect:rutasupd.htm"/>
+    </bean>
+    <bean id="RouteDelCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RouteDelCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="view" value="redirect:rutas.htm"/>
+    </bean>
+    
+    <bean id="UsersNotVisitedViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.UsersNotVisitedViewCtrl">
+    	<property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="view" value="logistic/usersnotvisited"/>
+    </bean>
+    <!-- /rutas -->
+    
+    <!-- travel -->
+    <bean id="TravelValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.TravelValidatorAddCtrl">
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="TRAVEL_CREATED" value="${TRAVEL_CREATED}" />
+        <property name="TRAVEL_PROGRAM" value="${TRAVEL_PROGRAM}" />
+    </bean>   
+     
+    <bean id="TravelValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.TravelValidatorUpdCtrl">
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="TRAVEL_PROGRAM" value="${TRAVEL_PROGRAM}" />           
+    </bean> 
+    <bean id="TravelViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.TravelViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.logistic.dto.AddTravelDTO"/>
+        <property name="formView" value="logistic/traveladm"/>
+        <property name="successView" value="redirect:travellist.htm"/>
+        <property name="validator" ref="TravelValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />                
+        <property name="DRIVER_PROFILE" value="${DRIVER_PROFILE}" />
+        <property name="flowToCreateView" value="redirect:travellist.htm"/>
+        <property name="flowToScheduleView" value="redirect:travelwaybill.htm"/>
+        <property name="TRAVEL_TIME" value="${TRAVEL_TIME}"/>
+    </bean>
+     <bean id="TravelViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.TravelViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>    
+        <property name="logisticService" ref="LogisticServiceBean"/>       
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.logistic.dto.UpdTravelDTO"/>
+        <property name="formView" value="logistic/travelupd"/>
+        <property name="successView" value="redirect:travellist.htm"/>
+        <property name="validator" ref="TravelValidatorUpdCtrl"/>
+        <property name="DRIVER_PROFILE" value="${DRIVER_PROFILE}" />        
+        <property name="flowToCreateView" value="redirect:travellist.htm"/>
+        <property name="flowToScheduleView" value="redirect:travelwaybill.htm"/>
+        <property name="TRAVEL_TIME" value="${TRAVEL_TIME}"/>
+    </bean>
+    <!-- travel -->
+		
+	<!-- ========== POS ========== -->
+    <bean id="POSViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.POSViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="sales/pos"/>
+    </bean>	
+	
+	<!-- ========== CALL CENTER ========== -->
+    <!-- callcenter -->
+    <bean id="CallCenterViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.callcenter.CallCenterViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="managerlogisticService" ref="ManagerLogisticBean"/>
+        <property name="view" value="callcenter/callcenter"/>
+    </bean>
+	<bean id="CallCenterAddStoreCtrl" class="com.retailsbs.logistikapp.web.ctrl.callcenter.CallCenterAddStoreCtrl">
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+		<property name="view" value="redirect:geocallcenter.htm"/>
+	</bean>
+    <!-- /callcenter -->
+	<!-- ========== /CALL CENTER ========== -->
+	
+	<!-- ========== CONFIGURATION ========== -->
+
+    <bean id="CfgSupplierViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.SupplierViewListCtrl">
+        <property name="view" value="config/supplier"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+
+    <!-- user -->
+    <bean id="CfgUserViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.UserViewListCtrl">
+        <property name="view" value="config/userlist"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="PERFIL_ADM" value="${PERFIL_ADM}" />
+        <property name="PERFIL_SUP" value="${PERFIL_SUP}" />
+        <property name="PERFIL_RET" value="${PERFIL_RET}" />
+        <property name="PERFIL_DRI" value="${PERFIL_DRI}" />
+        <property name="PERFIL_STO" value="${PERFIL_STO}" />
+        <property name="PERFIL_DEM" value="${PERFIL_DEM}" />
+        <property name="PERFIL_LGK" value="${PERFIL_LGK}" />
+        <property name="PERFIL_CCT" value="${PERFIL_CCT}" />
+        <property name="PERFIL_SOP" value="${PERFIL_SOP}" />
+        <property name="GLO_ADM" value="${GLO_ADM}" />
+        <property name="GLO_SUP" value="${GLO_SUP}" />
+        <property name="GLO_RET" value="${GLO_RET}" />
+        <property name="GLO_DRI" value="${GLO_DRI}" />
+        <property name="GLO_STO" value="${GLO_STO}" />
+        <property name="GLO_DEM" value="${GLO_DEM}" />
+        <property name="GLO_LGK" value="${GLO_LGK}" />
+        <property name="GLO_CCT" value="${GLO_CCT}" />
+        <property name="GLO_SOP" value="${GLO_SOP}" />
+    </bean>
+    <bean id="CfgUserViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.UserViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.user.dto.AddUserDTO"/>
+        <property name="formView" value="config/useradm"/>
+        <property name="successView" value="redirect:cfguserlist.htm"/>
+        <property name="validator" ref="UserValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="EMPRESA" value="${EMPRESA}" />
+        <property name="IMAGE" value="${IMAGE_DEFAULT_USER}" />
+    </bean>
+    <bean id="UserValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.UserValidatorAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="CfgUserViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.UserViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.user.dto.UpdUserDTO"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="formView" value="config/useradm"/>
+        <property name="successView" value="redirect:cfguserlist.htm"/>
+        <property name="validator" ref="UserValidatorUpdCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+    </bean>
+    <bean id="UserValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.UserValidatorUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="UserDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.UserDoActiveCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="redirect:userlist.htm"/>
+    </bean>
+    <bean id="PasswdConfigViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.PasswdConfigViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.user.dto.UpdUserDTO"/>
+        <property name="formView" value="config/passwdconfigupd"/>
+        <property name="successView" value="redirect:userlist.htm"/>
+        <property name="validator" ref="PasswdConfigValidatorUpdCtrl"/>
+    </bean>
+    <bean id="PasswdConfigValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.PasswdConfigValidatorUpdCtrl"/>
+    <bean id="UserDoDeleteCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.UserDoDeleteCtrl">
+        <property name="view" value="redirect:cfguserlist.htm"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+    </bean>
+    
+    <!-- Plazas comerciales -->
+    <bean id="CfgRetailViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.RetailViewListCtrl">
+        <property name="view" value="config/retaillist"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="CfgRetailViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.RetailViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddRetailDTO"/>
+        <property name="formView" value="config/retailadm"/>
+        <property name="successView" value="redirect:cfgretaillist.htm"/>
+        <property name="validator" ref="RetailValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="PAIS" value="${MEXICO}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+    </bean>
+    <bean id="CfgRetailViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.RetailViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.UpdRetailDTO"/>
+        <property name="formView" value="config/retailadm"/>
+        <property name="successView" value="redirect:cfgretaillist.htm"/>
+        <property name="validator" ref="RetailValidatorUpdCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="PAIS" value="${MEXICO}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+    </bean>
+    <bean id="CfgRetailViewDelCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.RetailViewDelCtrl">
+        <property name="view" value="redirect:cfgretaillist.htm"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="managerLogisticService" ref="ManagerLogisticBean"/>
+    </bean>
+    <bean id="RetailValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.RetailValidatorAddCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="RetailValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.RetailValidatorUpdCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+     <!--bean id="LgkRetailViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RetailViewListCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="logistic/lgk_retaillist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean-->
+    <bean id="RetailDetailViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RetailDetailViewListCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="logistic/retaildetail"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+
+    <bean id="RetailDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.logistic.RetailDoActiveCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="view" value="redirect:retaillist.htm"/>
+    </bean>
+    <!-- /Plazas comerciales -->
+    
+    <!-- store category -->
+    <bean id="CfgStoreCategoryViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.StoreCategoryViewListCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="view" value="config/storecategorylist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="StoreCategoryValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.StoreCategoryValidatorAddCtrl"/>
+    <bean id="StoreCategoryValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.StoreCategoryValidatorUpdCtrl"/>
+    <bean id="StoreCategoryViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.StoreCategoryViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddStoreCategoryDTO"/>
+        <property name="formView" value="config/storecategoryadm"/>
+        <property name="successView" value="redirect:cfgstorecatlist.htm"/>
+        <property name="cancelView" value="cfgstorecatlist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="validator" ref="StoreCategoryValidatorAddCtrl"/>
+    </bean>
+    <bean id="StoreCategoryViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.StoreCategoryViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.UpdStoreCategoryDTO"/>
+        <property name="formView" value="config/storecategoryadm"/>
+        <property name="successView" value="redirect:cfgstorecatlist.htm"/>
+        <property name="cancelView" value="cfgstorecatlist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="validator" ref="StoreCategoryValidatorUpdCtrl"/>
+    </bean>
+    <bean id="StoreCategoryViewDelCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.StoreCategoryViewDelCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.UpdStoreCategoryDTO"/>
+        <property name="formView" value="config/storecategorydel"/>
+        <property name="successView" value="redirect:cfgstorecatlist.htm"/>
+        <property name="cancelView" value="cfgstorecatlist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+    </bean>
+    <bean id="StoreCategoryFromStoreViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.StoreCategoryViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+       	<property name="userNotificationService" ref="UserNotificationServiceBean"/>        
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddStoreCategoryDTO"/>
+        <property name="formView" value="config/storecategoryadm"/>
+        <property name="successView" value="redirect:storeadd.htm?"/>
+        <property name="cancelView" value="storeadd.htm?"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="validator" ref="StoreCategoryValidatorAddCtrl"/>
+    </bean>
+    <bean id="StoreCategoryFromStoreViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.StoreCategoryViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddStoreCategoryDTO"/>
+        <property name="formView" value="config/storecategoryadm"/>
+        <property name="successView" value="redirect:storeupd.htm?"/>
+        <property name="cancelView" value="storeupd.htm?"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="validator" ref="StoreCategoryValidatorAddCtrl"/>
+    </bean>
+    <!-- /store category -->
+    
+    <!-- user-access -->
+    <bean id="UserAccessViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.UserAccessViewListCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="config/useraccesslist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="UserAccessDoCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.UserAccessDoCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="redirect:useraccesslist.htm"/>
+        <property name="EMPRESA" value="${EMPRESA}" />
+    </bean>
+    <!-- /user-access -->
+    
+	<!-- city -->
+	<bean id="CityViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.CityViewListCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+		<property name="view" value="config/citylist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+	</bean>
+    <bean id="CityViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.CityViewAddCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddCityDTO"/>
+        <property name="formView" value="config/cityadd"/>
+        <property name="successView" value="redirect:citylist.htm"/>
+        <property name="validator" ref="CityValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="CityValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.CityValidatorAddCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="CityViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.CityViewUpdCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.UpdCityDTO"/>
+        <property name="formView" value="config/cityadd"/>
+        <property name="successView" value="redirect:citylist.htm"/>
+        <property name="validator" ref="CityValidatorUpdCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="CityValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.CityValidatorUpdCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+	<bean id="CityDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.CityDoActiveCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+		<property name="view" value="redirect:citylist.htm"/>
+	</bean>
+	<!-- /city -->
+
+    <!-- locality -->
+    <bean id="LocalityViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.LocalityViewListCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="config/localitylist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="LocalityViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.LocalityViewAddCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddLocalityDTO"/>
+        <property name="formView" value="config/localityadd"/>
+        <property name="successView" value="redirect:localitylist.htm"/>
+        <property name="validator" ref="LocalityValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="LocalityValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.LocalityValidatorAddCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="LocalityViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.LocalityViewUpdCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.UpdLocalityDTO"/>
+        <property name="formView" value="config/localityadd"/>
+        <property name="successView" value="redirect:localitylist.htm"/>
+        <property name="validator" ref="LocalityValidatorUpdCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="LocalityValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.LocalityValidatorUpdCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="LocalityDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.LocalityDoActiveCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="view" value="redirect:localitylist.htm"/>
+    </bean>
+    <!-- /locality -->
+    
+	<!-- domain -->
+	<bean id="DomainViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.DomainViewListCtrl">
+        <property name="domainService" ref="DomainServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+		<property name="view" value="config/domainlist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+	</bean>
+    <bean id="DomainViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.DomainViewAddCtrl">
+        <property name="domainService" ref="DomainServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.domain.dto.AddDomainDTO"/>
+        <property name="formView" value="config/domainadd"/>
+        <property name="successView" value="redirect:domainlist.htm"/>
+        <property name="validator" ref="DomainValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="DomainValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.DomainValidatorAddCtrl">
+        <property name="domainService" ref="DomainServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="DomainViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.DomainViewUpdCtrl">
+        <property name="domainService" ref="DomainServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.domain.dto.UpdDomainDTO"/>
+        <property name="formView" value="config/domainadd"/>
+        <property name="successView" value="redirect:domainlist.htm"/>
+        <property name="validator" ref="DomainValidatorUpdCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="DomainValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.DomainValidatorUpdCtrl">
+        <property name="domainService" ref="DomainServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+	<bean id="DomainDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.DomainDoActiveCtrl">
+        <property name="domainService" ref="DomainServiceBean"/>
+		<property name="view" value="redirect:domainlist.htm"/>
+	</bean>
+	<!-- domain -->
+
+	<!-- domain-content -->
+	<bean id="DomainContentViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.DomainContentViewListCtrl">
+        <property name="domainService" ref="DomainServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+		<property name="view" value="config/domaincontentlist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+	</bean>
+    <bean id="DomainContentViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.DomainContentViewAddCtrl">
+        <property name="domainService" ref="DomainServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.domain.dto.AddDomainContentDTO"/>
+        <property name="formView" value="config/domaincontentadd"/>
+        <property name="successView" value="redirect:domaincontentlist.htm"/>
+        <property name="validator" ref="DomainContentValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="DomainContentValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.DomainContentValidatorAddCtrl">
+        <property name="domainService" ref="DomainServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="DomainContentViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.DomainContentViewUpdCtrl">
+        <property name="domainService" ref="DomainServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.domain.dto.UpdDomainContentDTO"/>
+        <property name="formView" value="config/domaincontentadd"/>
+        <property name="successView" value="redirect:domaincontentlist.htm"/>
+        <property name="validator" ref="DomainContentValidatorUpdCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="DomainContentValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.DomainContentValidatorUpdCtrl">
+        <property name="domainService" ref="DomainServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+	<bean id="DomainContentDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.config.DomainContentDoActiveCtrl">
+        <property name="domainService" ref="DomainServiceBean"/>
+		<property name="view" value="redirect:domaincontentlist.htm"/>
+	</bean>
+    <!-- /domain-content -->
+
+
+    <!-- ========== COMMUNICATION ========== -->
+    
+    <!-- alert -->
+    <bean id="AlertViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.AlertViewListCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="view" value="communication/alertlist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="AlertViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.AlertViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.user.dto.AddNotificationDTO"/>
+        <property name="formView" value="communication/alertadm"/>
+        <property name="successView" value="redirect:alertlist.htm"/>
+    </bean>
+    
+    <!-- todo -->
+    <bean id="ToDoViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.ToDoViewListCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="communication/todolist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="ToDoViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.ToDoViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.user.dto.AddToDoDTO"/>
+        <property name="formView" value="communication/todoadm"/>
+        <property name="successView" value="redirect:todolist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="ToDoViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.ToDoViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.user.dto.UpdToDoDTO"/>
+        <property name="formView" value="communication/todoadm"/>
+        <property name="successView" value="redirect:todolist.htm"/>
+    </bean>
+    <bean id="ToDoProcessCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.ToDoProcessCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="todolist.htm"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <!-- /todo -->
+    
+    <!-- inbox -->
+    <bean id="InboxViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxViewListCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="communication/inboxlist"/>
+    </bean>
+    <bean id="InboxViewListMsgCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxViewListCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="communication/inboxmsg"/>
+    </bean>
+    <bean id="InboxViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="view" value="communication/inboxadd"/>
+    </bean>    
+    <bean id="InboxViewNewCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxViewNewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="view" value="communication/inboxnew"/>
+    </bean>
+    
+    <bean id="InboxDoSendCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxDoSendCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="redirect:inboxlist.htm"/>
+        <property name="viewmobile" value="redirect:inboxmsg.htm"/>
+    </bean>
+    <bean id="InboxMsgDoSendCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxMsgDoSendCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="view" value="redirect:inboxmsge.htm"/>
+        <property name="PATH_ROOT" value="${PATH_ROOT}" />
+        <property name="PATH_IMAGES" value="${PATH_IMAGES}" />
+    </bean>
+    <bean id="InboxMsgGroupDoSendCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxMsgGroupDoSendCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="redirect:inboxmsggroup.htm"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+    </bean>
+    <bean id="InboxProcessCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxProcessCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="redirect:inboxlist.htm"/>
+    </bean>
+    <bean id="InboxDelCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxDelCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="redirect:inbox.htm#no-back-button"/>
+    </bean>    
+    <bean id="MsgDelCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.MsgDelCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="redirect:inboxmsge.htm"/>
+        <property name="PATH_ROOT" value="${PATH_ROOT}" />
+    </bean>  
+    <bean id="InboxViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="communication/inbox"/>                
+    </bean>
+    <bean id="InboxMsgeViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxMsgeViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="communication/inboxmsge"/>
+    </bean>      
+    <bean id="InboxMsgGroupViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxMsgGroupViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="communication/inboxmsggroup"/>
+    </bean>   
+    <bean id="InboxGroupViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.InboxGroupViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="communication/inboxgroup"/>
+    </bean>
+    <bean id="DelMsgGroupCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.DelMsgGroupCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="redirect:inboxgroup.htm"/>
+    </bean>
+    
+    <!-- /inbox -->
+    
+    <!-- calendar -->    
+    <bean id="CalendarViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.communication.CalendarViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="view" value="communication/calendar"/>
+        <property name="LABEL_PERSONAL" value="${LABEL_PERSONAL}" />
+        <property name="LABEL_GLOBAL" value="${LABEL_GLOBAL}" />
+        <property name="DRIVER_PROFILE" value="${DRIVER_PROFILE}" />
+    </bean>
+    <!-- /calendar -->
+
+    <!-- user-profile -->
+    <bean id="ProfileViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.user.ProfileViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="view" value="user/profile"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="IMAGE_DEFAULT_USER" value="${IMAGE_DEFAULT_USER}" />
+        <property name="PERFIL_ADM" value="${PERFIL_ADM}" />
+        <property name="PERFIL_SUP" value="${PERFIL_SUP}" />
+        <property name="PERFIL_RET" value="${PERFIL_RET}" />
+        <property name="PERFIL_DRI" value="${PERFIL_DRI}" />
+        <property name="PERFIL_STO" value="${PERFIL_STO}" />
+        <property name="PERFIL_DEM" value="${PERFIL_DEM}" />
+        <property name="PERFIL_LGK" value="${PERFIL_LGK}" />
+        <property name="PERFIL_CCT" value="${PERFIL_CCT}" />
+        <property name="GLO_ADM" value="${GLO_ADM}" />
+        <property name="GLO_SUP" value="${GLO_SUP}" />
+        <property name="GLO_RET" value="${GLO_RET}" />
+        <property name="GLO_DRI" value="${GLO_DRI}" />
+        <property name="GLO_STO" value="${GLO_STO}" />
+        <property name="GLO_DEM" value="${GLO_DEM}" />
+        <property name="GLO_LGK" value="${GLO_LGK}" />
+        <property name="GLO_CCT" value="${GLO_CCT}" />
+    </bean>
+
+    <bean id="UserProfileViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.user.UserProfileViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.user.dto.UpdUserDTO"/>
+        <property name="formView" value="user/user-profileupd"/>
+        <property name="successView" value="redirect:user-profile.htm"/>
+        <property name="validator" ref="UserProfileValidatorUpdCtrl"/>
+    </bean>
+
+    <bean id="ForgotPasswdViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.user.ForgotPasswdViewCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="view" value="user/forgotpasswd"/>
+        <property name="CORREO_SOPORTE" value="${CORREO_SOPORTE}" />
+        <property name="PASSWD_SOPORTE" value="${PASSWD_SOPORTE}" />
+    </bean>
+    
+    <bean id="UserProfileValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.UserProfileValidatorUpdCtrl">
+    </bean>
+    <bean id="ProfileViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.user.ProfileViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.user.dto.UpdUserDTO"/>
+        <property name="formView" value="user/profileupd"/>
+        <property name="successView" value="redirect:profile.htm"/>
+        <property name="validator" ref="ProfileValidatorUpdCtrl"/>
+    </bean>
+    <bean id="ProfileValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.ProfileValidatorUpdCtrl"/>
+    <bean id="PasswdProfileViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.user.PasswdProfileViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.user.dto.UpdUserDTO"/>
+        <property name="formView" value="user/passwdprofileupd"/>
+        <property name="successView" value="redirect:profile.htm"/>
+        <property name="validator" ref="PasswdProfileValidatorUpdCtrl"/>
+    </bean>
+    <bean id="PasswdProfileValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.PasswdProfileValidatorUpdCtrl"/>
+    <!-- /user-profile -->
+    
+    <!-- ========== ADMINISTRATION ========== -->
+    
+    <!-- supplier -->
+    <bean id="AdmSupplierViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.SupplierViewListCtrl">
+        <property name="view" value="admin/supplierlist"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="AdmSupplierViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.SupplierViewAddCtrl">
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.supplier.dto.AddSupplierDTO"/>
+        <property name="formView" value="admin/supplieradm"/>
+        <property name="successView" value="redirect:admsupplierlist.htm"/>
+        <property name="validator" ref="AdmSupplierValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+    </bean>
+    <bean id="AdmSupplierViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.SupplierViewUpdCtrl">
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.supplier.dto.UpdSupplierDTO"/>
+        <property name="formView" value="admin/supplieradm"/>
+        <property name="successView" value="redirect:admsupplierlist.htm"/>
+        <property name="validator" ref="AdmSupplierValidatorUpdCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+    </bean>
+    <bean id="AdmSupplierValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.SupplierValidatorAddCtrl">
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="AdmSupplierValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.SupplierValidatorUpdCtrl">
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="AdmSupplierDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.SupplierDoActiveCtrl">
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="view" value="redirect:admsupplierlist.htm"/>
+    </bean>
+    <bean id="AdmSupplierDelCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.SupplierDelCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="redirect:admsupplierlist.htm"/>
+    </bean>
+    <!-- /supplier -->
+    
+    <!-- user -->
+    <bean id="AdmUserViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.UserViewListCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="view" value="admin/userlist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="AdmUserViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.UserViewAddCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.user.dto.AddUserDTO"/>
+        <property name="formView" value="admin/useradm"/>
+        <property name="successView" value="redirect:admuserlist.htm"/>
+        <property name="validator" ref="UserValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+        <property name="EMPRESA" value="${EMPRESA}" />
+        <property name="IMAGE" value="${IMAGE_DEFAULT_USER}" />
+    </bean>
+    <bean id="AdmUserViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.UserViewUpdCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="supplierService" ref="SupplierServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.user.dto.UpdUserDTO"/>
+        <property name="formView" value="admin/useradm"/>
+        <property name="successView" value="redirect:admuserlist.htm"/>
+        <property name="validator" ref="UserValidatorUpdCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+    </bean>
+    <bean id="AdmUserDelCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.UserDoDeleteCtrl">
+        <property name="view" value="redirect:admuserlist.htm"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="logisticService" ref="LogisticServiceBean"/>
+    </bean>
+    
+    <bean id="UserAutoAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.UserAutoAddCtrl">
+        <property name="managerUserService" ref="ManagerUserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.manager.user.dto.AutoRegistroDTO"/>
+        <property name="formView" value="admin/autoadduser"/>
+        <property name="successView" value="redirect:registration-full.htm?exitoso=true"/> <!-- j_security_logout"/> -->
+        <property name="validator" ref="AutoRegistroValidatorCtrl"/>
+        <property name="AUTOADDURL" value="${AUTOADDURL}"/>
+		
+    </bean>
+    
+     <bean id="AutoRegistroValidatorCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.AutoRegistroValidatorCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+
+    <!-- /user -->
+    
+    <!-- country -->
+    <bean id="CountryViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.CountryViewListCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="view" value="admin/countrylist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="CountryViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.CountryViewAddCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddCountryDTO"/>
+        <property name="formView" value="admin/countryadm"/>
+        <property name="successView" value="redirect:countrylist.htm"/>
+        <property name="validator" ref="CountryValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+    </bean>
+    <bean id="CountryValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.CountryValidatorAddCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="CountryViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.CountryViewUpdCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="userNotificationService" ref="UserNotificationServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.UpdCountryDTO"/>
+        <property name="formView" value="admin/countryadm"/>
+        <property name="successView" value="redirect:countrylist.htm"/>
+        <property name="validator" ref="CountryValidatorUpdCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="ORDERBY" value="${ORDERBY}" />
+    </bean>
+    <bean id="CountryValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.CountryValidatorUpdCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="CountryDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.CountryDoActiveCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="view" value="redirect:countrylist.htm"/>
+    </bean>
+    <!-- /country -->
+    
+    <!-- state -->
+    <bean id="StateViewListCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.StateViewListCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="view" value="admin/statelist"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+        <property name="PAIS" value="${MEXICO}" />
+    </bean>
+    <bean id="StateViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.StateViewAddCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.AddStateDTO"/>
+        <property name="formView" value="admin/stateadm"/>
+        <property name="successView" value="redirect:statelist.htm"/>
+        <property name="validator" ref="StateValidatorAddCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="StateValidatorAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.StateValidatorAddCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="StateViewUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.StateViewUpdCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="commandName" value="command"/>
+        <property name="commandClass" value="com.retailsbs.logistikapp.retail.dto.UpdStateDTO"/>
+        <property name="formView" value="admin/stateadm"/>
+        <property name="successView" value="redirect:statelist.htm"/>
+        <property name="validator" ref="StateValidatorUpdCtrl"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+        <property name="NO_ACTIVE" value="${NO_ACTIVE}" />
+    </bean>
+    <bean id="StateValidatorUpdCtrl" class="com.retailsbs.logistikapp.web.ctrl.validator.StateValidatorUpdCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="ACTIVE" value="${ACTIVE}" />
+    </bean>
+    <bean id="StateDoActiveCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.StateDoActiveCtrl">
+        <property name="retailService" ref="RetailServiceBean"/>
+        <property name="view" value="redirect:statelist.htm"/>
+    </bean>
+    <!-- /state -->
+    
+    
+    <!-- Plans -->
+    <bean id="PlansListViewCtrl" class="com.retailsbs.logistikapp.web.ctrl.admin.PlansListViewCtrl">
+    	<property name="supplierService" ref="SupplierServiceBean"/>
+    	<property name="view" value="admin/planslist"/>
+    </bean>
+    <!-- /Plans -->
+    
+    <!-- ======================= RESOLVEDOR DE EXCEPCIONES ========================== -->
+ 
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="defaultErrorView" value="error"/>
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.Exception">error</prop>
+				<prop key="java.lang.NullPointerException">error</prop>
+				<prop key="java.lang.OutOfMemoryError">error</prop>
+				<prop key="com.retailsbs.logistikapp.user.exception.AccessNotFoundException">access</prop>
+				<prop key="com.retailsbs.logistikapp.supplier.exception.PlanNotFoundException">plan</prop>
+			</props>
+		</property>
+	</bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:messages"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="lang" />
+    </bean>
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="es" />
+    </bean>
+    <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="interceptors" ref="localeChangeInterceptor" />
+    </bean>
+
+    <!-- ======================= Resolves flow view names to .jsp templates ========================== -->
+    
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+</beans>

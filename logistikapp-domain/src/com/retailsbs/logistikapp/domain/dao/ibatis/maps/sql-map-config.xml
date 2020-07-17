@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<settings useStatementNamespaces="true"/>
+	<sqlMap resource="com/retailsbs/logistikapp/domain/dao/ibatis/maps/lgk_domain_content_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/domain/dao/ibatis/maps/lgk_domain_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/domain/dao/ibatis/maps/finder_domain_content_SqlMap.xml"/>
+</sqlMapConfig>

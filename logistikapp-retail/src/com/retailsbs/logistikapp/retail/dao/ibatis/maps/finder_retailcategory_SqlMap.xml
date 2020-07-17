@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_retailcategory">
+
+	<!-- Obtiene una lista de objetos de dominio de retailcategory a partir de un id retail y un parametro de busqueda(active y retail category) -->
+	<select id="getRetailsCategoryActiveByCriteria"
+		parameterClass="com.retailsbs.logistikapp.retail.dto.RetailCategoryActiveSearchCriteria"
+		resultClass="com.retailsbs.logistikapp.retail.domain.RetailCategory">
+		
+		SELECT distinct res.id_retail_category, res.id_supplier, res.created, res.modified, res.orderby, res.active, res.code, res.name, res.login
+		FROM(
+			SELECT  retcat.id_retail_category, retcat.id_supplier, retcat.created, retcat.modified, retcat.orderby, retcat.active, retcat.code, retcat.name, retcat.login
+			FROM lgk_retail_category retcat
+				WHERE 1=1
+				<isNotNull property="id_supplier">
+					AND retcat.id_supplier=#id_supplier#
+				</isNotNull>
+				<isNotNull property="active">
+					AND retcat.active=#active#
+				</isNotNull>		
+				<isNotNull property="id_retail_category">
+					UNION ALL
+					SELECT  retcat.id_retail_category, retcat.id_supplier, retcat.created, retcat.modified, retcat.orderby, retcat.active, retcat.code, retcat.name, retcat.login
+					FROM lgk_retail_category retcat
+					WHERE 1=1
+					<isNotNull property="id_supplier">
+						AND retcat.id_supplier=#id_supplier#
+					</isNotNull>
+					AND retcat.id_retail_category=#id_retail_category#
+				</isNotNull>	
+		)res
+		
+		order by res.orderby, res.name 
+	</select>
+	
+	<delete id="delRetailCategoryByIdSupplier" parameterClass="Long">
+		delete from lgk_retail_category
+		where id_supplier = #id_supplier:INTEGER#
+	</delete>
+
+
+</sqlMap>

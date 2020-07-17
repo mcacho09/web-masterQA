@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+    <!-- ======================== FILTER CHAIN ======================= -->
+    <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
+        <property name="filterInvocationDefinitionSource">
+            <value>
+                CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+                PATTERN_TYPE_APACHE_ANT
+                /**=httpSessionContextIntegrationFilter,authenticationProcessingFilter,logoutFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor
+            </value>
+            <!-- Put channelProcessingFilter before securityContextHolderAwareRequestFilter to turn on SSL switching -->
+            <!-- It's off by default b/c Canoo WebTest doesn't support SSL out-of-the-box -->
+        </property>
+    </bean>
+
+    <bean id="httpSessionContextIntegrationFilter" class="org.acegisecurity.context.HttpSessionContextIntegrationFilter"/>
+
+    <bean id="logoutFilter" class="org.acegisecurity.ui.logout.LogoutFilter">
+        <constructor-arg value="/index.jsp"/> <!-- URL redirected to after logout -->
+        <constructor-arg>
+            <list>
+                <ref bean="rememberMeServices"/>
+                <bean class="org.acegisecurity.ui.logout.SecurityContextLogoutHandler"/>
+            </list>
+        </constructor-arg>
+        <property name="filterProcessesUrl" value="/j_security_logout"/>
+    </bean>
+    
+    <bean id="authenticationProcessingFilter" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationFailureUrl" value="/index.jsp?code=1"/>
+        <property name="defaultTargetUrl" value="/customer.htm"/>
+        <property name="filterProcessesUrl" value="/j_security_check"/>
+        <property name="rememberMeServices" ref="rememberMeServices"/>
+    </bean>
+
+    <bean id="securityContextHolderAwareRequestFilter" class="org.acegisecurity.wrapper.SecurityContextHolderAwareRequestFilter"/>
+
+    <bean id="rememberMeProcessingFilter" class="org.acegisecurity.ui.rememberme.RememberMeProcessingFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="rememberMeServices" ref="rememberMeServices"/>
+    </bean>
+
+    <bean id="anonymousProcessingFilter" class="org.acegisecurity.providers.anonymous.AnonymousProcessingFilter">
+        <property name="key" value="anonymous"/>
+        <property name="userAttribute" value="anonymous,ROLE_ANONYMOUS"/>
+    </bean>
+
+    <bean id="formLoginAuthenticationEntryPoint" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+        <property name="loginFormUrl" value="/index.jsp"/>
+        <property name="forceHttps" value="false"/>
+    </bean>
+
+    <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
+        <property name="authenticationEntryPoint" ref="formLoginAuthenticationEntryPoint"/>
+    </bean>
+
+    <bean id="filterInvocationInterceptor" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="accessDecisionManager" ref="accessDecisionManager"/>
+        <property name="objectDefinitionSource">
+            <value>
+            <!--  Agregado de perfiles para control de planes (SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5) -->
+                PATTERN_TYPE_APACHE_ANT
+                
+                <!-- login -->
+                /index.jsp*=ADM,SUP,RET,STO,ROLE_ANONYMOUS,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                
+                <!-- home -->
+                /home.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /metricssalereport.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                
+                <!-- maps -->
+                /geocustomer.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP2,SUP3,SUP4,SUP5
+                /geolocation.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP2,SUP3,SUP4,SUP5
+                /geostore.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP2,SUP3,SUP4,SUP5
+                /geocategory.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP2,SUP3,SUP4,SUP5
+                /geotravel.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5
+                /geocallcenter.htm*=ADM,SUP,DEM,CCT,SUP1,SUP3,SUP4,SUP5
+                
+                <!-- clientes -->
+                /customer.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP2,SUP3,SUP4,SUP5,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                /customeradd.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP2,SUP3,SUP4,SUP5,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                /store.htm*=ADM,SUP,DRI,RET,STO,DEM,LGK,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5
+                /storeadd.htm*=ADM,SUP,DRI,RET,STO,DEM,LGK,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5
+                /storeupd.htm*=ADM,SUP,DRI,RET,STO,DEM,LGK,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5
+                /storedel.htm*=ADM,SUP,DRI,RET,STO,DEM,LGK,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5
+                /storesearch.htm*=ADM,DRI,SUP,RET,STO,DEM,LGK,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5
+                
+                <!-- fileupload -->
+                /fileupload.jsp*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5
+
+                <!-- logistic -->
+                /retailcategorylist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /retailcategoryadd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /retailcategoryupd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /retailcategoryfromretailadd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                
+                /travellist.htm*=ADM,SUP,RET,STO,DEM,LGK,DRI,SUP1,SUP3,SUP4,SUP5,DRI1,DRI3,DRI4,DRI5
+                /travelhistorylist.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,SUP1,SUP3,SUP4,SUP5,DRI1,DRI3,DRI4,DRI5
+                /traveladd.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP3,SUP4,SUP5
+                /travelupd.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP3,SUP4,SUP5
+                /travelconfirm.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,SUP1,SUP3,SUP4,SUP5,DRI1,DRI3,DRI4,DRI5
+                /confirmtravel.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,SUP1,SUP3,SUP4,SUP5,DRI1,DRI3,DRI4,DRI5
+                /travelaction.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,SUP1,SUP3,SUP4,SUP5,DRI1,DRI3,DRI4,DRI5
+                /travelonway.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,SUP1,SUP3,SUP4,SUP5,DRI1,DRI3,DRI4,DRI5
+                /travelwaybill.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,SUP1,SUP3,SUP4,SUP5,DRI1,DRI3,DRI4,DRI5
+                /actionwaybill.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,SUP1,SUP3,SUP4,SUP5,DRI1,DRI3,DRI4,DRI5
+                /waybillcsv.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,SUP1,SUP3,SUP4,SUP5,DRI1,DRI3,DRI4,DRI5
+                
+                /retaildeptadd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /retaildeptupd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /storedoactive.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /storedetail.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5
+                /storeimport.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /importstore.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                
+                /rutas.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP3,SUP4,SUP5
+                /rutasadd.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP3,SUP4,SUP5
+                /rutasupd.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP3,SUP4,SUP5
+                /rutasdel.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP3,SUP4,SUP5
+                /routedel.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP3,SUP4,SUP5
+                
+                /retailadm.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /retailcategoryadm.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /retaildeptadm.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /retaildetail.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /retaildoactive.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /retaillist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /storeadm.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /storecategoryadm.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /storecategorylist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /storelist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP3,SUP4,SUP5
+                /storeinfo.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP3,SUP4,SUP5,DRI1,DRI3,DRI4,DRI5
+                /travelreport.htm*=ADM,SUP,SUP1,SUP3,SUP4,SUP5,DRI,DRI1,DRI3,DRI4,DRI5
+                /travelreportdoc.htm*=ADM,SUP,SUP1,SUP3,SUP4,SUP5,DRI,DRI1,DRI3,DRI4,DRI5
+                
+                <!-- call center -->
+                /callcenter.htm*=ADM,SUP,DEM,CCT,SUP1,SUP3,SUP4,SUP5
+                
+                <!-- communication -->                
+                /alertlist.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5
+                /alertadd.htm*=ADM,SUP,RET,STO,DEM,LGK,SUP1,SUP2,SUP3,SUP4,SUP5
+
+                /inboxlist.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /inboxmsg.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /inboxadd.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /inboxnew.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /inboxdosend.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /inboxmsgdosend.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /inboxmsggroupdosend.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /inboxprocess.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /msgdel.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /inboxdel.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /inbox.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /inboxmsge.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /inboxmsggroup.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /inboxgroup.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /delmsggroup.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                
+                /todolist.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /todoadd.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /todoupd.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                /todoprocess.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                
+                /calendar.htm*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5
+                
+                <!-- user -->
+                /profile.htm*=ADM,SUP,RET,STO,DEM,CCT,DRI,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,LGK
+                /user-profileupd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /profileupd.htm*=ADM,SUP,RET,STO,DEM,CCT,DRI,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,LGK
+                /passwdprofileupd.htm*=ADM,SUP,RET,STO,DEM,CCT,DRI,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,LGK
+                /forgotpasswd.htm*=ADM,SUP,RET,STO,ROLE_ANONYMOUS,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5
+                /registration-full.htm*=ADM,SUP,RET,STO,ROLE_ANONYMOUS,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5
+                
+                <!-- config -->
+                /cfgretaillist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /cfgretailadd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /cfgretailupd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /cfgretaildel.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /cfguserlist.htm*=ADM,SUP,SUP1,SUP2,SUP3,SUP4,SUP5
+                /cfgsupplier.htm*=ADM,SUP,SUP1,SUP2,SUP3,SUP4,SUP5
+                /cfguseradd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /cfguserupd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                
+                
+                /cfgstorecatlist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /storecategoryadd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /storecategoryupd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /storecategorydel.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /storecategoryfromstoreadd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /storecategoryfromstoreupd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                
+                /cityadd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /citylist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /countryadm.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /countrylist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /domainadd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /domaincontentadd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /domaincontentlist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /domainlist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /localityadd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /localitylist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /passwdconfigupd.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /stateadm.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /statelist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /supplieradm.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /supplierlist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /useraccesslist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /useradm.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /userlist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                
+                <!-- admin -->
+                /admuserlist.htm*=ADM
+                /admuseradd.htm*=ADM
+                /admuserupd.htm*=ADM
+                /admdeluser.htm*=ADM
+                /admsupplierlist.htm*=ADM
+                /admsupplieradd.htm*=ADM
+                /admsupplierupd.htm*=ADM
+                /admsupplierdoactive.htm*=ADM
+                /admdelsupplier.htm*=ADM
+              	/planlist.html*=ADM
+                
+                <!-- DWR -->
+                /dwr/*=ADM,SUP,RET,STO,DEM,DRI,LGK,CCT,SUP1,SUP2,SUP3,SUP4,SUP5,DRI1,DRI2,DRI3,DRI4,DRI5,SOP
+                
+                <!-- sales -->
+                /categoryproductadm.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                /categoryproductlist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                /productadm.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                /productdet.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                /productimport.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                /productlist.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                /productmix.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                /reportbydri.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                /salesdetail.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                
+                <!-- pos -->
+                /sales.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                /stock.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /newstock.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /updstock.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /admtemplatestock.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /userstock.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
+                
+                <!-- Pagos -->
+                 /planpayment.htm*=DRM 
+                
+            </value>
+        </property>
+    </bean>
+
+    <bean id="accessDecisionManager" class="org.acegisecurity.vote.AffirmativeBased">
+        <property name="allowIfAllAbstainDecisions" value="false"/>
+        <property name="decisionVoters">
+            <list>
+                <bean class="org.acegisecurity.vote.RoleVoter">
+                    <property name="rolePrefix" value=""/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="rememberMeServices" class="org.acegisecurity.ui.rememberme.TokenBasedRememberMeServices">
+        <property name="userDetailsService" ref="UserServiceBean"/>
+        <property name="key" value="appfuseRocks"/>
+        <property name="parameter" value="rememberMe"/>
+    </bean>
+
+    <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+        <property name="providers">
+            <list>
+                <ref local="daoAuthenticationProvider"/>
+                <!-- ref local="anonymousAuthenticationProvider"/ -->
+                <!-- ref local="rememberMeAuthenticationProvider"/ -->
+            </list>
+        </property>
+    </bean>
+
+	<!-- Configuración Autenticación meidante DAO -->
+    <bean id="daoAuthenticationProvider" class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+         <property name="userDetailsService" ref="UserServiceBean"/>
+         <!--property name="userCache" ref="userCache"/-->
+         <property name="passwordEncoder" ref="passwordEncoder"/>
+         <!--property name="hideUserNotFoundExceptions" value="false"/-->
+    </bean>
+
+    <bean id="anonymousAuthenticationProvider" class="org.acegisecurity.providers.anonymous.AnonymousAuthenticationProvider">
+        <property name="key" value="anonymous"/>
+    </bean>
+
+    <bean id="rememberMeAuthenticationProvider" class="org.acegisecurity.providers.rememberme.RememberMeAuthenticationProvider">
+        <property name="key" value="appfuseRocks"/>
+    </bean>
+
+    <!-- This bean definition must be available to ApplicationContext.getBean() so StartupListener
+         can look for it and detect if password encryption is turned on or not -->
+    
+	<!-- bean id="passwordEncoder" class="org.acegisecurity.providers.encoding.Md5PasswordEncoder"/ -->
+	<bean id="passwordEncoder" class="org.acegisecurity.providers.encoding.PlaintextPasswordEncoder"/>
+
+    <!-- This bean is optional; it isn't used by any other bean as it only listens and logs -->
+    <bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener"/>
+
+    <!-- SSL Switching: to use this, configure it in the filterChainProxy bean -->
+    <bean id="channelProcessingFilter" class="org.acegisecurity.securechannel.ChannelProcessingFilter">
+        <property name="channelDecisionManager" ref="channelDecisionManager"/>
+        <property name="filterInvocationDefinitionSource">
+            <value>
+                PATTERN_TYPE_APACHE_ANT
+                /jsp/**=REQUIRES_SECURE_CHANNEL
+                /j_security_check*=REQUIRES_SECURE_CHANNEL
+                /**=REQUIRES_INSECURE_CHANNEL
+            </value>
+        </property>
+    </bean>
+
+    <bean id="channelDecisionManager" class="org.acegisecurity.securechannel.ChannelDecisionManagerImpl">
+        <property name="channelProcessors">
+            <list>
+                <bean class="org.acegisecurity.securechannel.SecureChannelProcessor"/>
+                <bean class="org.acegisecurity.securechannel.InsecureChannelProcessor"/>
+            </list>
+        </property>
+    </bean>
+</beans>

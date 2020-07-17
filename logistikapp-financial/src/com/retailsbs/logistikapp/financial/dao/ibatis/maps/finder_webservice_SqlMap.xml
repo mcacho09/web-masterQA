@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_webservice">
+
+	<select id="getTransactionList" 
+		parameterClass="com.retailsbs.logistikapp.financial.dto.WSTransactionListDTO"
+		resultClass="com.retailsbs.logistikapp.financial.dto.WSTransactionDTO">
+	
+		SELECT ord.id_order, ord.invoice, s.name AS store, 
+			coalesce(vta.sales, 0) AS sale , 
+			coalesce(dev.devolutions,0) AS devolutions, 
+			coalesce(dev.sale_dev, 0) AS sale_dev , 
+			coalesce(chg.changes, 0) AS changes,
+			ord.trx_num AS trxnumber,
+			ord.status,
+			u.username AS driver
+		FROM lgk_order ord
+		JOIN lgk_store s ON ord.id_store = s.id_store
+		LEFT JOIN (
+			SELECT id_order, coalesce(sum(quantity*price_sale), 0) AS sales 
+			FROM lgk_order_detail 
+			WHERE typetrx = 'VTA' 
+			GROUP BY id_order
+		) vta ON vta.id_order = ord.id_order
+		LEFT JOIN (
+			SELECT id_order, coalesce(sum(quantity), 0) AS devolutions, coalesce(sum(quantity * price_sale), 0) AS sale_dev
+			FROM lgk_order_detail 
+			WHERE typetrx = 'DEV' 
+			GROUP BY id_order
+		)dev ON dev.id_order = ord.id_order
+		LEFT JOIN (
+			SELECT id_order, coalesce(sum(quantity), 0) AS changes 
+			FROM lgk_order_detail 
+			WHERE typetrx = 'CHG' 
+			GROUP BY id_order
+		)chg ON chg.id_order = ord.id_order
+		JOIN lgk_user u ON u.id_user = ord.id_user
+		
+		WHERE 1=1 
+		<isNotNull property="id_supplier">
+			AND ord.id_supplier = #id_supplier:INTEGER#
+		</isNotNull>
+		<isNotNull property="id_user">
+			AND ord.id_user = #id_user:INTEGER#
+		</isNotNull>
+		<isNotNull property="id_order">
+			AND ord.id_order = #id_order:INTEGER#
+		</isNotNull>
+		<isNotNull property="invoice">
+			AND ord.invoice::timestamp::date = #invoice:DATE#
+		</isNotNull>
+		<isNotEmpty property="id_store">
+			AND s.id_store = #id_store:INTEGER#
+		</isNotEmpty>
+		ORDER BY ord.invoice DESC, ord.id_order DESC
+		<isNotNull property="limit">
+			LIMIT #limit:INTEGER#
+		</isNotNull>
+	
+	</select>
+	
+	<select id="getProductsDetailByIdOrder" 
+		parameterClass="com.retailsbs.logistikapp.financial.dto.WSProductsDetailCriteria"
+		resultClass="com.retailsbs.logistikapp.financial.dto.WSProductDetailDTO">
+	
+		SELECT od.quantity, p.code, p.name_short, p.name_long, coalesce(od.price_sale,0) as price_sale, coalesce(od.price_sug, 0) as price_sug, od.typetrx, p.image, p.tax,
+		FROM lgk_order_detail od
+		JOIN lgk_product p on p.id_product = od.id_product
+		JOIN lgk_order o on o.id_order = od.id_order
+		WHERE od.id_order = #id_order:INTEGER# 
+			and o.id_supplier = #id_supplier:INTEGER#
+			<isNotNull property="typetrx">
+				and od.typetrx = #typetrx#
+			</isNotNull>
+		
+	</select>
+	
+	<select id="getProductsByIdSupplier"
+		parameterClass="com.retailsbs.logistikapp.financial.dto.WSProductCriteria"
+		resultClass="com.retailsbs.logistikapp.financial.dto.WSProduct">
+		
+		SELECT p.id_product, 
+			p.name_short, 
+			p.name_long, 
+			p.code, 
+			coalesce(p.piece_in_box, 0) as piece_in_box,
+			p.price_sale as price_sale_piece,
+			coalesce(case coalesce(p.type, 'PCS') when 'PKG' then coalesce(data.price_sale, coalesce(p.price_sale_box, p.price_sale)) when 'PCS' then coalesce(data.price_sale, p.price_sale) end ) as price_sale,
+			coalesce(p.type, 'PCS') as type,
+			p.tax
+		FROM lgk_category_product cp
+		JOIN lgk_product p on p.id_category_product = cp.id_category_product
+		left join (
+			select id_product, price_sale
+			from lgk_store s
+			join lgk_store_category_product scp on s.id_store_category = scp.id_store_category
+			where id_store = #id_store:INTEGER#
+		) data on p.id_product = data.id_product
+		where cp.id_supplier = #id_supplier:integer# and p.active = #active#
+		order by p.orderby ASC
+		
+	</select>
+	
+	<select id="getImageProductyById" parameterClass="Long" resultClass="String">
+	
+		SELECT image
+		FROM lgk_product
+		WHERE id_product = #id_product:INTEGER#
+		
+	</select>
+	
+	<select id="getSaleByDri" resultClass="com.retailsbs.logistikapp.financial.dto.SaleByDriDTO">
+		select usr.id_user, usr.username, sum(quantity * coalesce(price_sale, 0.00)) as amount
+		from lgk_order o
+		join lgk_user usr on usr.id_user = o.id_user
+		join lgk_order_detail od on od.id_order = o.id_order
+		where delivery = #delivery#::timestamp::date
+		group by usr.username, usr.id_user
+		order by amount desc, usr.username asc
+	</select>
+	
+</sqlMap>

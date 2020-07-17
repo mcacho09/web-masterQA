@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xmlns:aop="http://www.springframework.org/schema/aop"
+	     xmlns:tx="http://www.springframework.org/schema/tx"
+	     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+
+	<!-- =====================  DEFINICIONES GENERALES  ======================== -->
+
+
+	<!-- ==========================  DATASOURCE  ============================== -->
+
+	<!-- SqlMap setup for iBATIS Database Layer -->
+	<bean id="sqlMapClient-user" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:com/retailsbs/logistikapp/user/dao/ibatis/maps/sql-map-config.xml"/>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+
+	<!-- ==========================  DEFINICION DE DAOS  ============================== -->
+	
+	<bean id="UserDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.UserDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+	<bean id="AccessDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.AccessDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+	<bean id="ToDoDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.ToDoDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+	<bean id="MessageDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.MessageDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	<bean id="AttachmentDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.AttachmentDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+	<bean id="UserMessageDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.UserMessageDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+	<bean id="FinderMessageDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.FinderMessageDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+	<bean id="FinderUserMessageDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.FinderUserMessageDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+    <bean id="NotificationDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.NotificationDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-user"/>
+    </bean>
+    
+    <bean id="FinderNotificationDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.FinderNotificationDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-user"/>
+    </bean>
+	
+	<bean id="FinderToDoDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.FinderToDoDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+    <bean id="FinderAccessDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.FinderAccessDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-user"/>
+    </bean>
+	
+    <bean id="FinderUserDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.FinderUserDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-user"/>
+    </bean>
+	
+	<bean id="CalendarDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.CalendarDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+	<bean id="FinderCalendarDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.FinderCalendarDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+		
+	<bean id="MessageGroupDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.MessageGroupDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+		
+	<bean id="UserGroupDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.UserGroupDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+		
+	<bean id="GroupDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.GroupDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	<bean id="FinderAttachmentDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.FinderAttachmentDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+	<bean id="FinderUserGroupDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.FinderUserGroupDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+	<bean id="FinderMessageGroupDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.FinderMessageGroupDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+	<bean id="FinderGroupDaoBean" class="com.retailsbs.logistikapp.user.dao.ibatis.FinderGroupDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-user"/>
+	</bean>
+	
+	<!-- ==========================  DEFINICION DE BEANS  ============================== -->
+		
+  	<bean id="UserServiceBean" class="com.retailsbs.logistikapp.user.service.impl.UserServiceImpl">
+  		<property name="dao_user" 			 ref="UserDaoBean"/>
+  		<property name="dao_access" 		 ref="AccessDaoBean"/>
+  		<property name="dao_todo" 			 ref="ToDoDaoBean"/>
+  		<property name="dao_user_message" 	 ref="UserMessageDaoBean"/>
+  		<property name="dao_message" 		 ref="MessageDaoBean"/>
+  		<property name="finder_message" 	 ref="FinderMessageDaoBean"/>
+  		<property name="finder_user_message" ref="FinderUserMessageDaoBean"/>
+  		<property name="dao_notification" 	 ref="NotificationDaoBean"/>
+  		<property name="finder_notification" ref="FinderNotificationDaoBean"/>
+  		<property name="finder_todo" 		 ref="FinderToDoDaoBean"/>
+  		<property name="finder_access" 	 	 ref="FinderAccessDaoBean"/>
+  		<property name="finder_user" 		 ref="FinderUserDaoBean"/>
+  		<property name="dao_calendar" 		 ref="CalendarDaoBean"/>
+  		<property name="finder_calendar" 	 ref="FinderCalendarDaoBean"/>
+  		<property name="dao_user_group" 	 ref="UserGroupDaoBean"/>
+  		<property name="dao_message_group" 	 ref="MessageGroupDaoBean"/>
+  		<property name="dao_group" 	 		 ref="GroupDaoBean"/>
+  		<property name="finder_user_group" 	 ref="FinderUserGroupDaoBean"/>
+  		<property name="dao_attachment" 	 ref="AttachmentDaoBean"/>
+  		<property name="finder_attachment" 	 ref="FinderAttachmentDaoBean"/>
+  		<property name="finder_message_group" 	 ref="FinderMessageGroupDaoBean"/>
+  		<property name="finder_group" 	 ref="FinderGroupDaoBean"/>
+  	</bean>
+  	
+</beans>

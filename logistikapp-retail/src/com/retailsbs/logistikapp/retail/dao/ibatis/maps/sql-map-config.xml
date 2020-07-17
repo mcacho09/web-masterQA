@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<settings useStatementNamespaces="true"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/lgk_city_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/lgk_country_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/lgk_locality_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/lgk_retail_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/lgk_retail_category_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/lgk_retail_dept_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/lgk_state_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/lgk_store_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/lgk_actives_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/lgk_actives_visited_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/finder_city_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/finder_country_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/finder_locality_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/finder_retail_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/finder_state_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/finder_store_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/lgk_store_category_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/finder_storecategory_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/finder_retailcategory_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/finder_retail_dept_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/retail/dao/ibatis/maps/finder_actives_visited_SqlMap.xml"/>
+</sqlMapConfig>

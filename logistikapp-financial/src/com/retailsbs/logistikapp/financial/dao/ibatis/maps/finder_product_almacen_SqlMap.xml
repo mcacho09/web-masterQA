@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="finder_product_almacen" >
+
+  <select id="productAlmacenNextValue" resultClass="Long">
+  	select nextval('lgk_product_almacen_id_product_almacen_seq'::regclass)
+  </select>
+  
+  <select id="getProductByIdAlmacen" 
+  		parameterClass="com.retailsbs.logistikapp.financial.dto.ProductByIdAlmacenCriteria"  
+  		resultClass="com.retailsbs.logistikapp.financial.dto.ProductAlmacenDTO">
+		select
+		  p.name_short,
+		  coalesce(stock.min, 0)          as min,
+		  coalesce(stock.max, 0)          as max,
+		  coalesce(stock.qty, 0)          as qty,
+		  coalesce(stock.type, 'VTA')     as stock_type,
+		  coalesce(stock.qty, 0)          as qty_stock_general,
+		  p.id_product,
+		  p.id_category_product,
+		  p.created,
+		  p.modified,
+		  p.login,
+		  p.orderby,
+		  p.active,
+		  p.code,
+		  p.image,
+		  p.name_long,
+		  p.price_sale,
+		  p.price_cost,
+		  p.id_brand,
+		  coalesce(p.flag, 'N')           as flag,
+		  coalesce(p.price_cost_box, 0.0) as price_cost_box,
+		  coalesce(p.piece_in_box, 0)     as piece_in_box,
+		  coalesce(p.type, 'PCS')         as type,
+		  coalesce(p.price_sale_box, 0.0) as price_sale_box
+		from lgk_product p
+		  left join (
+		              select
+		                lpa.qty,
+		                lpa.type,
+		                lpa.min,
+		                lpa.max,
+		                a.id_supplier,
+		                a.id_retail,
+		                a.id_user,
+		                lpa.id_product,
+		                a.id_almacen
+		              from lgk_product_almacen lpa
+		                join lgk_almacen a on lpa.id_almacen = a.id_almacen
+		            ) stock on stock.id_product = p.id_product
+		where p.active = 'S'
+		      and stock.id_supplier = #id_supplier:INTEGER#
+		      and stock.id_almacen = #id_almacen:INTEGER#
+		order by p.name_short
+  </select>
+  
+  <delete id="deleteProductAlmacenByIdAlmacen">
+  	delete from lgk_product_almacen where id_almacen = #id_almacen:INTEGER#
+  </delete>
+  
+  <delete id="removeProductsNotSale">
+  	delete from lgk_product_almacen where id_almacen = #id_almacen:INTEGER# and type in ('DEV', 'CHG', 'VDO')
+  </delete>
+  
+  <select id="getProductsFromAlmacen" 
+	  	parameterClass="com.retailsbs.logistikapp.financial.dto.ProductByIdAlmacenCriteria"  
+	  	resultClass="com.retailsbs.logistikapp.financial.dto.ProductAlmacenDTO">
+		
+		select
+		  p.name_short,
+		  coalesce(stock.min, 0)          as min,
+		  coalesce(stock.max, 0)          as max,
+		  coalesce(stock.qty, 0)          as qty,
+		  <!-- coalesce(stock.type, 'VTA')     as stock_type, -->
+		  coalesce(stock.qty, 0)          as qty_stock_general,
+		  p.id_product,
+		  p.id_category_product,
+		  p.created,
+		  p.modified,
+		  p.login,
+		  p.orderby,
+		  p.active,
+		  p.code,
+		  p.image,
+		  p.name_long,
+		  p.price_sale,
+		  p.price_cost,
+		  p.id_brand,
+		  coalesce(p.flag, 'N')           as flag,
+		  coalesce(p.price_cost_box, 0.0) as price_cost_box,
+		  coalesce(p.piece_in_box, 0)     as piece_in_box,
+		  coalesce(p.type, 'PCS')         as type,
+		  coalesce(p.price_sale_box, 0.0) as price_sale_box
+		from lgk_product p
+		  left join (
+		              select
+		                lpa.qty,
+		                <!-- lpa.type, -->
+		                lpa.min,
+		                lpa.max,
+		                a.id_supplier,
+		                a.id_retail,
+		                a.id_user,
+		                lpa.id_product,
+		                a.id_almacen
+		              from lgk_product_almacen lpa
+		                join lgk_almacen a on lpa.id_almacen = a.id_almacen
+		            ) stock on stock.id_product = p.id_product
+		where p.active = 'S'
+		      and stock.id_supplier = #id_supplier:INTEGER#
+		      and stock.id_almacen = #id_almacen:INTEGER#
+		order by p.name_short
+				
+  </select>
+  
+  <select id="getSaledProductsByIdAlmacen"
+  		parameterClass="com.retailsbs.logistikapp.financial.dto.ProductByIdAlmacenCriteria"  
+	  	resultClass="com.retailsbs.logistikapp.financial.dto.ProductAlmacenDTO">
+		
+		select
+		  p.name_short,
+		  coalesce(stock.min, 0)          as min,
+		  coalesce(stock.max, 0)          as max,
+		  coalesce(case stock.type
+		           when 'VTA'
+		             then 0
+		           else stock.qty end, 0) as qty,
+		  coalesce(stock.type, 'VTA')     as stock_type,
+		  coalesce(stock.qty, 0)          as qty_stock_general,
+		  p.id_product,
+		  p.id_category_product,
+		  p.created,
+		  p.modified,
+		  p.login,
+		  p.orderby,
+		  p.active,
+		  p.code,
+		  p.image,
+		  p.name_long,
+		  p.price_sale,
+		  p.price_cost,
+		  p.id_brand,
+		  coalesce(p.flag, 'N')           as flag,
+		  coalesce(p.price_cost_box, 0.0) as price_cost_box,
+		  coalesce(p.piece_in_box, 0)     as piece_in_box,
+		  coalesce(p.type, 'PCS')         as type,
+		  coalesce(p.price_sale_box, 0.0) as price_sale_box
+		from lgk_product p
+		  left join (
+		              select
+		                lpa.qty,
+		                lpa.type,
+		                lpa.min,
+		                lpa.max,
+		                a.id_supplier,
+		                a.id_retail,
+		                a.id_user,
+		                lpa.id_product,
+		                a.id_almacen
+		              from lgk_product_almacen lpa
+		                join lgk_almacen a on lpa.id_almacen = a.id_almacen
+		            ) stock on stock.id_product = p.id_product
+		where p.active = 'S'
+		      and stock.id_supplier = #id_supplier:INTEGER#
+		      and stock.id_almacen = #id_almacen:INTEGER#
+	  	
+	</select>
+
+</sqlMap>

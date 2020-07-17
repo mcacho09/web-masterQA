@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_calendar">
+
+    <select id="getEventByCriteria"
+     		parameterClass="com.retailsbs.logistikapp.user.dto.EventSearchCriteria"
+            resultClass="com.retailsbs.logistikapp.user.dto.CalendarDTO">
+            
+       		SELECT cal.id_calendar, cal.cal_title, cal.cal_start, cal.cal_end, cal.cal_level, cal.cal_alert 
+			FROM lgk_calendar cal
+			WHERE 1=1
+			AND cal.id_user=#id_user:INTEGER# 
+			OR (cal.id_supplier=#id_supplier:INTEGER# AND cal.cal_level='G')
+			
+    </select>
+    
+    <delete id="delCalendarByIdSupplier" parameterClass="Long">
+    	delete from lgk_calendar
+    	where id_supplier = #id_supplier:INTEGER#
+    </delete>
+    
+    <delete id="delCalendarByIdUser" parameterClass="Long">
+    	delete from lgk_calendar
+    	where id_user = #id_user:INTEGER#
+    </delete>
+    
+</sqlMap>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xmlns:aop="http://www.springframework.org/schema/aop"
+	     xmlns:tx="http://www.springframework.org/schema/tx"
+	     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+
+	<!-- =====================  DEFINICIONES GENERALES  ======================== -->
+
+
+	<!-- ==========================  DATASOURCE  ============================== -->
+
+	<!-- SqlMap setup for iBATIS Database Layer -->
+	<bean id="sqlMapClient-logistic" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:com/retailsbs/logistikapp/logistic/dao/ibatis/maps/sql-map-config.xml"/>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>                                         
+
+
+	<!-- ==========================  DEFINICION DE DAOS  ============================== -->
+	
+	 <bean id="RouteDaoBean" class="com.retailsbs.logistikapp.logistic.dao.ibatis.RouteDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-logistic"/>
+    </bean>
+    <bean id="RouteStoreDaoBean" class="com.retailsbs.logistikapp.logistic.dao.ibatis.RouteStoreDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-logistic"/>
+    </bean>
+    <bean id="TravelDaoBean" class="com.retailsbs.logistikapp.logistic.dao.ibatis.TravelDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-logistic"/>
+    </bean>
+    <bean id="WayBillDaoBean" class="com.retailsbs.logistikapp.logistic.dao.ibatis.WayBillDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-logistic"/>
+    </bean>
+	<bean id="FinderTravelDaoBean" class="com.retailsbs.logistikapp.logistic.dao.ibatis.FinderTravelDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-logistic"/>
+    </bean>
+	<bean id="FinderWayBillDaoBean" class="com.retailsbs.logistikapp.logistic.dao.ibatis.FinderWayBillDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-logistic"/>
+    </bean>	
+	<bean id="FinderRouteStoreDaoBean" class="com.retailsbs.logistikapp.logistic.dao.ibatis.FinderRouteStoreDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-logistic"/>
+    </bean>	
+	<bean id="FinderRouteDaoBean" class="com.retailsbs.logistikapp.logistic.dao.ibatis.FinderRouteDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-logistic"/>
+    </bean>	
+    <bean id="UserPositionDaoBean" class="com.retailsbs.logistikapp.logistic.dao.ibatis.UserPositionDAOImpl">
+        <property name="sqlMapClient" ref="sqlMapClient-logistic"/>
+    </bean>	
+	<!-- ==========================  DEFINICION DE BEANS  ============================== -->
+  	<bean id="LogisticServiceBean" class="com.retailsbs.logistikapp.logistic.service.impl.LogisticServiceImpl">
+  		<property name="dao_route"          ref="RouteDaoBean"/>
+        <property name="dao_route_store"    ref="RouteStoreDaoBean"/>
+        <property name="dao_travel"         ref="TravelDaoBean"/>
+        <property name="dao_waybill"        ref="WayBillDaoBean"/>
+        <property name="finder_travel"      ref="FinderTravelDaoBean"/>
+        <property name="finder_waybill"     ref="FinderWayBillDaoBean"/>
+        <property name="finder_route_store"	ref="FinderRouteStoreDaoBean"/>
+        <property name="finder_route"       ref="FinderRouteDaoBean"/>
+        <property name="dao_user_position"  ref="UserPositionDaoBean"/>
+  	</bean>
+  	
+</beans>

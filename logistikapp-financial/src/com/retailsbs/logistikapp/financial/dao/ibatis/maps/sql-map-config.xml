@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<settings useStatementNamespaces="true"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/lgk_cost_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/lgk_order_detail_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/lgk_order_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/lgk_brand_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/lgk_category_product_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/lgk_product_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/lgk_store_category_product_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/lgk_almacen_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/lgk_product_almacen_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/lgk_configuration_stock_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/lgk_configuration_stock_product_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/finder_cost_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/finder_order_detail_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/finder_order_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/finder_product_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/finder_category_product_SqlMap.xml"/>	
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/finder_brand_product_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/finder_store_category_product_SqlMap.xml"/>	
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/finder_webservice_SqlMap.xml"/>
+	
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/finder_almacen_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/finder_product_almacen_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/finder_configuration_stock_SqlMap.xml"/>
+	<sqlMap resource="com/retailsbs/logistikapp/financial/dao/ibatis/maps/finder_configuration_stock_product_SqlMap.xml"/>
+</sqlMapConfig>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_storecategory">
+
+	<!-- Obtiene una lista de objetos de dominio de storecategory a partir de un id retail y un parametro de busqueda
+		de ids -->
+	<select id="getStoresCategoryActiveByCriteria"
+		parameterClass="com.retailsbs.logistikapp.retail.dto.StoreCategoryActiveSearchCriteria"
+		resultClass="com.retailsbs.logistikapp.retail.domain.StoreCategory">
+		
+		SELECT distinct res.id_store_category, res.id_supplier, res.created, res.modified, res.orderby, res.active, res.code, res.name, res.login
+		FROM(
+		SELECT  stocat.id_store_category, stocat.id_supplier, stocat.created, stocat.modified, stocat.orderby, stocat.active, stocat.code, stocat.name, stocat.login
+		FROM lgk_store_category stocat
+		WHERE 1=1
+		<isNotNull property="id_supplier">
+			AND stocat.id_supplier=#id_supplier#
+		</isNotNull>
+		<isNotNull property="active">
+			AND stocat.active=#active#
+		</isNotNull>
+		<isNotNull property="id_store_category">
+			UNION ALL
+			SELECT  stocat.id_store_category, stocat.id_supplier, stocat.created, stocat.modified, stocat.orderby, stocat.active, stocat.code, stocat.name, stocat.login
+			FROM lgk_store_category stocat
+			WHERE 1=1
+			<isNotNull property="id_supplier">
+				AND stocat.id_supplier=#id_supplier#
+			</isNotNull>
+			AND stocat.id_store_category=#id_store_category#
+		</isNotNull>	
+		)res
+		order by res.orderby, res.name
+	</select>
+
+	<delete id="delStoreCategoryByIdSupplier" parameterClass="Long">
+		delete from lgk_store_category
+		where id_supplier = #id_supplier:INTEGER#
+	</delete>
+
+</sqlMap>

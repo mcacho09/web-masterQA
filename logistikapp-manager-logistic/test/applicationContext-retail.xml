@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xmlns:aop="http://www.springframework.org/schema/aop"
+	     xmlns:tx="http://www.springframework.org/schema/tx"
+	     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+
+	<!-- =====================  DEFINICIONES GENERALES  ======================== -->
+
+
+	<!-- ==========================  DATASOURCE  ============================== -->
+
+	<!-- SqlMap setup for iBATIS Database Layer -->
+	<bean id="sqlMapClient-retail" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:com/retailsbs/logistikapp/retail/dao/ibatis/maps/sql-map-config.xml"/>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>                                         
+
+
+	<!-- ==========================  DEFINICION DE DAOS  ============================== -->
+	
+	<bean id="CountryDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.CountryDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="StateDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.StateDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="CityDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.CityDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="LocalityDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.LocalityDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="RetailDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.RetailDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="RetailDeptDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.RetailDeptDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="StoreDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.StoreDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="FinderRetailDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.FinderRetailDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="FinderStoreDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.FinderStoreDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="FinderStateDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.FinderStateDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="FinderCityDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.FinderCityDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="RetailCategoryDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.RetailCategoryDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="FinderLocalityDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.FinderLocalityDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="FinderCountryDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.FinderCountryDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="StoreCategoryDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.StoreCategoryDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="FinderStoreCategoryDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.FinderStoreCategoryDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<bean id="FinderRetailCategoryDaoBean" class="com.retailsbs.logistikapp.retail.dao.ibatis.FinderRetailCategoryDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-retail"/>
+	</bean>
+	
+	<!-- ==========================  DEFINICION DE BEANS  ============================== -->
+  	<bean id="RetailServiceBean" class="com.retailsbs.logistikapp.retail.service.impl.RetailServiceImpl">
+  		<property name="dao_country" 		ref="CountryDaoBean"/>
+  		<property name="dao_state" 			ref="StateDaoBean"/>
+  		<property name="dao_city"			ref="CityDaoBean"/>
+  		<property name="dao_locality" 		ref="LocalityDaoBean"/>
+  		<property name="dao_retail" 			ref="RetailDaoBean"/>
+  		<property name="dao_retail_dept"		ref="RetailDeptDaoBean"/>
+  		<property name="dao_store" 			ref="StoreDaoBean"/>
+  		<property name="dao_finder_retail" 	ref="FinderRetailDaoBean"/>
+  		<property name="dao_finder_store" 	ref="FinderStoreDaoBean"/>
+  		<property name="dao_finder_state" 	ref="FinderStateDaoBean"/>
+  		<property name="dao_finder_city" 	ref="FinderCityDaoBean"/>
+  		<property name="dao_retail_category" ref="RetailCategoryDaoBean"/>
+  		<property name="dao_finder_locality" 	ref="FinderLocalityDaoBean"/>
+  		<property name="dao_finder_country" 	ref="FinderCountryDaoBean"/>
+  		<property name="dao_store_category" ref="StoreCategoryDaoBean"/>
+  	 	<property name="dao_finder_store_category" ref="FinderStoreCategoryDaoBean"/>
+  	 	<property name="dao_finder_retail_category" ref="FinderRetailCategoryDaoBean"/>
+  	</bean>
+  	
+</beans>

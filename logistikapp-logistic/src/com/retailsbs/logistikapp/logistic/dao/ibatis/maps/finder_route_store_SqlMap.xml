@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_route_store">
+
+    <delete id="deleteByIdRoute" parameterClass="Long" >
+            delete from lgk_route_store
+            where id_route = #id_route:integer#
+  	</delete>
+
+    <delete id="deleteByIdStore" parameterClass="Long" >
+            delete from lgk_route_store
+            where id_store = #id_store:integer#
+  	</delete>
+</sqlMap>

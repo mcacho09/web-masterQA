@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_locality" >
+
+  <select id="getLocality"
+          resultClass="com.retailsbs.logistikapp.retail.dto.LocalityDTO" 
+          parameterClass="com.retailsbs.logistikapp.retail.dto.GetLocalitySearchCriteria" >
+		SELECT  res.id_locality, res.id_city, res.city_name, res.created, res.modified, 
+				res.login, res.orderby, res.active, res.code, res.name
+		FROM (
+		     SELECT row_number() over() as r, vrow.*
+		       FROM (
+					SELECT  loc.id_locality, loc.id_city, cty.name as city_name, loc.created, loc.modified, loc.orderby, loc.active,
+							loc.code, loc.name, loc.login
+					FROM lgk_locality loc
+					JOIN lgk_city cty ON cty.id_city = loc.id_city
+					WHERE 1=1
+					<isNotNull property="active">
+						AND loc.active = #active:VARCHAR#
+					</isNotNull>
+					<isNotNull property="id_city">
+						AND loc.id_city = #id_city:INTEGER#
+					</isNotNull>
+					ORDER BY loc.orderby
+			    ) vrow
+		   ) res 
+		WHERE 1=1
+		<isNotNull property="lim_inf">AND <![CDATA[r >= #lim_inf#]]></isNotNull>
+		<isNotNull property="lim_sup">AND <![CDATA[r <= #lim_sup#]]></isNotNull>
+
+  </select>
+  
+  <select id="getLocalityTotalByCriteria"
+          resultClass="Integer" 
+          parameterClass="com.retailsbs.logistikapp.retail.dto.GetLocalitySearchCriteria" >
+
+		SELECT  COUNT(cty.id_city) as total
+		FROM lgk_locality loc
+		JOIN lgk_city cty ON cty.id_city = loc.id_city
+		WHERE 1=1
+		<isNotNull property="active">
+			AND loc.active = #active:VARCHAR#
+		</isNotNull>
+		<isNotNull property="id_city">
+			AND loc.id_city = #id_city:INTEGER#
+		</isNotNull>
+
+  </select>
+  
+</sqlMap>

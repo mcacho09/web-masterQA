@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_message">
+
+	<!-- Obtiene un listado de los cambios de estado por comercio de una transaccion -->
+	<select id="getMessageByIdUserMessage"
+                parameterClass="Long"
+                resultClass="com.retailsbs.logistikapp.user.dto.MessageDTO">
+
+        select usf.id_user as user_from_id, usf.username as user_from_name, usf.image as user_from_image,
+                  ust.id_user as user_to_id, ust.username as user_to_name, ust.image as user_to_image,
+                  me.id_message, me.created, me.message, me.read, me.send
+          from lgk_user_message um
+     left join lgk_message me on me.id_user_message = um.id_user_message
+           join lgk_user usf on usf.id_user = um.id_user
+           join lgk_user ust on ust.id_user = um.id_user_to
+        where um.id_user_message = #id_user_message:integer#
+         order by me.created
+
+	</select>
+
+	<delete id="delMessageByIdUserMsg" parameterClass="com.retailsbs.logistikapp.user.domain.Message">
+
+		DELETE FROM
+		lgk_message
+		WHERE id_user_message = #id_user_message:INTEGER#
+
+	</delete>
+	
+  <select id="newMessageTotal"
+          resultClass="Integer" 
+          parameterClass="com.retailsbs.logistikapp.user.dto.NewMessageTotalDTO" >
+
+			SELECT  count(*)
+			FROM lgk_message msj
+			JOIN lgk_user_message ums ON msj.id_user_message = ums.id_user_message
+			<isNotNull property="id_user">
+				AND ums.id_user = #id_user:INTEGER#
+			</isNotNull>
+			WHERE 1=1 
+			<isNotNull property="read">
+				AND read = #read:VARCHAR#
+			</isNotNull>
+  </select>
+
+  <select id="getLastNewMessage"
+          resultClass= "com.retailsbs.logistikapp.user.dto.lastNewMessageDTO"
+          parameterClass= "com.retailsbs.logistikapp.user.dto.lastNewMessageSearchCriteria">
+
+			SELECT  msj.id_message, msj.id_user_message, msj.created, substring(msj.message,1,#caracteres:INTEGER#) as message, msj.read, usr.image as image_sender,
+					usr.username as username_sender, usr.profile as profile_sender 
+			FROM lgk_message msj    
+			JOIN lgk_user_message ums ON msj.id_user_message = ums.id_user_message         
+			<isNotNull property="id_user">
+				AND ums.id_user = #id_user:INTEGER#        
+			</isNotNull>
+			JOIN lgk_user usr ON usr.id_user = ums.id_user_to
+			<isNotNull property="active">
+				AND usr.active = #active:VARCHAR#
+			</isNotNull>
+			WHERE 1=1          
+			<isNotNull property="read">
+				AND read = #read:VARCHAR#
+			</isNotNull>
+			order by msj.created  desc
+			<isNotNull property="limit">
+				limit #limit:INTEGER# 
+			</isNotNull>
+			
+  </select>
+
+
+    <!-- Obtiene el total de mensajes no leidos para mostrarse en la barra de navegación superior -->
+    <select id="getQtyMessageNoReadByIdUser" 
+                parameterClass="Long"
+                resultClass="Integer">
+        select coalesce(count(ms.id_message),0) as qty
+         from lgk_user_message um
+          join lgk_message ms on ms.id_user_message = um.id_user_message
+          and ms.read = 'N'
+      where um.id_user = #id_user:integer#
+    </select>
+    
+    <!-- Obtiene una lista de mensajes no leidos para mostrarse en la barra de navegación superior -->
+    <select id="getListMessageNoReadByIdUser"
+                parameterClass="Long"
+                resultClass="com.retailsbs.logistikapp.user.dto.MessageNoReadDTO">
+        select us.id_user_message, us.id_user, u.username, u.image, me.message, me.created, us.qty
+          from (
+                 select um.id_user_message, ut.id_user, max(ms.id_message) as id_message, count(ms.id_message) as qty
+                   from lgk_user_message um
+                   join lgk_message ms on ms.id_user_message = um.id_user_message
+                    and ms.read = 'N'
+                   join lgk_user ut on ut.id_user = um.id_user_to
+                  where um.id_user = #id_user:integer#
+                  group by um.id_user_message, ut.id_user
+                  order by id_message desc
+               ) us
+          join lgk_message me on me.id_message = us.id_message
+          join lgk_user u on u.id_user = us.id_user
+        order by me.created desc
+    </select>
+
+	<!-- Marca todos los mensajes de una conversacion como leidos  -->
+	<update id="updateReadByIdUserMessage" 
+			parameterClass="com.retailsbs.logistikapp.user.domain.Message">
+    		update lgk_message 
+    		SET read='S' 
+    		where 1=1 
+    		and	id_user_message = #id_user_message:integer#
+    		and read = 'N'
+  	</update>
+  	
+  	    <!-- A partir de una relacion entre usuarios, mensajes, messageGroup y Group se obtiene
+  	          una lista de todos los mensajes grupales quien los envia y a que grupo -->
+    <select id="getMessageByIdGroup"
+                parameterClass="Long"
+                resultClass="com.retailsbs.logistikapp.user.dto.MessageGroupDTO">
+                
+			SELECT  lgk_message_group.id_message, lgk_message_group.created,
+					lgk_message.message, lgk_message.read, lgk_group.name,
+					lgk_user.username, lgk_user.id_user, lgk_user.image
+			FROM lgk_message_group 
+					JOIN lgk_message ON lgk_message.id_message = lgk_message_group.id_message
+					JOIN lgk_group ON lgk_group.id_group = lgk_message_group.id_group
+					JOIN lgk_user ON lgk_message.id_user = lgk_user.id_user
+			WHERE lgk_group.id_group = #id_user:integer#
+			order by lgk_message_group.created
+    </select>
+    
+    <delete id="delMessageByIdUser" parameterClass="Long">
+    	delete from lgk_message
+    	where id_user = #id_user:INTEGER#
+    </delete>
+    
+</sqlMap>

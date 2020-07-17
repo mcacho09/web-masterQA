@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_notification">
+
+	<!-- Obtiene un listado acotado a un cierto limite de notificaciones con 
+		información extendida enviadas a los perfiles de usuarios o algún perfil 
+		de usuario específico profile is null || profile = <profile> -->
+	<select id="getNotificationByCriteria"
+		parameterClass="com.retailsbs.logistikapp.user.dto.NotificationSearchCriteria"
+		resultClass="com.retailsbs.logistikapp.user.dto.NotificationDTO">
+		select nt.id_notification, nt.created, nt.message, nt.priority, nt.icon, nt.profile, us.id_user, us.username, us.image, nt.link
+		from lgk_notification nt
+		join lgk_user us on us.id_user = nt.id_user
+		where 1=1 and nt.id_user != #id_user:integer#
+		<isNotNull property="id_supplier">and (nt.id_supplier = #id_supplier:integer#)</isNotNull>
+        <isEqual property="profile" compareValue="ADM">and ( nt.profile is null or nt.profile = '' or nt.profile in ('ADM', 'SUP', 'RET', 'STO','CAL') )</isEqual>
+        <isEqual property="profile" compareValue="SUP">and ( nt.profile is null or nt.profile = '' or nt.profile in ('SUP', 'RET', 'STO','CAL') )</isEqual>
+        <isEqual property="profile" compareValue="RET">and ( nt.profile is null or nt.profile = '' or nt.profile in ('RET', 'STO','CAL') )</isEqual>
+        <isEqual property="profile" compareValue="STO">and ( nt.profile is null or nt.profile = '' or nt.profile in ('STO','CAL') )</isEqual>
+		<isNotNull property="id_user">and level is null or ( nt.id_user=#id_user:integer# and level ='P')</isNotNull>
+		order by nt.created desc
+		<isNotNull property="limit">limit #limit:integer#</isNotNull>
+	</select>
+
+
+	<!-- Obtiene un listado de notificaciones enviadas para a los perfiles de 
+		usuarios y para un perfil de usuario en particular profile is null || profile = <profile> para el día de hoy -->
+	<select id="getNotificationTodayByCriteria"
+		parameterClass="com.retailsbs.logistikapp.user.dto.NotificationTodaySearchCriteria"
+		resultClass="com.retailsbs.logistikapp.user.domain.Notification">
+		select id_notification, n.id_user, n.created, message, priority, icon, n.profile, u.image, n.link
+		from lgk_notification n
+		inner join lgk_user u on u.id_user = n.id_user
+		where 1=1 and n.id_user != #id_user:integer#
+		<isNotNull property="id_supplier">and (id_supplier = #id_supplier:integer#)</isNotNull>
+		<isNotNull property="fecha">and <![CDATA[ n.created > CURRENT_DATE ]]></isNotNull>		
+        <isEqual property="profile" compareValue="ADM">and ( n.profile is null or n.profile in ('ADM', 'SUP', 'RET', 'STO','CAL') )</isEqual>
+        <isEqual property="profile" compareValue="SUP">and ( n.profile is null or n.profile in ('SUP', 'RET', 'STO','CAL') )</isEqual>
+        <isEqual property="profile" compareValue="RET">and ( n.profile is null or n.profile in ('RET', 'STO','CAL') )</isEqual>
+        <isEqual property="profile" compareValue="STO">and ( n.profile is null or n.profile in ('STO','CAL' ) )</isEqual>
+		<isNotNull property="id_user">and (level is null or (u.id_user=#id_user:integer# and level ='P'))</isNotNull>
+		order by n.created desc
+	</select>
+	
+	<delete id="delNotificationByIdSupplier" parameterClass="Long">
+		delete from lgk_notification
+		where id_supplier = #id_supplier:INTEGER#
+	</delete>
+
+	<delete id="delNotificationByIdUser" parameterClass="Long">
+		delete from lgk_notification
+		where id_user = #id_user:INTEGER#
+	</delete>
+
+</sqlMap>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_todo">
+
+
+  <select id="getToDoActive"
+          resultClass= "com.retailsbs.logistikapp.user.dto.ToDoDTO"
+          parameterClass="com.retailsbs.logistikapp.user.dto.ToDoActiveSearchCriteria" >
+
+		SELECT  td.id_todo, td.id_user, td.created, td.modified, td.active, 
+				substring(td.todo,1,#limit_char:INTEGER#) as todo, td.priority
+		FROM lgk_todo td
+		WHERE 1=1
+		<isNotNull property="active">
+			AND active = #active:VARCHAR#
+		</isNotNull>
+		ORDER BY td.priority, td.todo
+		<isNotNull property="limit">
+			limit #limit:INTEGER#
+		</isNotNull>
+			
+  </select>
+  
+  <select id="getToDoActiveTotal"
+  			resultClass="Integer"
+  			parameterClass="com.retailsbs.logistikapp.user.dto.ToDoActiveSearchCriteria">
+  			
+			SELECT count(*)
+			FROM lgk_todo todo
+			WHERE 1=1
+			<isNotNull property="active">
+				AND active = #active:INTEGER#
+			</isNotNull>
+  			
+  </select>
+
+    <!-- Obtiene un listado de todas las tareas activas para un usuario -->  
+    <select id="getTodoActiveByIdUser"
+                parameterClass="Long"
+                resultClass="com.retailsbs.logistikapp.user.domain.ToDo">
+        select id_todo, created, todo, priority
+        from lgk_todo
+        where active = 'S'
+        and id_user = #id_user:integer#
+        order by priority, todo
+    </select>
+    
+    <delete id="delTodoByIdUser" parameterClass="Long">
+    	delete from lgk_todo
+    	where id_user = #id_user:INTEGER#
+    </delete>
+
+</sqlMap>

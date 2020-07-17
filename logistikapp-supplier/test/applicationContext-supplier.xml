@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xmlns:aop="http://www.springframework.org/schema/aop"
+	     xmlns:tx="http://www.springframework.org/schema/tx"
+	     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+
+	<!-- =====================  DEFINICIONES GENERALES  ======================== -->
+
+
+	<!-- ==========================  DATASOURCE  ============================== -->
+
+	<!-- SqlMap setup for iBATIS Database Layer -->
+	<bean id="sqlMapClient-supplier" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:com/retailsbs/logistikapp/supplier/dao/ibatis/maps/sql-map-config.xml"/>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>                                         
+
+
+	<!-- ==========================  DEFINICION DE DAOS  ============================== -->
+
+    <!-- supplier -->	
+	<bean id="SupplierDaoBean" class="com.retailsbs.logistikapp.supplier.dao.ibatis.SupplierDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-supplier"/>
+	</bean>
+	<!-- /supplier -->
+
+    
+	
+	<!-- plan -->	
+	<bean id="PlanDaoBean" class="com.retailsbs.logistikapp.supplier.dao.ibatis.PlanDAOImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-supplier"/>
+	</bean>
+	<!-- /plan -->
+	
+	<!-- Finder Supplier -->
+	<bean id="FinderSupplierBean" class="com.retailsbs.logistikapp.supplier.dao.ibatis.FinderSupplierImpl">
+		<property name="sqlMapClient" ref="sqlMapClient-supplier"/>
+	</bean>
+	
+	<!-- ==========================  DEFINICION DE BEANS  ============================== -->
+  	<bean id="SupplierServiceBean" class="com.retailsbs.logistikapp.supplier.service.impl.SupplierServiceImpl">
+  		<property name="dao_supplier" ref="SupplierDaoBean"/>
+  		<property name="dao_plan" ref="PlanDaoBean"/> 		
+  		<property name="finder_supplier" ref="FinderSupplierBean"/>
+  	</bean>
+  	
+</beans>

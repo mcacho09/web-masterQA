@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_domain_content" >
+
+  <!--
+    Obtiene un listado de los cambios de estado por comercio de una transaccion
+  -->
+  <select id="getDomainContent"
+          resultClass= "com.retailsbs.logistikapp.domain.dto.DomainContentDTO"
+          parameterClass="com.retailsbs.logistikapp.domain.dto.DomainContentSearchCriteria" >
+		SELECT  res.id_domain_content, res.id_domain, res.domain_code, res.created, res.modified,
+				res.login, res.orderby, res.active, res.name, res.param, res.value, res.code
+		FROM (
+		     SELECT row_number() over() as r, vrow.*
+		       FROM (
+					SELECT  dc.id_domain_content, dom.id_domain, dom.code as domain_code, dc.created, dc.modified, 
+							dc.login, dc.orderby, dc.active, dc.name, dc.param, dc.value, dc.code
+					FROM lgk_domain_content dc
+					JOIN lgk_domain dom ON dom.id_domain = dc.id_domain
+					<isNotNull property="active">
+						AND dom.active = #active:VARCHAR#
+					</isNotNull>
+					WHERE 1=1
+					<isNotNull property="id_domain">
+						AND dc.id_domain = #id_domain:INTEGER#
+					</isNotNull>
+					<isNotNull property="active">
+						AND dc.active = #active:VARCHAR#
+					</isNotNull>
+					ORDER BY orderby
+			    ) vrow
+		   ) res 
+
+  </select>
+  
+  <select id="getTotalDomainContent"
+          resultClass="Integer" 
+          parameterClass="com.retailsbs.logistikapp.domain.dto.DomainContentSearchCriteria" >
+
+		SELECT  COUNT(dc.id_domain_content) as total
+		FROM lgk_domain_content dc
+		JOIN lgk_domain dom ON dom.id_domain = dc.id_domain
+		<isNotNull property="active">
+			AND dom.active = #active:VARCHAR#
+		</isNotNull>
+		WHERE 1=1
+		<isNotNull property="id_domain">
+			AND dc.id_domain = #id_domain:INTEGER#
+		</isNotNull>
+		<isNotNull property="active">
+			AND dc.active = #active:VARCHAR#
+		</isNotNull>
+
+  </select>
+  
+</sqlMap>

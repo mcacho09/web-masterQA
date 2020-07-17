@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE abatorConfiguration PUBLIC "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN"
+  "http://ibatis.apache.org/dtd/abator-config_1_0.dtd">
+<abatorConfiguration>
+
+	<abatorContext generatorSet="Java5">
+
+        <jdbcConnection driverClass="org.postgresql.Driver"
+                                    connectionURL="jdbc:postgresql://localhost:5432/logistikapp"
+                                    userId="postgres"
+                                    password="postgres">
+            <classPathEntry location="C:\Users\Axel\Documents\Developer\logistikapp\WebContent\WEB-INF\lib\postgresql-9.1-903.jdbc4.jar" />
+        </jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="domain" targetProject="logistikapp-supplier/abator" />
+	
+        <sqlMapGenerator targetPackage="maps" targetProject="logistikapp-supplier/abator" />
+	    
+        <daoGenerator type="SPRING" targetPackage="dao" targetProject="logistikapp-supplier/abator">
+            <property name="enableSubPackages" value="false" />
+        </daoGenerator>
+
+        
+        <table schema="" tableName="lgk_supplier" domainObjectName="Supplier"
+                   enableInsert="true" enableSelectByPrimaryKey="true" enableSelectByExample="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
+                   enableDeleteByExample="false" enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" selectByExampleQueryId="false">
+        
+            <generatedKey column="id_supplier" sqlStatement="SELECT LASTVAL()" identity="true"/>
+        
+            <columnOverride column="id_supplier" property="id_supplier" javaType="Long" jdbcType="INTEGER"/>
+            <columnOverride column="created" property="created" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="modified" property="modified" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="login" property="login" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="orderby" property="orderby" javaType="Integer" jdbcType="INTEGER"/>
+            <columnOverride column="active" property="active" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="code" property="code" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="name" property="name" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="id_plan" property="id_plan" javaType="Long" jdbcType="INTEGER"/>
+            <columnOverride column="plan_created" property="plan_created" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="plan_started" property="plan_started" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="plan_end" property="plan_end" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="payment" property="payment" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="adjustment" property="adjustment" javaType="Double" jdbcType="DECIMAL"/>
+           	<columnOverride column="shelf" property="shelf" javaType="String" jdbcType="VARCHAR"/>
+           
+            <columnOverride column="unpaid" property="unpaid"  javaType="Long" jdbcType="INTEGER"/>
+        </table>
+        
+
+        <!--
+        <table schema="" tableName="lgk_category_product" domainObjectName="CategoryProduct"
+                   enableInsert="true" enableSelectByPrimaryKey="true" enableSelectByExample="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
+                   enableDeleteByExample="false" enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" selectByExampleQueryId="false">
+        
+            <generatedKey column="id_category_product" sqlStatement="SELECT LASTVAL()" identity="true"/>
+        
+            <columnOverride column="id_category_product" property="id_category_product" javaType="Long" jdbcType="INTEGER"/>
+            <columnOverride column="id_supplier" property="id_supplier" javaType="Long" jdbcType="INTEGER"/>
+            <columnOverride column="created" property="created" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="modified" property="modified" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="login" property="login" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="orderby" property="orderby" javaType="Integer" jdbcType="INTEGER"/>
+            <columnOverride column="active" property="active" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="code" property="code" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="name" property="name" javaType="String" jdbcType="VARCHAR"/>
+        </table>
+        -->
+        
+        <!--
+        <table schema="" tableName="lgk_product" domainObjectName="Product"
+                   enableInsert="true" enableSelectByPrimaryKey="true" enableSelectByExample="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
+                   enableDeleteByExample="false" enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" selectByExampleQueryId="false">
+        
+            <generatedKey column="id_product" sqlStatement="SELECT LASTVAL()" identity="true"/>
+        
+            <columnOverride column="id_product" property="id_product" javaType="Long" jdbcType="INTEGER"/>
+            <columnOverride column="id_category_product" property="id_category_product" javaType="Long" jdbcType="INTEGER"/>
+            <columnOverride column="created" property="created" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="modified" property="modified" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="login" property="login" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="orderby" property="orderby" javaType="Integer" jdbcType="INTEGER"/>
+            <columnOverride column="active" property="active" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="code" property="code" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="name_short" property="name_short" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="name_long" property="name_long" javaType="String" jdbcType="VARCHAR"/>
+            <columnOverride column="price_sale" property="price_sale" javaType="Double" jdbcType="DECIMAL"/>
+            <columnOverride column="price_cost" property="price_cost" javaType="Double" jdbcType="DECIMAL"/>
+            <columnOverride column="image" property="image" javaType="String" jdbcType="VARCHAR"/>
+        </table>
+		-->
+		<!--
+       <table schema="" tableName="lgk_plan" domainObjectName="Plan"
+                   enableInsert="true" enableSelectByPrimaryKey="true" enableSelectByExample="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
+                   enableDeleteByExample="true" enableUpdateByExample="true" selectByPrimaryKeyQueryId="false" selectByExampleQueryId="false">
+        
+            <generatedKey column="id_plan" sqlStatement="SELECT LASTVAL()" identity="true"/>
+        	
+        	<columnOverride column="id_plan" property="id_plan" javaType="Long" jdbcType="INTEGER"/>
+            <columnOverride column="plan_name" property="plan_name" javaType="String" jdbcType="CHARACTER"/>
+            <columnOverride column="customers" property="customers" javaType="Long" jdbcType="INTEGER"/>
+            <columnOverride column="users" property="users" javaType="Long" jdbcType="INTEGER"/>
+            <columnOverride column="searchbox" property="searchbox" javaType="String" jdbcType="CHARACTER"/>
+            <columnOverride column="scheduling" property="scheduling" javaType="String" jdbcType="CHARACTER"/>
+            <columnOverride column="routes" property="routes" javaType="String" jdbcType="CHARACTER"/>
+            <columnOverride column="travels" property="travels" javaType="String" jdbcType="CHARACTER"/>
+            <columnOverride column="historical" property="historical" javaType="String" jdbcType="CHARACTER"/>
+            <columnOverride column="callcenter" property="callcenter" javaType="String" jdbcType="CHARACTER"/>
+            <columnOverride column="notifications" property="notifications" javaType="String" jdbcType="CHARACTER"/>
+            <columnOverride column="messages" property="messages" javaType="String" jdbcType="CHARACTER"/>
+            <columnOverride column="groups" property="groups" javaType="String" jdbcType="CHARACTER"/>
+            <columnOverride column="tasks" property="tasks" javaType="String" jdbcType="CHARACTER"/>
+            <columnOverride column="amount" property="amount" javaType="Long" jdbcType="INTEGER"/>
+            
+        </table>
+        -->
+			
+	</abatorContext>
+  
+</abatorConfiguration>

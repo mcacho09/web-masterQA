@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_order">
+
+  	<delete id="delOrderByIdSupplier" parameterClass="Long">
+  		delete from lgk_order
+  		where id_supplier = #id_supplier:INTEGER#
+  	</delete>
+  	
+  	<select id="getReportByDate" parameterClass="com.retailsbs.logistikapp.financial.dto.ReportSearchCriteria"
+  					resultClass="com.retailsbs.logistikapp.financial.dto.ReportDTO">
+  					
+        SELECT ord.invoice, s.name, ord.trx_num , us.username, ord.status, ord.id_order, COALESCE (SUM(vta.quantity_sales),0) as qty_vta, 
+                COALESCE (SUM(vta.quantity_sales_sug),0) as qty_vta_sug, 
+                COALESCE (SUM(dev.quantity_sales_dev_sug),0) as qty_vta_dev_sug, 
+                COALESCE(chg.quantity_sales,0) as qty_chg, 
+                COALESCE(dev.quantity_sales,0) as qty_dev
+            FROM lgk_order ord
+            JOIN lgk_store s ON s.id_store = ord.id_store
+            JOIN lgk_user us ON us.id_user = ord.id_user
+            LEFT JOIN (SELECT od.id_order, COALESCE(SUM(od.quantity),0) as quantity_sales, 
+                COALESCE(SUM(od.quantity*od.price_sale),0) as quantity_sales_sug, od.price_sale 
+                FROM lgk_order_detail od
+                WHERE od.typetrx = 'VTA'
+                GROUP BY od.id_order, od.price_sale 
+                ) vta 
+            ON vta.id_order = ord.id_order
+            LEFT JOIN (SELECT od.id_order, COALESCE(SUM(od.quantity),0) as quantity_sales
+                FROM lgk_order_detail as od
+                WHERE od.typetrx = 'CHG'
+                GROUP BY od.id_order
+                ) chg
+            ON chg.id_order = ord.id_order
+            LEFT JOIN (SELECT od.id_order, COALESCE(SUM(od.quantity),0) as quantity_sales, 
+            	COALESCE(SUM(od.quantity*od.price_sale),0) as quantity_sales_dev_sug
+                FROM lgk_order_detail as od
+                WHERE od.typetrx = 'DEV'
+                GROUP BY od.id_order
+            ) dev
+            ON dev.id_order = ord.id_order
+            WHERE 1=1
+            AND <![CDATA[ ord.invoice >= #invoice# ]]>
+            AND <![CDATA[ ord.invoice <= #invoice_fin# ]]>
+            AND ord.id_supplier = #id_supplier#
+            <isNotNull property="ids">
+		     	and ord.id_order in <iterate open="(" close=")" property="ids" conjunction=",">#ids[]#</iterate>
+		     </isNotNull>
+            <isNotNull property="idus">
+		     	and ord.id_user in <iterate open="(" close=")" property="idus" conjunction=",">#idus[]#</iterate>
+		     </isNotNull>
+		     <isNotNull property="id_user">
+		     	and us.id_user = #id_user:INTEGER#
+		     </isNotNull>
+            GROUP BY ord.invoice, s.name, us.username, ord.status, ord.id_order, chg.quantity_sales, dev.quantity_sales 
+            ORDER BY ord.id_order
+  	</select>
+  	
+    <select id="getReportExtByDate"
+                parameterClass="com.retailsbs.logistikapp.financial.dto.ReportExtSearchCriteria"
+                resultClass="com.retailsbs.logistikapp.financial.dto.ReportExtDTO">
+		  select od.id_order, od.invoice, od.trx_num as numtrx, odd.id_product, odd.typetrx, st.name as storename, st.code as storecode, us.username,
+		         odd.quantity, (odd.quantity * odd.price) as price, (odd.quantity * odd.cost) as cost, odd.status as statustrx
+		    from lgk_order od
+		    join (
+		           select ord.id_order, odd.id_product, odd.typetrx,
+		                  coalesce(sum(odd.quantity),0) as quantity, coalesce(sum(odd.price_sale),0) as price, coalesce(sum(pd.price_cost),0) as cost, ord.status
+		             from lgk_order ord
+		             join lgk_order_detail odd on odd.id_order = ord.id_order
+		             join lgk_product pd on pd.id_product = odd.id_product
+		            where 1=1
+		              and <![CDATA[ ord.invoice >= #fini# ]]>
+		              and <![CDATA[ ord.invoice <= #ffin# ]]>
+		              and ord.id_supplier = #id_supplier#
+		         group by ord.id_order, odd.id_product, odd.typetrx, ord.status
+		         ) odd on odd.id_order = od.id_order
+		    join lgk_store st on st.id_store = od.id_store
+		    join lgk_user us on us.id_user = od.id_user
+		   where 1=1
+		     and <![CDATA[ od.invoice >= #fini# ]]>
+		     and <![CDATA[ od.invoice <= #ffin# ]]>
+		     and od.id_supplier = #id_supplier#
+		     <isNotNull property="ids">
+		     	and od.id_order in <iterate open="(" close=")" property="ids" conjunction=",">#ids[]#</iterate>
+		     </isNotNull>
+		     <isNotNull property="idus">
+		     	and od.id_user in <iterate open="(" close=")" property="idus" conjunction=", ">#idus[]#</iterate>
+		     </isNotNull>
+		order by od.id_order                
+    </select>
+  	
+  	<select id="getMetricsSale" 
+  		parameterClass="com.retailsbs.logistikapp.financial.dto.GetMetricsSaleDTO"
+  		resultClass="com.retailsbs.logistikapp.financial.dto.MetricsSaleDTO">
+  		
+  			select coalesce(sum(detail.noproducts),0) as productsQty, 
+				count(distinct o.id_order) as notrx, 
+				round(coalesce(sum(detail.sale),0.00),2) as sale, 
+				round(coalesce(sum(detail.decrease),0.00),2) as decrease, 
+				round(coalesce(sum(detail.sale - detail.sale_cost),0.00),2) as utility,
+				round(coalesce(case count(distinct o.id_order) when 0 then 0 else sum(detail.sale) / count(distinct o.id_order) end, 0.00),2) as ticketavg
+			from lgk_order o
+			join (
+				select id_order,
+					sum(case typetrx when 'VTA' then quantity else 0 end) as noproducts,
+					sum(case typetrx when 'VTA' then (quantity * od.price_sale) else 0 end) as sale, 
+					sum(case when typetrx != 'VTA' then (quantity * (CASE product_type WHEN 'PKG' THEN p.price_cost_box ELSE p.price_cost END)) else 0 end ) as decrease,
+					sum(case typetrx when 'VTA' then (quantity * (CASE product_type WHEN 'PKG' THEN p.price_cost_box ELSE p.price_cost END)) else 0 end ) as sale_cost
+				from lgk_order_detail od
+				left join lgk_product p on p.id_product = od.id_product
+				group by id_order
+			) detail on detail.id_order = o.id_order
+			join lgk_user u on u.id_user = o.id_user
+			where 1=1 
+				<isNotNull property="id_supplier">
+				and id_supplier = #id_supplier:INTEGER# 
+				</isNotNull>
+				and status != 'CAN' 
+				<isNotNull property="initDate">
+				and delivery::date <![CDATA[ >= ]]>#initDate:DATE#
+				</isNotNull>
+				<isNotNull property="finalDate">
+				and delivery::date <![CDATA[ <= ]]>#finalDate:DATE#
+				</isNotNull> 
+				<isNotNull property="id_user">
+					and o.id_user = #id_user:INTEGER#
+				</isNotNull>
+				<isNotNull property="ids">
+					and o.id_order in <iterate open="(" close=")" property="ids" conjunction=",">#ids[]#</iterate>
+				</isNotNull>
+				<isNotNull property="idus">
+					and o.id_user in <iterate open="(" close=")" property="idus" conjunction=",">#idus[]#</iterate>
+				</isNotNull>
+  	</select>
+
+  	<select id="getMetricsSaleFull" 
+  		parameterClass="com.retailsbs.logistikapp.financial.dto.GetMetricsSaleDTO"
+  		resultClass="com.retailsbs.logistikapp.financial.dto.MetricsSaleFullDTO">
+  		
+  		select coalesce(sum(detail.noproducts),0) as productsQty, 
+				count(distinct o.id_order) as notrx, 
+				coalesce(sum(detail.sale),0.00) as sale, 
+				coalesce(sum(detail.decrease),0.00) as decrease, 
+				coalesce(sum(detail.sale - detail.sale_cost),0.00) as utility,
+				coalesce(case count(distinct o.id_order) when 0 then 0 else sum(detail.sale) / count(distinct o.id_order) end, 0)::real as ticketavg,
+				o.delivery
+			from lgk_order o
+			join (
+				select id_order,
+					sum(case typetrx when 'VTA' then quantity else 0 end) as noproducts,
+					sum(case typetrx when 'VTA' then (quantity * (case product_type when 'PKG' then p.price_sale_box else case p.type when 'PKG' then p.price_sale_box else p.price_sale end end)) else 0.0 end) as sale, 
+	sum(case when typetrx != 'VTA' then (quantity * (case product_type when 'PKG' then p.price_cost_box else case p.type when 'PKG' then p.price_cost_box else p.price_cost end end)) else 0.0 end ) as decrease,
+	sum(case typetrx when 'VTA' then (quantity * (case product_type when 'PKG' then p.price_cost_box else case p.type when 'PKG' then p.price_cost_box else p.price_cost end end)) else 0.0 end ) as sale_cost
+				from lgk_order_detail od
+				left join lgk_product p on p.id_product = od.id_product
+				group by id_order
+			) detail on detail.id_order = o.id_order
+			join lgk_user u on u.id_user = o.id_user
+			where id_supplier = #id_supplier:INTEGER# 
+				and status != 'CAN' 
+				and delivery::date <![CDATA[ >= ]]><isNotNull property="initDate">#initDate:DATE#</isNotNull><isNull property="initDate">NOW()::Date</isNull>
+				and delivery::date <![CDATA[ <= ]]><isNotNull property="finalDate">#finalDate:DATE#</isNotNull> <isNull property="finalDate">NOW()::Date</isNull>
+				<isNotNull property="id_user">
+					and o.id_user = #id_user:INTEGER#
+				</isNotNull>
+		group by o.delivery
+		order by o.delivery ASC
+  		
+  	</select>
+  	
+  	<select id="getMetricsSaleReport"
+  		parameterClass="com.retailsbs.logistikapp.financial.dto.GetMetricsSaleDTO"
+  		resultClass="com.retailsbs.logistikapp.financial.dto.MetricsSaleReportDTO">
+  		
+  		select s.code, 
+			s.name as store, 
+			sc.name as store_category,
+			coalesce(sum(tinfo.waybills), 0) as notravels, 
+			coalesce(sum(tinfo.checkins), 0) as checkins, 
+			coalesce(sum(oinfo.orders), 0) as notrx,
+			coalesce(sum(oinfo.qtyproducts), 0) as noproducts,
+			coalesce(sum(oinfo.sales), 0.00) as sale,
+			coalesce(sum(oinfo.decrease), 0.00) as decrease,
+			coalesce(sum(oinfo.sales) - sum(oinfo.sales_cost), 0.00) as utility,
+			coalesce(sum(oinfo.sales) / sum(oinfo.orders), 0.00)::real as ticketavg,
+			r.name as route,
+			case when oinfo.username != '' then oinfo.username when tinfo.username != '' then tinfo.username else 'No asignado' end as driver
+		from lgk_store s
+		left join lgk_store_category sc on sc.id_store_category = s.id_store_category
+		left join lgk_route_store rs on rs.id_store = s.id_store
+		left join lgk_route r on r.id_route = rs.id_route
+		left join (
+			select id_store,
+				count(id_waybill) as waybills,
+				sum(case w.status when 'S' then 1 else 0 end) as checkins,
+				u.username
+			from lgk_waybill w
+			join lgk_travel t on t.id_travel = w.id_travel
+			join lgk_user u on t.id_user = u.id_user
+			where t.status in ('TRA','FIN') 
+						and t.started::date <![CDATA[ >= ]]><isNotNull property="initDate">#initDate:DATE#</isNotNull><isNull property="initDate">NOW()::Date</isNull>
+						and t.started::date <![CDATA[ <= ]]><isNotNull property="finalDate">#finalDate:DATE#</isNotNull> <isNull property="finalDate">NOW()::Date</isNull>
+			group by id_store, u.username
+		) tinfo on tinfo.id_store = s.id_store
+		left join (
+			select id_store, 
+				count(o.id_order) as orders, 
+				sum(quantity) as qtyproducts,
+				sum(case typetrx when 'VTA' then (quantity * od.price_sale) end) as sales,
+				sum(case when typetrx != 'VTA' then (quantity * od.price_sale) end) as decrease,
+				sum(case typetrx when 'VTA' then (quantity * (CASE product_type WHEN 'PKG' THEN p.price_cost_box ELSE p.price_cost END)) end) as sales_cost,
+				u.username
+			from lgk_order o
+			join lgk_order_detail od on od.id_order = o.id_order
+			join lgk_product p on p.id_product = od.id_product
+			join lgk_user u on o.id_user = u.id_user
+			where delivery::date <![CDATA[ >= ]]><isNotNull property="initDate">#initDate:DATE#</isNotNull><isNull property="initDate">NOW()::Date</isNull>
+						and delivery::date <![CDATA[ <= ]]><isNotNull property="finalDate">#finalDate:DATE#</isNotNull> <isNull property="finalDate">NOW()::Date</isNull> 
+						and o.status != 'CAN'
+			group by id_store, username
+		) oinfo on oinfo.id_store = s.id_store
+		where r.id_supplier = #id_supplier:INTEGER#
+		group by s.code, s.name, r.name, driver, sc.name
+		order by sale DESC, notravels DESC, s.name ASC
+		
+  	</select>
+  	
+  	<select id="getInfoToTicket"
+  		parameterClass="Long"
+  		resultClass="com.retailsbs.logistikapp.financial.dto.InfoTicketDTO">
+	  	select s.name as supplier, 
+			st.name as store,
+			r.name as retail, 
+			to_char(o.invoice, 'DD/MM/YYYY') as date, 
+			to_char(o.invoice, 'HH12:mm:ss A.M.') as hour, 
+			o.trx_num,
+			case o.status when 'APR' then 'Pagado' when 'NP' then 'No Pagado' else 'Cancelado' end as status,
+			u.username as seller,
+			st.email as store_email,
+			u.email as seller_mail,
+			r.email as retail_email
+		from lgk_order o
+		join lgk_supplier s on s.id_supplier = o.id_supplier
+		join lgk_store st on st.id_store = o.id_store
+		join lgk_retail r on r.id_retail = st.id_retail
+		join lgk_user u on u.id_user = o.id_user
+		where o.id_order = #id_order:INTEGER#
+  	</select>
+  	
+  	<select id="getInfoProductsToTicket"
+  		parameterClass="com.retailsbs.logistikapp.financial.dto.InfoProductsToTicketCriteria"
+  		resultClass="com.retailsbs.logistikapp.financial.dto.InfoProductsToTicketDTO">
+	  	select 
+	  		od.quantity, 
+	  		p.name_short, 
+	  		coalesce(od.price_sale,p.price_sale) as price_sale, 
+			(od.quantity * coalesce(od.price_sale, p.price_sale)) as sale
+		from lgk_order o
+		join lgk_order_detail od on o.id_order = od.id_order
+		join lgk_product p on p.id_product = od.id_product
+		where o.id_order = #id_order:INTEGER# and od.typetrx = #typetrx#
+  	</select>
+
+	<select id="getOrdersInfoToReport" 
+		parameterClass="com.retailsbs.logistikapp.financial.dto.OrdersInfoToReportCriteria"
+		resultClass="com.retailsbs.logistikapp.financial.dto.OrdersInfoToReportDTO">
+		select o.id_order, o.delivery, s.code, s.name as store, u.username, o.trx_num, coalesce(sale.total, 0) as total, case status when 'APR' THEN 'Pagado' when 'NO' THEN 'No pagado' else 'No pagado' end as status
+		from lgk_order o
+		join lgk_store s on o.id_store = s.id_store
+		join lgk_user u on u.id_user = o.id_user
+		join (
+			select id_order, sum(price_sale) as total
+			from lgk_order_detail
+			group by id_order
+		) sale on sale.id_order = o.id_order
+		where 1=1
+            AND <![CDATA[ o.invoice >= #invoice# ]]>
+            AND <![CDATA[ o.invoice <= #invoice_fin# ]]>
+            AND o.id_supplier = #id_supplier#
+            <isNotNull property="ids">
+		     	and o.id_order in <iterate open="(" close=")" property="ids" conjunction=",">#ids[]#</iterate>
+		     </isNotNull>
+		     <isNotNull property="id_user">
+		     	and u.id_user = #id_user:INTEGER#
+		     </isNotNull>
+	</select>
+
+	<select id="getTopClients" 
+		parameterClass="com.retailsbs.logistikapp.financial.dto.TopClientsCriteria" 
+		resultClass="com.retailsbs.logistikapp.financial.dto.TopClientsDTO">
+		SELECT
+		  s.name                                                                                      AS store,
+		  coalesce(sum(CASE typetrx
+		               WHEN 'VTA'
+		                 THEN (quantity * od.price_sale)
+		               ELSE 0 END), 0.00)                                                             AS sales,
+		  count(DISTINCT o.id_order)                                                                  AS no_trx,
+		  coalesce(round((sum(CASE typetrx
+		                      WHEN 'VTA'
+		                        THEN (quantity * od.price_sale)
+		                      ELSE 0 END)) / count(DISTINCT o.id_order), 2), 0)                       AS ticket_avg,
+		  coalesce(round(sum(CASE typetrx
+		                     WHEN 'VTA'
+		                       THEN (quantity * od.price_sale)
+		                     ELSE 0 END) - sum((CASE product_type
+		                                        WHEN 'PKG'
+		                                          THEN lp.price_cost_box
+		                                        ELSE lp.price_cost END) * od.quantity), 2), 0.00) AS utility
+		FROM lgk_order o
+		  JOIN lgk_store s ON s.id_store = o.id_store
+		  JOIN lgk_order_detail od ON od.id_order = o.id_order
+		  JOIN lgk_product lp ON od.id_product = lp.id_product
+		WHERE
+		  o.id_supplier = #id_supplier:INTEGER#
+		  AND o.status != 'CAN'
+		  AND <![CDATA[ o.invoice::date >= #fini# ]]>
+          AND <![CDATA[ o.invoice::date <= #ffin# ]]>
+		  <isNotNull property="id_user">
+          	AND o.id_user = #id_user:INTEGER#
+          </isNotNull>
+		GROUP BY S.name
+		ORDER BY sales DESC
+		LIMIT 10
+  	</select>
+  	
+  	<select id="getSaleByCategory"
+  	parameterClass="com.retailsbs.logistikapp.financial.dto.SaleByCategoryCriteria" 
+		resultClass="com.retailsbs.logistikapp.financial.dto.SaleByCategoryDTO">
+  		select sc.name as category, sum(od.price_sale * od.quantity) as sale
+		from lgk_order o
+		join lgk_order_detail od on od.id_order = o.id_order
+		join lgk_store s on o.id_store = s.id_store
+		join lgk_store_category sc on sc.id_store_category = s.id_store_category
+		where o.id_supplier = #id_supplier:INTEGER# and o.status != 'CAN'
+			AND <![CDATA[ o.invoice >= #fini# ]]>
+            AND <![CDATA[ o.invoice <= #ffin# ]]>
+            <isNotNull property="id_user">
+            	AND o.id_user = #id_user:INTEGER#
+            </isNotNull>
+            <isNotNull property="ids">
+		     	and o.id_order in <iterate open="(" close=")" property="ids" conjunction=",">#ids[]#</iterate>
+		     </isNotNull>
+            <isNotNull property="idus">
+		     	and o.id_user in <iterate open="(" close=")" property="idus" conjunction=",">#idus[]#</iterate>
+		     </isNotNull>
+		group by sc.name
+		order by sc.name
+  	</select>
+  	
+  	<select id="getCategoryAndNoStores" parameterClass="Long" resultClass="com.retailsbs.logistikapp.financial.dto.CategoryAndNoStoresDTO">
+  		select sc.id_store_category, sc.name as category, count(s.*) as total_stores
+		from lgk_store_category sc
+		join lgk_store s on sc.id_store_category = s.id_store_category
+		where sc.id_supplier = #id_supplier:INTEGER#
+		group by sc.id_store_category, sc.name
+  	</select>
+  	
+  	<select id="getNoStoreVisitedByIdStoreCategory" parameterClass="com.retailsbs.logistikapp.financial.dto.NoStoreVisitedByIdStoreCategoryCriteria" resultClass="Long">
+  		select count(distinct s.id_store) as no_stores
+		from lgk_order o
+		join lgk_store s on s.id_store = o.id_store
+		where s.id_store_category = #id_store_category:INTEGER# 
+			<isNotNull property="fini">
+				AND <![CDATA[ o.invoice::date >= #fini# ]]>
+			</isNotNull>
+			<isNotNull property="ffin">
+	            AND <![CDATA[ o.invoice::date <= #ffin# ]]> 
+			</isNotNull>
+  	</select>
+  	
+  	<select id="getReportByDri" 
+  		parameterClass="com.retailsbs.logistikapp.financial.dto.ReportByDriCriteria" 
+  		resultClass="com.retailsbs.logistikapp.financial.dto.ReportByDriDTO">
+  		
+  		select u.id_user, u.username, 
+  			sum(case typetrx when 'VTA' then (price_sale * quantity) when 'DEV' then ((price_sale * quantity) * -1.00) else 0.00 end) as sales, 
+  			sum(od.quantity) as total_products, count(distinct o.id_order) no_trx
+		from lgk_order o
+		join lgk_user u on u.id_user = o.id_user
+		join lgk_order_detail od on od.id_order = o.id_order
+		where id_supplier = #id_supplier:INTEGER# and o.status != 'CAN'
+		<isNotNull property="fini">
+			<![CDATA[ and o.invoice::date >= #fini# ]]>
+		</isNotNull>
+		<isNotNull property="ffin">
+			<![CDATA[ and o.invoice::date <= #ffin# ]]>
+		</isNotNull>
+		group by u.username, u.id_user
+		order by u.username ASC
+  		
+  	</select>
+  	
+</sqlMap>

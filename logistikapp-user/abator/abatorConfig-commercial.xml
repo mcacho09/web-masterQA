@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE abatorConfiguration PUBLIC "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN"
+  "http://ibatis.apache.org/dtd/abator-config_1_0.dtd">
+
+<abatorConfiguration>
+
+	<abatorContext generatorSet="Java5">
+<!--
+
+        <jdbcConnection driverClass="org.postgresql.Driver"
+                                    connectionURL="jdbc:postgresql://localhost:5432/oxxo"
+                                    userId="postgres"
+                                    password="postgres">
+            <classPathEntry location="/Users/jorge/Documents/projects/logistikapp/dev/lgk-v1/logistikapp/WebContent/WEB-INF/lib/postgresql-9.1-903.jdbc4.jar" />
+-->
+        <jdbcConnection driverClass="org.postgresql.Driver"
+	                        connectionURL="jdbc:postgresql://127.0.0.1:5433/logistica"
+	                        userId="postgres"
+	                        password="jucaraca">
+			<classPathEntry location="/Users/jucaraca/Documents/Desarrollo/lib/postgresql-9.3-1102.jdbc3.jar" />
+            
+		</jdbcConnection>
+
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+	    <javaModelGenerator targetPackage="domain" targetProject="logistikapp-commercial/abator" />
+	
+	    <sqlMapGenerator targetPackage="maps" targetProject="logistikapp-commercial/abator" />
+	    
+	    <daoGenerator type="SPRING" targetPackage="dao" targetProject="logistikapp-commercial/abator">
+            <property name="enableSubPackages" value="false" />
+	    </daoGenerator>
+
+<!--
+-->        
+        <table schema="" tableName="lgk_retailcat_goal" domainObjectName="RetailcatGoal"
+               enableInsert="true" enableSelectByPrimaryKey="true" enableSelectByExample="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
+               enableDeleteByExample="false" enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" selectByExampleQueryId="false">
+        
+            <generatedKey column="id_retailcat_goal" sqlStatement="SELECT LASTVAL()" identity="true"/>
+        
+            <columnOverride column="id_retailcat_goal"	property="id_retailcat_goal"	javaType="Long" jdbcType="SERIAL"/>
+            <columnOverride column="id_retail_category" property="id_retail_category" 	javaType="Long" jdbcType="INTEGER"/>
+            <columnOverride column="year" 				property="year" 				javaType="Integer" jdbcType="BIGINT"/>
+            <columnOverride column="month" 				property="month" 				javaType="Integer" jdbcType="BIGINT"/>
+            <columnOverride column="amount" 			property="amount" 				javaType="Double" jdbcType="NUMERIC"/>
+            <columnOverride column="created" 			property="created" 				javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="modified" 			property="modified" 			javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <columnOverride column="login" 				property="login" 				javaType="String" jdbcType="VARCHAR"/>
+        </table>
+        
+	</abatorContext>
+  
+</abatorConfiguration>

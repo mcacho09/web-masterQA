@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_message_group">
+
+	<delete id="delMessageGrpByIdGrp" 
+			parameterClass="com.retailsbs.logistikapp.user.domain.MessageGroup">
+
+		DELETE FROM lgk_message_group
+		WHERE id_group = #id_group:INTEGER#
+
+	</delete>
+	<select id="getMessageByIdUserMessage"
+                parameterClass="Long"
+                resultClass="com.retailsbs.logistikapp.user.domain.MessageGroup">
+
+		SELECT id_message_group, id_group, id_message, created
+		FROM lgk_message_group
+		WHERE id_group = #id_group:INTEGER#
+
+	</select>
+
+	<delete id="delMessageGroupByIdMessage" parameterClass="Long">
+
+		DELETE FROM lgk_message_group
+		WHERE id_message = #id_message:INTEGER#
+
+	</delete>
+	
+</sqlMap>

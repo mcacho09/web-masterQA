@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_country" >
+
+  <!--
+    Obtiene un listado de los cambios de estado por comercio de una transaccion
+  -->
+  <select id="getCountry"
+          resultClass="com.retailsbs.logistikapp.retail.dto.CountryDTO" 
+          parameterClass="com.retailsbs.logistikapp.retail.dto.CountrySearchCriteria" >
+		SELECT id_country, res.created, res.modified, res.login, res.orderby, res.active, res.code, res.prefix, res.name  
+		FROM (
+		     SELECT row_number() over() as r, vrow.*
+		       FROM (
+					SELECT ctry.id_country, ctry.created, ctry.modified, ctry.login, ctry.orderby, ctry.active, ctry.code, ctry.prefix, ctry.name
+					FROM lgk_country ctry
+					WHERE 1=1
+					<isNotNull property="active">
+						AND ctry.active = #active:VARCHAR#
+					</isNotNull>
+					ORDER BY ctry.orderby
+			    ) vrow
+		   ) res 
+		WHERE 1=1
+		<isNotNull property="lim_inf">AND <![CDATA[r >= #lim_inf#]]></isNotNull>
+		<isNotNull property="lim_sup">AND <![CDATA[r <= #lim_sup#]]></isNotNull>
+
+  </select>
+  
+  <select id="getCountryTotalByCriteria"
+          resultClass="Integer" 
+          parameterClass="com.retailsbs.logistikapp.retail.dto.CountrySearchCriteria" >
+
+		SELECT  COUNT(ctry.id_country) as total
+		FROM lgk_country ctry
+		WHERE 1=1
+		<isNotNull property="active">
+			AND ctry.active = #active:VARCHAR#
+		</isNotNull>
+
+  </select>
+  
+</sqlMap>

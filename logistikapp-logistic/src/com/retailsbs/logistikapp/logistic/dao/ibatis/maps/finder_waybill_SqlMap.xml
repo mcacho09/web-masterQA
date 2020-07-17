@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_waybill">
+
+    <select id="getWayBillByIdTravel"
+     		parameterClass="Long"
+       		resultClass="com.retailsbs.logistikapp.logistic.dto.WayBillDTO">
+
+            <!-- SELECT  wb.id_waybill, wb.id_travel, tra.name as travel_name, wb.id_store, wb.orderby, wb.status, wb.comment,                      
+					wb.checkin, st.id_retail, st.name, st.latitude, st.longitude, st.code, st.address1, st.address2, st.postal,                     
+					st.shelf, wb.latitude as lat_real, wb.longitude as lon_real, wb.outrange, wb.map_range, cty.name as city,                      
+					sta.name as state, wb.note, wb.image1, wb.image2, wb.image3 -->
+				SELECT  wb.id_waybill, wb.id_travel, tra.name as travel_name, wb.id_store, wb.orderby, wb.status, case when wb.comment != '' then wb.comment else null end as comment,                      
+					wb.checkin, st.id_retail, st.name, st.latitude, st.longitude, st.code, st.address1, st.address2, st.postal,                     
+					st.shelf, wb.latitude as lat_real, wb.longitude as lon_real, wb.outrange, wb.map_range, cty.name as city,                      
+					sta.name as state, case when wb.note != '' then wb.note else null end as note, case when wb.image1 != '' then 'S' else null end as image1, case when wb.image2 != '' then 'S' else null end as image2, case when wb.image3 != '' then 'S' else null end as image3, st.email
+				FROM lgk_waybill wb
+				JOIN lgk_store st ON wb.id_store = st.id_store             
+				JOIN lgk_travel tra ON tra.id_travel = wb.id_travel             
+				JOIN lgk_city cty ON cty.id_city = st.id_city             
+				JOIN lgk_state sta ON sta.id_state = st.id_state                          
+				WHERE wb.id_travel = #id_travel:integer#           
+				ORDER BY wb.orderby
+    </select>
+
+    <delete id="deleteByIdTravel" parameterClass="Long" >
+            delete from lgk_waybill
+            where id_travel = #id_travel:integer#
+  	</delete>
+
+    <select id="getWayBillByCriteria"
+     		parameterClass="com.retailsbs.logistikapp.logistic.dto.WayBillSearchCriteria"
+       		resultClass="com.retailsbs.logistikapp.logistic.dto.WayBillDTO">
+       		SELECT  wb.id_waybill, wb.id_travel, tra.name as travel_name, wb.id_store, wb.orderby, wb.status, wb.comment, 
+                    wb.checkin, st.id_retail, st.name, st.latitude, st.longitude, st.code, st.address1, st.address2, st.postal, wb.image1, wb.image2, wb.image3
+            FROM lgk_waybill wb
+            INNER JOIN lgk_store st ON wb.id_store = st.id_store
+            JOIN lgk_travel tra ON tra.id_travel = wb.id_travel
+            <isNotNull property="id_travel">
+	            AND wb.id_travel = #id_travel:integer#        
+            </isNotNull>
+            WHERE 1=1
+            <isNotNull property="id_store">
+	            AND wb.id_store = #id_store:INTEGER#
+            </isNotNull>
+            ORDER BY wb.orderby      		
+    </select>
+    
+    <delete id="deleteByIdStore" parameterClass="Long" >
+            delete from lgk_waybill
+            where id_store = #id_store:INTEGER#
+  	</delete>
+  	
+  	<select id="getCustomersNotVisited" parameterClass="com.retailsbs.logistikapp.logistic.dto.CustomersNotVisitedCriteria" resultClass="com.retailsbs.logistikapp.logistic.dto.CustomersNotVisitedDTO">
+  		select s.id_store, s.name as store
+		from lgk_access a
+		join lgk_travel t on t.id_user = a.id_user
+		join lgk_waybill w on w.id_travel = t.id_travel
+		join lgk_store s on s.id_store = w.id_store
+		where id_supplier = #id_supplier:INTEGER#  and t.status = 'FIN' 
+		<isNotNull property="fini"> 
+			<![CDATA[ and t.schedule::date >= #fini#  ]]>
+		</isNotNull> 
+		<isNotNull property="ffin">
+			<![CDATA[ and t.schedule <= #ffin# ]]>
+		</isNotNull>
+		<isNotNull property="id_user">
+			t.id_user = #id_user:INTEGER#
+		</isNotNull>
+		group by s.id_store, s.name
+		order by s.id_store
+  	</select>
+  	
+  	<select id="getSuppliersWithStoresNotVisited" parameterClass="java.util.Date" resultClass="Long">
+	  	select a.id_supplier
+		from lgk_travel t
+		join lgk_access a on a.id_user = t.id_user
+		join lgk_waybill w on w.id_travel = t.id_travel
+		where t.status in ('FIN', 'TRA', 'PRO') and w.status != 'S' and t.schedule::date = #date#
+		group by a.id_supplier
+		having count(w.id_waybill) > 0
+  	</select>
+  	
+  	<select id="getStoresNotVisitedByDateAndSupplier" 
+  		parameterClass="com.retailsbs.logistikapp.logistic.dto.StoresNotVisitedByDateAndSupplierCriteria" 
+  		resultClass="com.retailsbs.logistikapp.logistic.dto.StoresNotVisitedByDateAndSupplierDTO">
+  		select w.id_waybill, s.id_store, t.id_travel, t.name as travel, u.username as driver, s.name as store, s.latitude, s.longitude, s.code
+		from lgk_travel t
+		join lgk_user u on u.id_user = t.id_user
+		join lgk_access a on a.id_user = t.id_user
+		join lgk_waybill w on w.id_travel = t.id_travel
+		join lgk_store s on s.id_store = w.id_store
+		where t.status in ('FIN', 'TRA', 'PRO') and w.status != 'S' and t.schedule::date = #date# and a.id_supplier = #id_supplier:INTEGER#
+		order by t.started, s.name, s.code ASC
+  	</select>
+
+</sqlMap>

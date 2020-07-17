@@ -1,0 +1,21 @@
+package com.retailsbs.logistikapp.retail.dto;
+
+public class AvailableStoreByIdSupplierIdRoute {
+	
+	private Long id_supplier;
+	private Long id_route;
+
+	public Long getId_supplier() {
+		return id_supplier;
+	}
+	public void setId_supplier(Long id_supplier) {
+		this.id_supplier = id_supplier;
+	}
+	public Long getId_route() {
+		return id_route;
+	}
+	public void setId_route(Long id_route) {
+		this.id_route = id_route;
+	}
+
+}

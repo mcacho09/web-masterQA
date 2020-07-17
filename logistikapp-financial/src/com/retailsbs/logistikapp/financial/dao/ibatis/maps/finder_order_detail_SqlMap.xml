@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="finder_order_detail">
+
+  	<delete id="delOrderDetailByIdOrder" parameterClass="Long">
+  		delete from lgk_order_detail
+  		where id_order = #id_order:INTEGER#
+  	</delete>
+  	
+  	<delete id="delOrderDetailByIdProduct" parameterClass="Long">
+  		delete from lgk_order_detail
+  		where id_product = #id_product:INTEGER#
+  	</delete>
+  	
+  	<select id="getProductsUsedsInOrderDetail"
+  		resultClass="Object"
+  		parameterClass="com.retailsbs.logistikapp.financial.dto.ProductsUsedsInOrderDetailDTO">
+  		
+  		select distinct p.id_product 
+		from lgk_order_detail od
+		join lgk_product p on p.id_product = od.id_product
+		join lgk_category_product cp on cp.id_category_product = p.id_category_product
+		where cp.id_supplier = #id_supplier:INTEGER# and p.id_product in <iterate open="(" close=")" property="ids" conjunction=",">#ids[]#</iterate>
+  	
+  	</select>
+  	
+</sqlMap>
