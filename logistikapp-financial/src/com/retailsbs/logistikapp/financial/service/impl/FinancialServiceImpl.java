@@ -1,5 +1,6 @@
 package com.retailsbs.logistikapp.financial.service.impl;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -149,7 +150,10 @@ public class FinancialServiceImpl implements FinancialService {
 	private FinderConfigurationStock finder_configuration_stock;
 	private ConfigurationStockProductDAO dao_configuration_stock_product;
 	private FinderConfigurationStockProduct finder_configuration_stock_product;
-
+	private static DecimalFormat df2 = new DecimalFormat("#.##");
+	private float iva = 0.16f;
+	private float ieps = 0.08f;
+	
 	public BrandDAO getDao_brand_product() {
 		return dao_brand_product;
 
@@ -350,6 +354,7 @@ public class FinancialServiceImpl implements FinancialService {
 		record.setId_product(dto.getId_product());
 		record.setPrice_sug(dto.getPrice_sug());
 		record.setQuantity(dto.getQuantity());
+		record.setTax(dto.getTax());
 		// se persiste el objeto
 		Long id = dao_order_detail.insert(record);
 		return id;
@@ -368,6 +373,7 @@ public class FinancialServiceImpl implements FinancialService {
 		record.setId_product(dto.getId_product());
 		record.setPrice_sug(dto.getPrice_sug());
 		record.setQuantity(dto.getQuantity());
+		record.setTax(dto.getTax());
 		// se persiste el objeto
 		int row = dao_order_detail.updateByPrimaryKeySelective(record);
 		return row;
@@ -828,7 +834,7 @@ public class FinancialServiceImpl implements FinancialService {
 				dto_order_detail.setQuantity(trxDTO.getQuantity());
 				dto_order_detail.setTypetrx("VTA");
 				dto_order_detail.setProduct_type(trxDTO.getProduct_type());
-	
+				
 				dao_order_detail.insert(dto_order_detail);
 	
 			}
@@ -933,7 +939,7 @@ public class FinancialServiceImpl implements FinancialService {
 				+ dto.getRetail() + "</td>" + "</tr>" + "<tr>"
 				+ "<td><b>Fecha</b>: " + dto.getDate() + "</td>"
 				+ "<td><b>Hora</b>: " + dto.getHour() + "</td>" + "</tr>"
-				+ "<tr>" + "<td><b>No. Transacci贸n</b>:</td>" + "<td>"
+				+ "<tr>" + "<td><b>No. Transacci髇</b>:</td>" + "<td>"
 				+ dto.getTrx_num() + "</td>" + "</tr>" + "<tr>"
 				+ "<td><b>Estatus</b>:</td>" + "<td>" + dto.getStatus()
 				+ "</td>" + "</tr>" + "<tr>" + "<td><b>Vendedor</b>:</td>"
@@ -1026,7 +1032,7 @@ public class FinancialServiceImpl implements FinancialService {
 					+ "</table>" + "<hr>";
 		}
 		if (!productsDEV.isEmpty()) {
-			body += "<h4 style=\"text-align: center;\">Devoluci贸n</h4>"
+			body += "<h4 style=\"text-align: center;\">Devoluci脙鲁n</h4>"
 					+ "<table style=\"width: 100%; text-align: left;\">"
 					+ "<thead>"
 					+ "<tr>"
@@ -1044,7 +1050,7 @@ public class FinancialServiceImpl implements FinancialService {
 					+ "<td style=\"text-align: left;\"><b>Total Productos:</b> "
 					+ totalProductsDev
 					+ "</td>"
-					+ "<td style=\"text-align: right;\"><b>Total Devoluci贸n:</b> $"
+					+ "<td style=\"text-align: right;\"><b>Total Devoluci脙鲁n:</b> $"
 					+ totalVentaDev + "</td>" + "</tr>" + "</tbody>"
 					+ "</table>" + "<hr>";
 		}
@@ -1086,7 +1092,7 @@ public class FinancialServiceImpl implements FinancialService {
 				
 				+ "<tr>" + "<td style=\"font-size: initial; color: darkslategrey;\"><b>Conductor: </b></td>" + "<td>"
 				+ seller + "</td>" + "</tr>" + "<tr>"
-				+ "<tr>" + "<td style=\"font-size: initial; color: darkslategrey;\"><b>Tel閒ono: </b></td>" + "<td>"
+				+ "<tr>" + "<td style=\"font-size: initial; color: darkslategrey;\"><b>Tel茅fono: </b></td>" + "<td>"
 				+ telefono + "</td>" + "</tr>" + "<tr>"
 				+ "<tr>" + "<td style=\"font-size: initial; color: darkslategrey;\"><b>Correo: </b></td>" + "<td>"
 				+ s_email + "</td>" + "</tr>";
@@ -1101,7 +1107,7 @@ public class FinancialServiceImpl implements FinancialService {
 				+ "<div style=\"width: 90%; margin: 0 auto; padding: 5px 10px; box-shadow: 0 0 5px 5px lightgrey;\">"
 				+ "<h2 style=\"text-align: center; color: darkslategrey;\">" + store
 				+ "</h2>" + "<h1 style=\"text-align: center; color: darkslategrey;\">"
-				+ "l conductor va en camino!" + "</h1>"
+				+ "隆El conductor va en camino!" + "</h1>"
 				+ "<h2 style=\"text-align: center; color: darkslategrey;\">"
 				+ supplier + "</h2>"
 				+ "<table style=\"width: 100%; text-align: left;\">"
@@ -1129,7 +1135,7 @@ public class FinancialServiceImpl implements FinancialService {
 
 		String ticketInfo = "Plaza: " + dto.getRetail() + "\n" + "Fecha: "
 				+ dto.getDate() + "\n" + "Hora: " + dto.getHour() + "\n"
-				+ "No. Transacci贸n: " + dto.getTrx_num() + "\n" + "Estatus: "
+				+ "No. Transacci髇: " + dto.getTrx_num() + "\n" + "Estatus: "
 				+ dto.getStatus() + "\n" + "Vendedor: " + dto.getSeller();
 
 		Long totalProducts = 0l;
@@ -1143,8 +1149,10 @@ public class FinancialServiceImpl implements FinancialService {
 
 		List<InfoProductsToTicketDTO> list = this
 				.getInfoProductsToTicket(criteria);
-		String productsVta = "";
-		for (InfoProductsToTicketDTO i : list) {
+		String productsVta = " ";
+		String typeTax_vta = "IVA:         ";
+		float taxVta = 0;
+		for (InfoProductsToTicketDTO i : list) {			
 			String tmp = "[" + i.getQuantity() + "] " + i.getName_short();
 
 			int size = tmp.length() <= 32 ? tmp.length() : 32;
@@ -1155,6 +1163,23 @@ public class FinancialServiceImpl implements FinancialService {
 					+ i.getSale() + "\n";
 			totalProducts += i.getQuantity();
 			totalVenta += i.getSale();
+			
+			if(i.getTax()!=null){
+				if(i.getTax().equals(1)){
+					taxVta += i.getSale()*iva;
+					typeTax_vta = "IVA:         ";
+				}
+				else if(i.getTax().equals(2)){
+					taxVta += i.getSale()*ieps;
+					typeTax_vta = "IEPS:       ";
+				}
+				else if(i.getTax().equals(3)){
+					taxVta += i.getSale()*iva;
+					taxVta += taxVta*ieps;
+					typeTax_vta = "IEPS e IVA:  ";
+				}		
+			}
+
 		}
 
 		criteria.setTypetrx("CHG");
@@ -1175,9 +1200,10 @@ public class FinancialServiceImpl implements FinancialService {
 		criteria.setTypetrx("DEV");
 
 		list = this.getInfoProductsToTicket(criteria);
-		String productsDEV = "";
+		String productsDEV = " ";
+		String typeTax_dev = "IVA:             ";
+		float taxDev = 0;
 		for (InfoProductsToTicketDTO i : list) {
-
 			String tmp = "[" + i.getQuantity() + "] " + i.getName_short();
 
 			int size = tmp.length() <= 32 ? tmp.length() : 32;
@@ -1187,41 +1213,65 @@ public class FinancialServiceImpl implements FinancialService {
 			productsDEV += tmp + "\n";
 			totalProductsDev += i.getQuantity();
 			totalVentaDev += i.getSale();
+			
+			if(i.getTax()!=null){
+				if(i.getTax().equals(1)){
+					taxDev += i.getSale()*iva;
+					typeTax_dev = "IVA:             ";
+				}
+				else if(i.getTax().equals(2)){
+					taxDev += i.getSale()*ieps;
+					typeTax_dev = "IEPS:           ";
+				}
+				else if(i.getTax().equals(3)){
+					taxDev += i.getSale()*iva;
+					taxDev += taxDev*ieps;
+					typeTax_dev = "IEPS e IVA:  ";
+				}
+			}
 		}
 
 		body = dto.getSupplier().toUpperCase() + "\n\n"
 				+ dto.getStore().toUpperCase() + "\n\n" + ticketInfo + "\n\n";
-		if (!productsVta.isEmpty()) {
+		if (!productsVta.isEmpty() && totalProducts>0) {
+			double subTotal_vta = totalVenta-taxVta;
 			body += "================================\n"
 					+ "             Compra\n" + "Producto  -  " + "Precio  -  "
 					+ "Total" + "\n" + productsVta + "\nTotal Productos: "
-					+ totalProducts + "\n" + "Total Venta: $" + totalVenta
-					+ "\n";
+					+ totalProducts + "\n\n" 
+					+ "Subtotal:    $" + df2.format(subTotal_vta) + "\n"
+					+ typeTax_vta + "$" + df2.format(taxVta) + "\n" 
+					+ "Total Venta: $" + df2.format(totalVenta) + "\n";
 		}
 
-		if (!productsCHG.isEmpty()) {
+		if (!productsCHG.isEmpty() && !productsCHG.equals("")) {
 			body += "\n================================\n"
 					+ "             Cambio\n" + "Producto" + "\n" + productsCHG;
 		}
-		if (!productsDEV.isEmpty()) {
+		if (!productsDEV.isEmpty() && totalProductsDev>0) {
+			double subTotal_dev = totalVentaDev-taxDev;
 			body += "\n================================\n"
-					+ "           Devoluci贸n\n" + "Producto" + "\n"
-					+ productsDEV + "\nTotal Productos: " + totalProductsDev
-					+ "\nTotal Devoluc贸n: $" + totalVentaDev;
+					+ "           Devoluci髇\n" + "Producto" + "\n"
+					+ productsDEV + "\nTotal Productos: " + totalProductsDev + "\n\n"
+					+ "Subtotal:       $" + df2.format(subTotal_dev) + "\n" 
+					+ typeTax_dev + " $" + df2.format(taxDev) + "\n" 
+					+ "Total Devoluci髇: $" + df2.format(totalVentaDev);
 		}
 
-		if (!productsVta.isEmpty() && !productsDEV.isEmpty()) {
+		if((!productsVta.isEmpty() && totalProducts>0) && (!productsDEV.isEmpty() && totalProductsDev>0)) {
 			body += "\n================================\n"
 					+ "          Total Ticket\n" + "$"
-					+ (totalVenta - totalVentaDev) + "\n"
+					+ df2.format(totalVenta - totalVentaDev) + "\n"
 					+ "          TOTAL TICKET:\n"
-					+ "      VENTAS - DEVOLUCIONES";
+					+ "      VENTAS - DEVOLUCIONES\n";
 		}
 
-		return body
-				+ "\n\n"
-				+ "ESTE DOCUMENTO ES UNA NOTA DE \nVENTA Y NO ES VALIDO COMO \n\"COMPROBANTE FISCAL\""
-				+ "\n\n\n";
+		body += "\n\nDEBO(MOS) Y PAGARE(MOS) INCONDI-\nCIONALMENTE A LA ORDEN DE: "+ dto.getSupplier().toUpperCase() + "\nEL " +
+	            "IMPORTE DE ESTA NOTA EN LA FECHA\nDE SU PRESENTACI覰 EN LA CIUDAD DE\n_______________,____. " +
+	            "VALOR RECIBIDO\nEN MERCANCIA A MI (NUESTRA) SATISFACCI覰\nCONVINIENDO DE NO HACERLO PAGAR EL __%" + "\n" +
+	            "MENSUAL A PARTIR DE LA FECHA DE ESTE\nDOCUMENTO M罶 GASTOS QUE SE GENERAN POR\nCOBRANZA. ACEPTO(MOS) ________________.";
+		
+		return body;
 	}
 
 	/*

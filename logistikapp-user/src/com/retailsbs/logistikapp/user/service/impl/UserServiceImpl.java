@@ -594,7 +594,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		// Se controla que hayan datos
 		// sino se lanza exception
 		if (list.size() == 0)
-			throw new AccessNotFoundException("Usuario con id =" + id_user
+			throw new AccessNotFoundException("Usuario con id = " + id_user
 					+ " acceso suspendido");
 
 		// Se retorna lista

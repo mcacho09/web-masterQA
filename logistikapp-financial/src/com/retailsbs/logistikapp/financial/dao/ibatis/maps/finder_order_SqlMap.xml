@@ -253,7 +253,8 @@
 	  		od.quantity, 
 	  		p.name_short, 
 	  		coalesce(od.price_sale,p.price_sale) as price_sale, 
-			(od.quantity * coalesce(od.price_sale, p.price_sale)) as sale
+			(od.quantity * coalesce(od.price_sale, p.price_sale)) as sale,
+			p.tax
 		from lgk_order o
 		join lgk_order_detail od on o.id_order = od.id_order
 		join lgk_product p on p.id_product = od.id_product

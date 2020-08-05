@@ -6,6 +6,7 @@ public class InfoProductsToTicketDTO {
 	private String name_short;
 	private Double price_sale;
 	private Double sale;
+	private Integer tax;
 	
 	public Long getQuantity() {
 		return quantity;
@@ -31,11 +32,17 @@ public class InfoProductsToTicketDTO {
 	public void setSale(Double sale) {
 		this.sale = sale;
 	}
+	public Integer getTax() {
+		return tax;
+	}
+	public void setTax(Integer tax) {
+		this.tax = tax;
+	}
 	@Override
 	public String toString() {
 		return "InfoProductsToTicketDTO [quantity=" + quantity
 				+ ", name_short=" + name_short + ", price_sale=" + price_sale
-				+ ", sale=" + sale + "]";
+				+ ", sale=" + sale + ", tax=" + tax + "]";
 	}
 	
 

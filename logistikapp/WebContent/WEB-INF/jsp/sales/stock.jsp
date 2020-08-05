@@ -67,7 +67,7 @@
                                     <li class="active"><span>Almacen</span></li>
                                 </ol>
                                 
-                                <h1>Información de almacenes</h1>
+                                <h1>Información de almacénes</h1>
                             </div>
                         </div>
                         

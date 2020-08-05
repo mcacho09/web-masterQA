@@ -38,5 +38,4 @@ public class TrxDTO {
 	public void setProduct_type(String product_type) {
 		this.product_type = product_type;
 	}
-	
 }

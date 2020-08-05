@@ -15,6 +15,7 @@
     <result column="cost" property="cost" jdbcType="NUMERIC" />
     <result column="price_sale" property="price_sale" jdbcType="NUMERIC" />
     <result column="product_type" property="product_type" jdbcType="String" />
+    <result column="tax" property="tax" jdbcType="INTEGER" />
   </resultMap>
   <sql id="abatorgenerated_Example_Where_Clause" >
     <!--
@@ -52,7 +53,7 @@
       This element was generated on Tue Oct 03 16:24:25 CDT 2017.
     -->
     select 'false' as QUERYID, id_order_detail, id_order, id_product, price_sug, quantity, typetrx,
-      cost, price_sale, product_type
+      cost, price_sale, product_type, tax
     from lgk_order_detail
     where id_order_detail = #id_order_detail:SERIAL#
   </select>
@@ -62,7 +63,7 @@
       This element was generated on Tue Oct 03 16:24:25 CDT 2017.
     -->
     select 'false' as QUERYID, id_order_detail, id_order, id_product, price_sug, quantity, typetrx,
-      cost, price_sale, product_type
+      cost, price_sale, product_type, tax
     from lgk_order_detail
     <isParameterPresent >
       <include refid="lgk_order_detail.abatorgenerated_Example_Where_Clause" />
@@ -85,9 +86,9 @@
       This element was generated on Tue Oct 03 16:24:25 CDT 2017.
     -->
     insert into lgk_order_detail (id_order, id_product, price_sug, quantity, typetrx, cost,
-      price_sale, product_type)
+      price_sale, product_type, tax)
     values (#id_order:INTEGER#, #id_product:INTEGER#, #price_sug:NUMERIC#, #quantity:INTEGER#,
-      #typetrx:VARCHAR#, #cost:NUMERIC#, #price_sale:NUMERIC#, #product_type:String#)
+      #typetrx:VARCHAR#, #cost:NUMERIC#, #price_sale:NUMERIC#, #product_type:String#, #tax:INTEGER#)
     <selectKey resultClass="Long" keyProperty="id_order_detail" >
       SELECT LASTVAL()
     </selectKey>
@@ -105,7 +106,8 @@
       typetrx = #typetrx:VARCHAR#,
       cost = #cost:NUMERIC#,
       price_sale = #price_sale:NUMERIC#,
-      product_type = #product_type:String#
+      product_type = #product_type:String#,
+      tax = #tax:INTEGER#
     where id_order_detail = #id_order_detail:SERIAL#
   </update>
   <update id="abatorgenerated_updateByPrimaryKeySelective" parameterClass="com.retailsbs.logistikapp.financial.domain.OrderDetail" >
@@ -138,6 +140,9 @@
       </isNotNull>
       <isNotNull prepend="," property="product_type" >
         product_type = #product_type:String#
+      </isNotNull>
+      <isNotNull prepend="," property="tax" >
+        tax = #tax:INTEGER#
       </isNotNull>
     </dynamic>
     where id_order_detail = #id_order_detail:SERIAL#

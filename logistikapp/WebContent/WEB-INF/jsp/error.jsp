@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Acceso suspendido - LogistikApp</title>
+    <title>Ha ocurrido un problema - LogistikApp</title>
     
     <!-- bootstrap -->
     <link href="css/bootstrap/bootstrap.css" rel="stylesheet" />
@@ -38,7 +38,7 @@
                             <div id="error-box-inner">
                                 <img src="img/error-500-v1.png" alt="Error 500"/>
                             </div>
-                            <h1>Acceso Suspendido</h1>
+                            <h1>Ha ocurrido un problema</h1>
                             <p>Volver a <a href="home.htm">Dashboard</a></p>
                         </div>
                     </div>

@@ -63,7 +63,7 @@
 		parameterClass="com.retailsbs.logistikapp.financial.dto.WSProductsDetailCriteria"
 		resultClass="com.retailsbs.logistikapp.financial.dto.WSProductDetailDTO">
 	
-		SELECT od.quantity, p.code, p.name_short, p.name_long, coalesce(od.price_sale,0) as price_sale, coalesce(od.price_sug, 0) as price_sug, od.typetrx, p.image, p.tax,
+		SELECT od.quantity, p.code, p.name_short, p.name_long, coalesce(od.price_sale,0) as price_sale, coalesce(od.price_sug, 0) as price_sug, od.typetrx, p.image, p.tax
 		FROM lgk_order_detail od
 		JOIN lgk_product p on p.id_product = od.id_product
 		JOIN lgk_order o on o.id_order = od.id_order

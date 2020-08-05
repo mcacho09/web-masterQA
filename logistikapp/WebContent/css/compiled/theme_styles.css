@@ -4069,6 +4069,20 @@ input[type="radio"] {
 .infographic-box {
   padding: 20px;
 }
+.infographic-sm-box i {
+  font-size: 2.4em;
+  display: block;
+  float: left;
+  margin-right: 15px;
+  width: 45px;
+  height: 45px;
+  line-height: 60px;
+  text-align: center;
+  border-radius: 50%;
+  background-clip: padding-box;
+  /* stops bg color from leaking outside the border: */
+  color: #fff;
+}
 .infographic-box i {
   font-size: 2.4em;
   display: block;
