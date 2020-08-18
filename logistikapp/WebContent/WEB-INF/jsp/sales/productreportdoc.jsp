@@ -8,6 +8,6 @@
 <c:forEach var="i" items="${categorysales}"> ,${i.category },${i.sale }
 </c:forEach>
  
-"Fecha","Hora","Nombre","Num Trx","Usuario","Venta Qty","Venta Mto","Cambio","Devolucion","Estado",
-<c:forEach var="rpt" items="${list}" >"<fmt:formatDate pattern="dd/MM/yyyy" value="${rpt.invoice}"/>","<fmt:formatDate value="${rpt.invoice }" pattern="HH:mm:ss"/>","${rpt.name}","${rpt.trx_num}","${rpt.username}","${rpt.qty_vta}","${rpt.qty_vta_sug}","${rpt.qty_chg}","${rpt.qty_dev}",<c:if test="${rpt.status == 'APR' }">"Pagado"</c:if><c:if test="${rpt.status == 'CAN' }">"Cancelada"</c:if><c:if test="${rpt.status == 'NP' }">"Por pagar"</c:if>,
+"Fecha","Hora","Nombre","Num Trx","Usuario","Venta Qty","Subtotal","Impuesto","Venta Mto","Cambio","Devolucion","Estado",
+<c:forEach var="rpt" items="${list}" varStatus="status" >"<fmt:formatDate pattern="dd/MM/yyyy" value="${rpt.invoice}"/>","<fmt:formatDate value="${rpt.invoice }" pattern="HH:mm:ss"/>","${rpt.name}","${rpt.trx_num}","${rpt.username}","${rpt.qty_vta}","${sub_list[status.index]}","${tax_list[status.index]}","${rpt.qty_vta_sug}","${rpt.qty_chg}","${rpt.qty_dev}",<c:if test="${rpt.status == 'APR' }">"Pagado"</c:if><c:if test="${rpt.status == 'CAN' }">"Cancelada"</c:if><c:if test="${rpt.status == 'NP' }">"Por pagar"</c:if>,
 </c:forEach>

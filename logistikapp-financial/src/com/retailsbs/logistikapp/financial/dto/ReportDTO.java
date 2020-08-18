@@ -13,6 +13,7 @@ public class ReportDTO extends Order{
 	private Double qty_vta_dev_sug;
 	private Long qty_chg;
 	private Long qty_dev;
+	private Long id_product;
 	
 	//Parametro para filtrar por cliente 
 	public String getName() {
@@ -75,6 +76,13 @@ public class ReportDTO extends Order{
 	}
 	public void setQty_dev(Long qty_dev) {
 		this.qty_dev = qty_dev;
+	}
+	//Se obtiene id del producto
+	public Long getId_product() {
+		return id_product;
+	}
+	public void setId_product(Long id_product) {
+		this.id_product = id_product;
 	}
 	
 }

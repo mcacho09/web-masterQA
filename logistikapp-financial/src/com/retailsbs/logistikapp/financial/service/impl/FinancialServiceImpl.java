@@ -2,6 +2,7 @@ package com.retailsbs.logistikapp.financial.service.impl;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -813,7 +814,7 @@ public class FinancialServiceImpl implements FinancialService {
 		dto_order.setId_retail(dto.getId_retail());
 		dto_order.setId_store(dto.getId_store());
 		dto_order.setId_user(dto.getId_user());
-
+		
 		// AGREGADO DE ORDEN
 		Long orden = dao_order.insert(dto_order);
 
@@ -939,7 +940,7 @@ public class FinancialServiceImpl implements FinancialService {
 				+ dto.getRetail() + "</td>" + "</tr>" + "<tr>"
 				+ "<td><b>Fecha</b>: " + dto.getDate() + "</td>"
 				+ "<td><b>Hora</b>: " + dto.getHour() + "</td>" + "</tr>"
-				+ "<tr>" + "<td><b>No. Transacción</b>:</td>" + "<td>"
+				+ "<tr>" + "<td><b>No. Transacciï¿½n</b>:</td>" + "<td>"
 				+ dto.getTrx_num() + "</td>" + "</tr>" + "<tr>"
 				+ "<td><b>Estatus</b>:</td>" + "<td>" + dto.getStatus()
 				+ "</td>" + "</tr>" + "<tr>" + "<td><b>Vendedor</b>:</td>"
@@ -1122,7 +1123,7 @@ public class FinancialServiceImpl implements FinancialService {
 		SendEmail.sendTicket(s_email, store, body,
 				"retail", r_email, seller, s_email, supplier);
 		if (r_email == null || r_email.isEmpty())
-			return "Correo de entrega no enviado, compruebe su información.";
+			return "Correo de entrega no enviado, compruebe su informaciï¿½n.";
 		else
 			return "";
 	}
@@ -1135,7 +1136,7 @@ public class FinancialServiceImpl implements FinancialService {
 
 		String ticketInfo = "Plaza: " + dto.getRetail() + "\n" + "Fecha: "
 				+ dto.getDate() + "\n" + "Hora: " + dto.getHour() + "\n"
-				+ "No. Transacción: " + dto.getTrx_num() + "\n" + "Estatus: "
+				+ "No. Transacciï¿½n: " + dto.getTrx_num() + "\n" + "Estatus: "
 				+ dto.getStatus() + "\n" + "Vendedor: " + dto.getSeller();
 
 		Long totalProducts = 0l;
@@ -1251,11 +1252,11 @@ public class FinancialServiceImpl implements FinancialService {
 		if (!productsDEV.isEmpty() && totalProductsDev>0) {
 			double subTotal_dev = totalVentaDev-taxDev;
 			body += "\n================================\n"
-					+ "           Devolución\n" + "Producto" + "\n"
+					+ "           Devoluciï¿½n\n" + "Producto" + "\n"
 					+ productsDEV + "\nTotal Productos: " + totalProductsDev + "\n\n"
 					+ "Subtotal:       $" + df2.format(subTotal_dev) + "\n" 
 					+ typeTax_dev + " $" + df2.format(taxDev) + "\n" 
-					+ "Total Devolución: $" + df2.format(totalVentaDev);
+					+ "Total Devoluciï¿½n: $" + df2.format(totalVentaDev);
 		}
 
 		if((!productsVta.isEmpty() && totalProducts>0) && (!productsDEV.isEmpty() && totalProductsDev>0)) {
@@ -1267,9 +1268,9 @@ public class FinancialServiceImpl implements FinancialService {
 		}
 
 		body += "\n\nDEBO(MOS) Y PAGARE(MOS) INCONDI-\nCIONALMENTE A LA ORDEN DE: "+ dto.getSupplier().toUpperCase() + "\nEL " +
-	            "IMPORTE DE ESTA NOTA EN LA FECHA\nDE SU PRESENTACIÓN EN LA CIUDAD DE\n_______________,____. " +
-	            "VALOR RECIBIDO\nEN MERCANCIA A MI (NUESTRA) SATISFACCIÓN\nCONVINIENDO DE NO HACERLO PAGAR EL __%" + "\n" +
-	            "MENSUAL A PARTIR DE LA FECHA DE ESTE\nDOCUMENTO MÁS GASTOS QUE SE GENERAN POR\nCOBRANZA. ACEPTO(MOS) ________________.";
+	            "IMPORTE DE ESTA NOTA EN LA FECHA\nDE SU PRESENTACIï¿½N EN LA CIUDAD DE\n_______________,____. " +
+	            "VALOR RECIBIDO\nEN MERCANCIA A MI (NUESTRA) SATISFACCIï¿½N\nCONVINIENDO DE NO HACERLO PAGAR EL __%" + "\n" +
+	            "MENSUAL A PARTIR DE LA FECHA DE ESTE\nDOCUMENTO Mï¿½S GASTOS QUE SE GENERAN POR\nCOBRANZA. ACEPTO(MOS) ________________.";
 		
 		return body;
 	}
@@ -2056,6 +2057,12 @@ public class FinancialServiceImpl implements FinancialService {
 		
 		return 0;
 		
+	}
+
+	@Override
+	public List<Double> getSubtotal(ProductSearchCriteria dto) {
+		List<Double> list = new ArrayList<>(Arrays.asList(1.38, 2.56, 4.3));
+		return list;
 	}
 
 }

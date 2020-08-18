@@ -6,8 +6,8 @@
 		parameterClass="com.retailsbs.logistikapp.financial.dto.WSTransactionListDTO"
 		resultClass="com.retailsbs.logistikapp.financial.dto.WSTransactionDTO">
 	
-		SELECT ord.id_order, ord.invoice, s.name AS store, 
-			coalesce(vta.sales, 0) AS sale , 
+		SELECT ord.id_order, ord.invoice, s.name AS store, coalesce(ord.payment_part, 0) AS payment_part,
+			coalesce(vta.sales, 0) AS sale, 
 			coalesce(dev.devolutions,0) AS devolutions, 
 			coalesce(dev.sale_dev, 0) AS sale_dev , 
 			coalesce(chg.changes, 0) AS changes,

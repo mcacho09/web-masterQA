@@ -12,6 +12,7 @@ public class WSProductDetailDTO {
 	private String image;
 	private Integer trx;
 	private Integer tax;
+	private Long id_product;
 	
 	public Long getQuantity() {
 		return quantity;
@@ -73,12 +74,19 @@ public class WSProductDetailDTO {
 	public void setTax(Integer tax) {
 		this.tax= tax;
 	}
+	public Long getId_product() {
+		return id_product;
+	}
+	public void setId_product(Long id_product) {
+		this.id_product = id_product;
+	}
 	@Override
 	public String toString() {
 		return "WSProductDetailDTO [quantity=" + quantity + ", code=" + code
 				+ ", name_short=" + name_short + ", name_long=" + name_long
 				+ ", price_sale=" + price_sale + ", price_sug=" + price_sug
-				+ ", typetrx=" + typetrx + ", image=" + image + ", trx=" + trx + ", tax=" + tax + "]";
+				+ ", typetrx=" + typetrx + ", image=" + image + ", trx=" 
+				+ trx + ", tax=" + tax + ", id_product=" + id_product + "]";
 	}
 
 }
