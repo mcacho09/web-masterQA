@@ -275,7 +275,8 @@ public class FinancialServiceImpl implements FinancialService {
 		record.setInvoice(dto.getInvoice());
 		record.setModified(dto.getModified());
 		record.setStatus(dto.getStatus());
-
+		record.setPayment_part(dto.getPayment_part());
+		
 		// persiste el objeto
 		Long id = dao_order.insert(record);
 		return id;
@@ -294,6 +295,8 @@ public class FinancialServiceImpl implements FinancialService {
 		record.setInvoice(dto.getInvoice());
 		record.setModified(dto.getModified());
 		record.setStatus(dto.getStatus());
+		record.setPayment_part(dto.getPayment_part());
+		
 		// se persiste el objeto
 		int row = dao_order.updateByPrimaryKeySelective(record);
 
@@ -814,6 +817,7 @@ public class FinancialServiceImpl implements FinancialService {
 		dto_order.setId_retail(dto.getId_retail());
 		dto_order.setId_store(dto.getId_store());
 		dto_order.setId_user(dto.getId_user());
+		dto_order.setPayment_part(dto.getPayment_part());
 		
 		// AGREGADO DE ORDEN
 		Long orden = dao_order.insert(dto_order);
@@ -835,6 +839,7 @@ public class FinancialServiceImpl implements FinancialService {
 				dto_order_detail.setQuantity(trxDTO.getQuantity());
 				dto_order_detail.setTypetrx("VTA");
 				dto_order_detail.setProduct_type(trxDTO.getProduct_type());
+				//dto_order_detail.setPayment_part(trxDTO.getPayment_part());
 				
 				dao_order_detail.insert(dto_order_detail);
 	

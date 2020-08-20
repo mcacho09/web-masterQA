@@ -9,7 +9,8 @@ public class AddTrxDTO extends Order {
 	private List<TrxDTO> products_VTA; 
 	private List<TrxDTO> products_CHG;
 	private List<TrxDTO> products_DEV;
-	
+    private Double payment_part;
+    
 	public List<TrxDTO> getProducts_VTA() {
 		return products_VTA;
 	}
@@ -29,6 +30,12 @@ public class AddTrxDTO extends Order {
 		this.products_DEV = products_DEV;
 	}
 	
-	
+    public Double getPayment_part() {
+        return payment_part;
+    }
+
+    public void setPayment_part(Double payment_part) {
+        this.payment_part = payment_part;
+    }
 	
 }
