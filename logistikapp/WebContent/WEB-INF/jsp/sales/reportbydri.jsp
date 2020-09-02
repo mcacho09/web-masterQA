@@ -93,9 +93,6 @@
 			                                                 <button id="reportTrxButton" class="btn-report btn btn-primary" type="button" title="Descargar Reporte Trx Detallado" data-toggle="tooltip" data-placement="bottom">
 			                                                    <i class="fa fa-download"></i> TRX / Producto
 				                                             </button>
-			                                                 <button id="reportTrxButton" class="btn-report btn btn-primary" type="button" title="Descargar Reporte de Efectividad" data-toggle="tooltip" data-placement="bottom">
-			                                                    <i class="fa fa-download"></i> Reporte Efectividad
-				                                             </button>
 	                                                    </div>
 	                                                 
                                                     	<div id="header-num-selected" class="btn-group num-selected" style="display:none;"><span>NaN</span></div> 

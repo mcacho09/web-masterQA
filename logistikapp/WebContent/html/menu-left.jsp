@@ -119,7 +119,7 @@
 	                    <li><a href="travelhistorylist.htm" ${activetag2} ${fn:contains(pageContext.request.servletPath, '/logistic/travelhistory') ? 'class=active':''}> Hist&oacute;rico </a></li>
 		                    
 		                <authz:authorize ifNotGranted="DRI,DRI1,DRI2,DRI3,DRI4,DRI5,SUP3,LGK">
-		                    <li><a href="callcenter.htm" class="${fn:contains(pageContext.request.servletPath, '/callcenter/callcenter') ? 'active':''}"> Call Center </a></li>
+		                    <li><a href="callcenter.htm" class="${fn:contains(pageContext.request.servletPath, '/callcenter/callcenter') ? 'active':''}"> Pedidos </a></li>
 		                </authz:authorize>
 	                </ul>
 	            </li>
