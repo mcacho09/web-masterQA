@@ -1141,7 +1141,7 @@ public class FinancialServiceImpl implements FinancialService {
 
 		String ticketInfo = "Plaza: " + dto.getRetail() + "\n" + "Fecha: "
 				+ dto.getDate() + "\n" + "Hora: " + dto.getHour() + "\n"
-				+ "No. Transacci�n: " + dto.getTrx_num() + "\n" + "Estatus: "
+				+ "No. Transacción: " + dto.getTrx_num() + "\n" + "Estatus: "
 				+ dto.getStatus() + "\n" + "Vendedor: " + dto.getSeller();
 
 		Long totalProducts = 0l;

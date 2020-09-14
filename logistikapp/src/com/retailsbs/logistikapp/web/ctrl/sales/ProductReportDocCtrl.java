@@ -145,7 +145,7 @@ public class ProductReportDocCtrl implements Controller {
 		
 		List<ReportDTO> list = financialService.getReportByDate(dto);
 		
-		//System.out.println("list: " + list.size());
+		System.out.println("list: " + list.size());
 		ArrayList<Double> tax_list = new ArrayList<>();
 		ArrayList<Double> sub_list = new ArrayList<>();
 		
@@ -164,28 +164,6 @@ public class ProductReportDocCtrl implements Controller {
 			tax_list.add(tax);
 			sub_list.add(sub);
 		}
-		
-		/*
-		for (final ProductDTO product : products) {
-			Double tax = 0d;
-			Double sub = 0d;
-			if(product.getTax() != null){
-				if(product.getTax().equals(1)) {
-					System.out.println(product.getPrice_sale());
-					tax = product.getPrice_sale() * iva;	
-				}
-			}
-			sub = product.getPrice_sale() - tax;
-			sub_list.add(sub);
-			tax_list.add(tax);
-		}
-		
-		for (final ReportDTO trx : list) {
-			if(trx.getId_order().equals(0)){
-				
-			}
-		}
-		*/
 		
 		// Se obtienen las metricas de venta
 		GetMetricsSaleDTO dtoSale = new GetMetricsSaleDTO();
@@ -233,6 +211,7 @@ public class ProductReportDocCtrl implements Controller {
 		arg1.setHeader("Content-disposition", contentDisposition);
 		arg1.setContentType("application/csv");
 
+		System.out.println("Tam: " + list.size());
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("list", list);
 		model.put("metrics", metrics);

@@ -14,6 +14,7 @@ public class ReportDTO extends Order{
 	private Long qty_chg;
 	private Long qty_dev;
 	private Long id_product;
+	private Double payment_part;
 	
 	//Parametro para filtrar por cliente 
 	public String getName() {
@@ -83,6 +84,13 @@ public class ReportDTO extends Order{
 	}
 	public void setId_product(Long id_product) {
 		this.id_product = id_product;
+	}
+	//Se obtiene saldo de la orden
+	public Double getPayment_part() {
+		return payment_part;
+	}
+	public void setPayment_part(Double payment_part) {
+		this.payment_part = payment_part;
 	}
 	
 }

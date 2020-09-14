@@ -10,12 +10,12 @@
   	<select id="getReportByDate" parameterClass="com.retailsbs.logistikapp.financial.dto.ReportSearchCriteria"
   					resultClass="com.retailsbs.logistikapp.financial.dto.ReportDTO">
   					
-        SELECT ord.invoice, s.name, ord.trx_num, us.username, ord.status, ord.id_order, COALESCE (SUM(vta.quantity_sales),0) as qty_vta, COALESCE (SUM(vta.quantity_sales_sug),0) as qty_vta_sug, 
+        SELECT DISTINCT(ord.trx_num), ord.invoice, s.name, us.username, ord.status, ord.id_order, COALESCE (SUM(vta.quantity_sales),0) as qty_vta, COALESCE (SUM(vta.quantity_sales_sug),0) as qty_vta_sug, 
                 COALESCE (SUM(dev.quantity_sales_dev_sug),0) as qty_vta_dev_sug, 
                 COALESCE(chg.quantity_sales,0) as qty_chg, 
                 COALESCE(dev.quantity_sales,0) as qty_dev,
                 COALESCE(od.tax, 0) as tax,
-                COALESCE(od.id_product, 0) as id_product
+                COALESCE(ord.payment_part, 0) as payment_part
             FROM lgk_order ord
             JOIN lgk_store s ON s.id_store = ord.id_store
             JOIN lgk_user us ON us.id_user = ord.id_user
@@ -53,7 +53,7 @@
 		     <isNotNull property="id_user">
 		     	and us.id_user = #id_user:INTEGER#
 		     </isNotNull>
-            GROUP BY ord.invoice, s.name, us.username, ord.status, ord.id_order, chg.quantity_sales, dev.quantity_sales, od.tax, od.id_product
+            GROUP BY ord.invoice, s.name, us.username, ord.status, ord.id_order, chg.quantity_sales, dev.quantity_sales, od.tax
             ORDER BY ord.id_order
   	</select>
   	

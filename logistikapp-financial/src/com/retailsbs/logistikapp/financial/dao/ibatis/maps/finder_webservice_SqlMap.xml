@@ -12,6 +12,7 @@
 			coalesce(dev.sale_dev, 0) AS sale_dev , 
 			coalesce(chg.changes, 0) AS changes,
 			ord.trx_num AS trxnumber,
+			ord.payment_part AS payment_part,
 			ord.status,
 			u.username AS driver
 		FROM lgk_order ord
