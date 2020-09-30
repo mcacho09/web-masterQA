@@ -68,10 +68,10 @@
                     </c:if>
                     <!-- <li><a href="pos.htm" ${fn:contains(pageContext.request.servletPath, '/sales/pos.htm') ? 'class=active':''}> Punto de Venta </a></li>-->
                     <authz:authorize ifNotGranted="DRI,DRI1,DRI2,DRI3,DRI4,DRI5">
-                    <li><a href="reportbydri.htm" class="${fn:contains(pageContext.request.servletPath, '/sales/reportbydri') ? 'active':''}"> Reporte / Trx </a></li>
+                    <li><a href="reportbydri.htm" class="${fn:contains(pageContext.request.servletPath, '/sales/reportbydri') ? 'active':''}"> Reportes </a></li>
                     </authz:authorize>
                     <c:if test="${fn:contains(useracegi.profile, 'DRI') }">
-                    <li><a href="productreport.htm?idu=${useracegi.id_user }" class="${fn:contains(pageContext.request.servletPath, '/sales/productreport') ? 'active':''}"> Reporte / Trx </a></li>
+                    <li><a href="productreport.htm?idu=${useracegi.id_user }" class="${fn:contains(pageContext.request.servletPath, '/sales/productreport') ? 'active':''}"> Reportes </a></li>
                     </c:if>
                     <c:if test="${!fn:contains(useracegi.profile, 'DRI') }">
                     <li><a href="stock.htm" class="${fn:contains(pageContext.request.servletPath, '/sales/stock') ? 'active':''}"> Almacén </a></li>

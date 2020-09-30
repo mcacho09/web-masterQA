@@ -10,5 +10,6 @@
 	<classpathentry kind="src" path="/logistikapp-retail"/>
 	<classpathentry kind="src" path="/logistikapp-supplier"/>
 	<classpathentry kind="src" path="/logistikapp-email"/>
+	<classpathentry kind="lib" path="C:/Users/01936/Downloads/web-almacen/logistikapp/WebContent/WEB-INF/lib/logistikapp-email.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -88,10 +88,13 @@
 	                                                            <i class="fa fa-square-o"></i>
 	                                                        </button>
 			                                                 <button id="downloadreports" class="btn-report btn btn-primary" type="button" title="Descargar Reporte Trx Resumido" data-toggle="tooltip" data-placement="bottom">
-			                                                 	<i class="fa fa-download"></i> Resumen TRX
+			                                                 	<i class="fa fa-download"></i> Venta
 			                                                 </button>
 			                                                 <button id="reportTrxButton" class="btn-report btn btn-primary" type="button" title="Descargar Reporte Trx Detallado" data-toggle="tooltip" data-placement="bottom">
-			                                                    <i class="fa fa-download"></i> TRX / Producto
+			                                                    <i class="fa fa-download"></i> Productos
+				                                             </button>
+			                                                 <button id="reportPaymentsButton" class="btn-report btn btn-primary" type="button" title="Descargar Reporte Trx Cobranza" data-toggle="tooltip" data-placement="bottom">
+			                                                    <i class="fa fa-download"></i> Cobranza
 				                                             </button>
 	                                                    </div>
 	                                                 
@@ -276,6 +279,27 @@
 		       	}
 	        	location.href = href + "&idu=${idu}"
 	       	}); // reportTrxButton
+	       	
+	        $('#reportPaymentsButton').click( function() {
+        	    // Se obtienen rango de fechas para obtener datos
+	        	console.log("report/trx ==> fini=${fini}");
+	        	console.log("report/trx ==> ffin=${ffin}");
+	        	var href = "reportpayment.htm?fini=${fini}&ffin=${ffin}"
+	        	if ($('.repSelect:checked').size() > 0 ) {
+		       		var tmp = []
+		       		$('.repSelect:checked').each(function(i, e){
+		       			tmp.push(e.dataset.id)
+		       		})
+		       		href += "&idus=" + tmp
+		       	} else {
+		       		var tmp = []
+		       		$('.repSelect').each(function(i, e){
+		       			tmp.push(e.dataset.id)
+		       		})
+		       		href += "&idus=" + tmp
+		       	}
+	        	location.href = href + "&idu=${idu}"
+	       	}); // reportTrxCobranzaButton	       	
 	        	    
 	        $('#downloadreports').click( function() {
 	        	// Se obtienen todos los clientes seleccionados

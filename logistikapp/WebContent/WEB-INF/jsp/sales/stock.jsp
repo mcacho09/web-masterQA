@@ -97,11 +97,21 @@
 														<div class="col-xs-12">
 															<h2 class="text-info pull-left" v-if="!!almacen">{{ almacen.code }}</h2>
 															<div class="btn-group pull-right">
+															
 																<a href="newstock.htm" class="btn btn-primary" v-if="!almacen"><span>Nuevo</span> <i class="fa fa-plus"></i></a>
-																<a href="updstock.htm" class="btn btn-primary" v-if="!!almacen"><span>Editar</span> <i class="fa fa-edit"></i></a>
+																
 																<a href="admtemplatestock.htm" class="btn btn-primary" v-if="!!almacen"><span>Carga Inicial</span> <i class="fa fa-cog"></i></a>
 																<a class="btn btn-primary" href="#" v-if="false"><span v-if="!!almacen">Reporte</span> <i class="fa fa-download"></i></a> 
 																<button type="button" class="btn btn-warning" v-if="!!almacen" @click="showModalSurtir"><i class="fa fa-plus"></i> Surtir</button>
+
+																<c:if test="${!fn:contains(useracegi.userlogin, 'admin01')  }">
+																	<a href="updstock.htm" class="btn btn-primary" v-if="!!almacen"><span>Editar</span> <i class="fa fa-edit"></i></a>
+																</c:if>
+
+																<!--  button id="downloadreports" v-if="!!almacen" class="btn-report btn btn-primary" type="button" title="Descargar Almacen" data-toggle="tooltip" data-placement="bottom">
+			                                                 		<i class="fa fa-download"></i> Descargar
+			                                                 	</button-->
+			                                                 	
 																<!-- <button type="button" class="btn btn-danger" v-if="!!almacen"><span class="hidden-sm hidden-x">Eliminar</span> <i class="fa fa-trash"></i></button> -->
 															</div>
 														</div>
@@ -1616,7 +1626,18 @@
     			}
 			}
 		})
+		
 	</script>
+	
+	<script type="text/javascript">
+        $('#downloadreports').click( function() {
+        	location.href = "travelreportfromhistorico.htm?history=true&idt=" + ids+"&dol=${useracegi.profile}";
+        }); // mapButton
+        
+        
+        //Implementación descarga multilple
+        
+    </script>
 	
 </body>
 

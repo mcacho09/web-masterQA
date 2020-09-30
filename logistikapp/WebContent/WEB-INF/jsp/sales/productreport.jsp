@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	
-	<title>Reporte Trx - LogistikApp</title>
+	<title>Reportes - LogistikApp</title>
 	
 	<!-- bootstrap -->
 	<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
@@ -158,10 +158,13 @@
 	                                                            <i class="fa fa-square-o"></i>
 	                                                        </button>
 			                                                 <button id="downloadreports" class="btn-report btn btn-primary" type="button" title="Descargar Reporte Trx Resumido" data-toggle="tooltip" data-placement="bottom">
-			                                                 	<i class="fa fa-download"></i> Resumen TRX
+			                                                 	<i class="fa fa-download"></i> Venta
 			                                                 </button>
 			                                                 <button id="reportTrxButton" class="btn-report btn btn-primary" type="button" title="Descargar Reporte Trx Detallado" data-toggle="tooltip" data-placement="bottom">
-			                                                    <i class="fa fa-download"></i> TRX / Producto
+			                                                    <i class="fa fa-download"></i> Productos
+				                                             </button>
+			                                                 <button id="reportTrxButton" class="btn-report btn btn-primary" type="button" title="Descargar Reporte Trx Cobranza" data-toggle="tooltip" data-placement="bottom">
+			                                                    <i class="fa fa-download"></i> Cobranza
 				                                             </button>
 	                                                    </div>
 	                                                 
