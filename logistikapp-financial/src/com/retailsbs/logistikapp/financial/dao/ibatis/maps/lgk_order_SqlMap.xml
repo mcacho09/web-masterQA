@@ -15,6 +15,7 @@
     <result column="id_retail" property="id_retail" jdbcType="INTEGER" />
     <result column="id_store" property="id_store" jdbcType="INTEGER" />
     <result column="id_user" property="id_user" jdbcType="INTEGER" />
+    <result column="payment_part" property="payment_part" jdbcType="DOUBLE" />
   </resultMap>
   <sql id="abatorgenerated_Example_Where_Clause" >
     <!--
@@ -52,7 +53,7 @@
       This element was generated on Thu Aug 18 11:32:18 CDT 2016.
     -->
     select 'false' as QUERYID, id_order, id_supplier, modified, invoice, delivery, status,
-      id_retail, id_store, id_user
+      id_retail, id_store, id_user, payment_part
     from lgk_order
     where id_order = #id_order:SERIAL#
   </select>
@@ -85,9 +86,9 @@
       This element was generated on Thu Aug 18 11:32:18 CDT 2016.
     -->
     insert into lgk_order (id_supplier, modified, invoice, delivery, status, id_retail, id_store,
-      id_user)
+      id_user, payment_part)
     values (#id_supplier:INTEGER#, #modified:TIMESTAMP#, #invoice:TIMESTAMP#, #delivery:DATE#,
-      #status:VARCHAR#, #id_retail:INTEGER#, #id_store:INTEGER#, #id_user:INTEGER#)
+      #status:VARCHAR#, #id_retail:INTEGER#, #id_store:INTEGER#, #id_user:INTEGER#, #payment_part:DOUBLE#)
     <selectKey resultClass="Long" keyProperty="id_order" >
       SELECT CURRVAL('lgk_order_id_order_seq')
     </selectKey>
@@ -105,7 +106,8 @@
       status = #status:VARCHAR#,
       id_retail = #id_retail:INTEGER#,
       id_store = #id_store:INTEGER#,
-      id_user = #id_user:INTEGER#
+      id_user = #id_user:INTEGER#,
+      payment_part = #id_user:DOUBLE#,
     where id_order = #id_order:SERIAL#
   </update>
   <update id="abatorgenerated_updateByPrimaryKeySelective" parameterClass="com.retailsbs.logistikapp.financial.domain.Order" >
@@ -138,6 +140,9 @@
       </isNotNull>
       <isNotNull prepend="," property="id_user" >
         id_user = #id_user:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="payment_part" >
+        payment_part = #payment_part:DOUBLE#
       </isNotNull>
     </dynamic>
     where id_order = #id_order:SERIAL#

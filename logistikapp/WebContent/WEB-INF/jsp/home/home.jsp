@@ -105,13 +105,61 @@
                     </div>
                 </div>
                 
+                <c:if test="${fn:contains(useracegi.profile, 'DRI') == false}">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-6 col-xs-12">
+                                <div class="main-box infographic-box">
+                                    <a href="customer.htm"><i id="img-contenedor" class="fa fa-users red-bg"></i></a>
+                                    <h4>Clientes</h4>
+                                    <span class="value">
+                                       &nbsp;
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-xs-12">
+                                <div class="main-box infographic-box">
+                                 <a href="cfgretaillist.htm"><i id="img-contenedor" class="fa fa-globe emerald-bg"></i></a>
+                                   <h4>Plazas</h4>
+                                    <span class="value">
+                                        &nbsp;
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-xs-12">
+                                <div class="main-box infographic-box">
+                                <a href="rutas.htm"><i id="img-contenedor" class="fa fa-map-marker green-bg"></i></a>
+                                  <h4>Rutas</h4>
+                                    <span class="value">
+										<span class="timer" data-from="0" data-to="${routeQty}" data-speed="1000">
+                                            ${routeQty}
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-xs-12">
+                                <div class="main-box infographic-box">
+                               	<a href="cfguserlist.htm"><i id="img-contenedor" class="fa fa-user yellow-bg"></i></a>
+                                    <h4>Usuarios</h4>
+                                    <span class="value">
+                                        <span class="timer" data-from="0" data-to="${userQty}" data-speed="1000">
+                                            ${userQty}
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </c:if>
                 
 				
                 <div class="row">
                     <div class="col-lg-12">
 	                    <div class="row">
 	                    	<c:if test="${fn:contains(useracegi.profile, 'DRI') == false}">
-	                        <div class="col-lg-6">
+	                        <div class="col-lg-12">
 	                           
 	                            <div class="main-box">
 	                                <header class="main-box-header clearfix">
@@ -121,11 +169,11 @@
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 	                                                <div style="text-align: center;">Clientes por plaza</div>
-	                                                <div id="graphDonut1" style="height: 345px;"></div>
+	                                                <div id="graphDonut1" style="height: 200px;"></div>
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 	                                                <div style="text-align: center;">Categor&iacute;as</div>
-	                                                <div id="graphDonut2" style="height: 345px;"></div>
+	                                                <div id="graphDonut2" style="height: 200px;"></div>
                                             </div>
                                         </div>
 	                                </div>
@@ -134,7 +182,7 @@
 
 	                        </div> <!-- FIN COL -->
 	                        </c:if>
-	                        <div class="col-lg-6">
+	                        <div class="col-lg-12">
 								<div class="main-box">
 	                                <header class="main-box-header clearfix">
 	                                    <div class="row">

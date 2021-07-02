@@ -10,14 +10,16 @@
   	<select id="getReportByDate" parameterClass="com.retailsbs.logistikapp.financial.dto.ReportSearchCriteria"
   					resultClass="com.retailsbs.logistikapp.financial.dto.ReportDTO">
   					
-        SELECT ord.invoice, s.name, ord.trx_num , us.username, ord.status, ord.id_order, COALESCE (SUM(vta.quantity_sales),0) as qty_vta, 
-                COALESCE (SUM(vta.quantity_sales_sug),0) as qty_vta_sug, 
+        SELECT DISTINCT(ord.trx_num), ord.invoice, s.name, us.username, ord.status, ord.id_order, COALESCE (SUM(vta.quantity_sales),0) as qty_vta, COALESCE (SUM(vta.quantity_sales_sug),0) as qty_vta_sug, 
                 COALESCE (SUM(dev.quantity_sales_dev_sug),0) as qty_vta_dev_sug, 
                 COALESCE(chg.quantity_sales,0) as qty_chg, 
-                COALESCE(dev.quantity_sales,0) as qty_dev
+                COALESCE(dev.quantity_sales,0) as qty_dev,
+                COALESCE(od.tax, 0) as tax,
+                COALESCE(ord.payment_part, 0) as payment_part
             FROM lgk_order ord
             JOIN lgk_store s ON s.id_store = ord.id_store
             JOIN lgk_user us ON us.id_user = ord.id_user
+            JOIN lgk_order_detail od ON od.id_order = ord.id_order
             LEFT JOIN (SELECT od.id_order, COALESCE(SUM(od.quantity),0) as quantity_sales, 
                 COALESCE(SUM(od.quantity*od.price_sale),0) as quantity_sales_sug, od.price_sale 
                 FROM lgk_order_detail od
@@ -51,7 +53,7 @@
 		     <isNotNull property="id_user">
 		     	and us.id_user = #id_user:INTEGER#
 		     </isNotNull>
-            GROUP BY ord.invoice, s.name, us.username, ord.status, ord.id_order, chg.quantity_sales, dev.quantity_sales 
+            GROUP BY ord.invoice, s.name, us.username, ord.status, ord.id_order, chg.quantity_sales, dev.quantity_sales, od.tax
             ORDER BY ord.id_order
   	</select>
   	
@@ -253,7 +255,8 @@
 	  		od.quantity, 
 	  		p.name_short, 
 	  		coalesce(od.price_sale,p.price_sale) as price_sale, 
-			(od.quantity * coalesce(od.price_sale, p.price_sale)) as sale
+			(od.quantity * coalesce(od.price_sale, p.price_sale)) as sale,
+			p.tax
 		from lgk_order o
 		join lgk_order_detail od on o.id_order = od.id_order
 		join lgk_product p on p.id_product = od.id_product

@@ -243,6 +243,7 @@
                 /sales.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5
                 /stock.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
                 /newstock.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
+                /downloadstock.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
                 /updstock.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
                 /admtemplatestock.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5
                 /userstock.htm*=ADM,SUP,RET,STO,DEM,SUP1,SUP2,SUP3,SUP4,SUP5,LGK,DRI,DRI1,DRI2,DRI3,DRI4,DRI5

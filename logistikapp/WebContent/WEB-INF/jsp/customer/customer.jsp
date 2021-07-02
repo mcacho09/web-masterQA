@@ -78,6 +78,76 @@
                                 </div>
                             </div>
                             
+                            <div class="row">
+			                    <div class="col-lg-12">
+			                        <div class="row">
+			                        
+			                        	<%--Ventas --%>
+			                            <div class="col-lg-2 col-sm-6 col-xs-12 ">
+				                            <div class="col-md-12">
+				                                <div class="main-box infographic-box row">
+				                                <a href="reportbydri.htm"><i id="img-contenedor" class="fa fa-usd green-bg" style="width: 40px !important; height: 40px !important; line-height: 40px !important; margin-left: -5px;"></i></a>
+				                                  <span style="float: left; margin-top: 10px; font-weight: bold;">Ventas</span>
+				                                </div>
+			                                </div>
+			                            </div>
+			                           
+			                        	<%-- Almacén --%>
+			                            <div class="col-lg-2 col-sm-6 col-xs-12">
+				                            <div class="col-md-12">
+				                                <div class="main-box infographic-box row">
+				                                <a href="stock.htm"><i id="img-contenedor" class="fa fa-archive gray-bg" style="width: 40px !important; height: 40px !important; line-height: 40px !important; margin-left: -5px;"></i></a>
+				                                  <span style="float: left; margin-top: 10px; font-weight: bold;">Almacén</span>
+				                                </div>
+			                                </div>
+			                            </div>
+			                            
+			                            
+			                            <%-- Viajes --%>
+			                            <div class="col-lg-2 col-sm-6 col-xs-12">
+				                            <div class="col-md-12">
+				                                <div class="main-box infographic-box row">
+				                                <a href="travellist.htm"><i id="img-contenedor" class="fa fa-truck emerald-bg" style="width: 40px !important; height: 40px !important; line-height: 40px !important; margin-left: -5px;"></i></a>
+				                                  <span style="float: left; margin-top: 10px; font-weight: bold;">Viajes</span>
+				                                </div>
+			                                </div>
+			                            </div>
+			                            
+			                        	<%-- Rutas --%>
+			                            <div class="col-lg-2 col-sm-6 col-xs-12">
+				                            <div class="col-md-12">
+				                                <div class="main-box infographic-box row">
+				                                <a href="rutas.htm"><i id="img-contenedor" class="fa fa-map-marker red-bg" style="width: 40px !important; height: 40px !important; line-height: 40px !important; margin-left: -5px;"></i></a>
+				                                  <span style="float: left; margin-top: 10px; font-weight: bold;">Rutas</span>
+				                                </div>
+			                                </div>
+			                            </div>
+			                            
+			                        	<%-- Pedidos --%>
+			                            <div class="col-lg-2 col-sm-6 col-xs-12">
+				                            <div class="col-md-12">
+				                                <div class="main-box infographic-box row">
+				                                <a href="callcenter.htm"><i id="img-contenedor" class="fa fa-shopping-cart purple-bg" style="width: 40px !important; height: 40px !important; line-height: 40px !important; margin-left: -5px;"></i></a>
+				                                  <span style="float: left; margin-top: 10px; font-weight: bold;">Pedidos</span>
+				                                </div>
+			                                </div>
+			                            </div>
+			                            
+			                        	<%-- Calendario --%>
+			                            <div class="col-lg-2 col-sm-6 col-xs-12">
+				                            <div class="col-md-12">
+				                                <div class="main-box infographic-box row">
+				                                <a href="calendar.htm"><i id="img-contenedor" class="fa fa-calendar yellow-bg" style="width: 40px !important; height: 40px !important; line-height: 40px !important; margin-left: -5px;"></i></a>
+				                                  <span style="float: left; margin-top: 10px; font-weight: bold;">Calendario</span>
+				                                </div>
+			                                </div>
+			                            </div>
+
+			                        </div>
+		                        </div>
+		                    </div>
+
+                
                             <c:if test="${advertencia}">
                             <div id=mensaje class="row" >
                             	<div class="col-lg-4 ">

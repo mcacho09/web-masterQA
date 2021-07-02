@@ -161,6 +161,11 @@
                                                     	<c:if test="${status.value=='2'}"><c:set var="tax_out" value="IEPS" /></c:if>
                                                     	<c:if test="${status.value=='3'}"><c:set var="tax_out" value="IEPS e IVA" /></c:if>
                                                     	<option value="${status.value}"><c:out value="${tax_out}"/></option>                                             
+														<c:if test="${empty status.value}">
+                                                    		<option value='1'>IVA</option>
+                                                    		<option value='2'>IEPS</option>
+                                                    		<option value='3'>IEPS e IVA</option>
+                                                    	</c:if>
 														<c:if test="${status.value=='0'}">
                                                     		<option value='1'>IVA</option>
                                                     		<option value='2'>IEPS</option>

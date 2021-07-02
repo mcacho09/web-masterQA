@@ -223,6 +223,7 @@
         	<include method="getReportByDate"/>
         	<include method="updOrder"/>
         	<include method="selectProductByCriteria"/>
+        	<include method="getSubtotal"/>
         	<include method="delCategoryProductByIdCategoryProduct"/>
         	<include method="getMetricsSale"/>
         	<include method="getMetricsSaleFull"/>

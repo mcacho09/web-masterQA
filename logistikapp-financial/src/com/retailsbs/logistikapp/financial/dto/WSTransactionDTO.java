@@ -14,6 +14,8 @@ public class WSTransactionDTO {
 	private int devolutions;
 	private int changes;
 	private String status;
+	private Double payment_part;
+	
 	public int getId_order() {
 		return id_order;
 	}
@@ -74,5 +76,10 @@ public class WSTransactionDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
+	public Double getPayment_part() {
+		return payment_part;
+	}
+	public void setPayment_part(Double payment_part) {
+		this.payment_part = payment_part;
+	}
 }

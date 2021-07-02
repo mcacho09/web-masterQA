@@ -87,6 +87,7 @@
                 <prop key="saledetail.htm">SaleDetailViewCtrl</prop>
                 
                 <prop key="reporttrxproduct.htm">ReportTrxProductCtrl</prop>
+                <prop key="reportpayment.htm">ReportPaymentCtrl</prop>
                 
                 <prop key="productmix.htm">ProductMixViewCtrl</prop>
                 
@@ -94,6 +95,7 @@
                 
                 <prop key="stock.htm">StockViewCtrl</prop>
                 <prop key="newstock.htm">NewStockViewCtrl</prop>
+
                 <prop key="updstock.htm">UpdStockViewCtrl</prop>
                 <prop key="admtemplatestock.htm">AdmTemplateStockViewCtrl</prop>
                 <prop key="userstock.htm">UserStockViewCtrl</prop>
@@ -652,6 +654,11 @@
         <property name="userService" ref="UserServiceBean"/>
         <property name="financialService" ref="FinancialServiceBean"/>
         <property name="view" value="sales/reporttrxproduct"/>
+    </bean>
+    <bean id="ReportPaymentCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ReportPaymentCtrl">
+        <property name="userService" ref="UserServiceBean"/>
+        <property name="financialService" ref="FinancialServiceBean"/>
+        <property name="view" value="sales/reportpayment"/>
     </bean>
     
     <bean id="ProductViewAddCtrl" class="com.retailsbs.logistikapp.web.ctrl.sales.ProductViewAddCtrl">

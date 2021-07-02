@@ -21,6 +21,8 @@ import org.springframework.web.servlet.mvc.Controller;
 
 import com.retailsbs.logistikapp.financial.dto.GetMetricsSaleDTO;
 import com.retailsbs.logistikapp.financial.dto.MetricsSaleDTO;
+import com.retailsbs.logistikapp.financial.dto.ProductDTO;
+import com.retailsbs.logistikapp.financial.dto.ProductSearchCriteria;
 import com.retailsbs.logistikapp.financial.dto.ReportDTO;
 import com.retailsbs.logistikapp.financial.dto.ReportSearchCriteria;
 import com.retailsbs.logistikapp.financial.dto.SaleByCategoryCriteria;
@@ -29,15 +31,17 @@ import com.retailsbs.logistikapp.financial.service.FinancialService;
 import com.retailsbs.logistikapp.user.domain.Access;
 import com.retailsbs.logistikapp.user.domain.UserAcegi;
 import com.retailsbs.logistikapp.user.service.UserService;
+import com.retailsbs.logistikapp.web.dto.ReportTrxExtDTO;
 
 public class ProductReportDocCtrl implements Controller {
 
 	protected final Log logger = LogFactory.getLog(getClass());
-
 	private UserService userService;
 	private FinancialService financialService;
 	private String view;
+	private List<ProductDTO> products = null;
 
+	private Double iva = 0.16;
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
@@ -90,7 +94,7 @@ public class ProductReportDocCtrl implements Controller {
 					ffin = sdf2.parse( sdf1.format(hoy)+" 23:59:59");
 			}
 		} catch( Exception e) {
-			logger.error("REPORT/TRX ==> Error en formato de fechas, se dejarÃ¡n valores por defecto");
+			logger.error("REPORT/TRX ==> Error en formato de fechas, se dejarán valores por defecto");
 			logger.error("REPORT/TRX ==> fini="+arg0.getParameter("fini"));
 			logger.error("REPORT/TRX ==> ffin="+arg0.getParameter("ffin"));
 			// Por defecto el rango de fechas es el dia actual
@@ -102,13 +106,21 @@ public class ProductReportDocCtrl implements Controller {
 
 		String fileName = "reporte-trx-resumen-"+ sdf3.format(new Date()) + ".csv";
 		
+		ProductSearchCriteria dtopdt = new ProductSearchCriteria();
+		dtopdt.setId_supplier(id_supplier);
+		this.products = financialService.selectProductByCriteria(dtopdt);
+		
+		// Se retorna lista
+		
+		//logger.debug("REPORT/TRX ==> subtotal="+this.sub_list.size());
+		
 		// Se inicializa objeto para criterio de busqueda
 		ReportSearchCriteria dto = new ReportSearchCriteria();
 		dto.setId_supplier(id_supplier);
 		dto.setInvoice(fini);
 		dto.setInvoice_fin(ffin);
 		String tmpids = ServletRequestUtils.getStringParameter(arg0, "ids", "");
-		System.out.println("Los ids " + tmpids);
+		//System.out.println("Los ids " + tmpids);
 		List<Long> tmp = new ArrayList<>();
 		if (!tmpids.isEmpty()) {
 			String[] ids = tmpids.split(",");
@@ -117,9 +129,9 @@ public class ProductReportDocCtrl implements Controller {
 			}
 			dto.setIds(tmp);
 		}
-		
+
 		String tmpidus = ServletRequestUtils.getStringParameter(arg0, "idus", "");
-		System.out.println("Los idus " + tmpidus);
+		//System.out.println("Los idus " + tmpidus);
 		List<Long> idus = new ArrayList<>();
 		if (!tmpidus.isEmpty()) {
 			String[] ids = tmpidus.split(",");
@@ -132,6 +144,26 @@ public class ProductReportDocCtrl implements Controller {
 		}
 		
 		List<ReportDTO> list = financialService.getReportByDate(dto);
+		
+		System.out.println("list: " + list.size());
+		ArrayList<Double> tax_list = new ArrayList<>();
+		ArrayList<Double> sub_list = new ArrayList<>();
+		
+		
+		for(int i=0;i<list.size(); i++){
+			Double sub = 0.0;
+			Double tax = 0.0;
+			for(int j=0;j<products.size(); j++){
+				if(products.get(j).getId_product().equals(list.get(i).getId_product()) && (products.get(j).getTax()!=null)){
+					if(products.get(j).getTax().equals(1)){
+						tax = list.get(i).getQty_vta_sug() * iva;
+					}
+				}
+			}
+			sub = list.get(i).getQty_vta_sug() - tax;
+			tax_list.add(tax);
+			sub_list.add(sub);
+		}
 		
 		// Se obtienen las metricas de venta
 		GetMetricsSaleDTO dtoSale = new GetMetricsSaleDTO();
@@ -179,11 +211,13 @@ public class ProductReportDocCtrl implements Controller {
 		arg1.setHeader("Content-disposition", contentDisposition);
 		arg1.setContentType("application/csv");
 
+		System.out.println("Tam: " + list.size());
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("list", list);
 		model.put("metrics", metrics);
 		model.put("categorysales", categorysales);
-		
+		model.put("sub_list", sub_list);
+		model.put("tax_list", tax_list);
 		return new ModelAndView(view, model);
 	}
 }

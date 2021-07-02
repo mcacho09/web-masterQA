@@ -573,6 +573,8 @@ public interface FinancialService {
 	 * @since 12-12-2014
 	 */
 	List<ProductDTO> selectProductByCriteria(ProductSearchCriteria dto);
+	
+	List<Double> getSubtotal(ProductSearchCriteria dto);
 	/**
 	 * varifica que el codigo de producto que se va a agregar no exista
 	 * @param dto con datos de busqueda
@@ -908,5 +910,4 @@ public interface FinancialService {
 	 * Orders To Almacen
 	 */
 	int updateOrderAndRecoverToAlmacen(UpdateOrderAndRecoverToAlmacenDTO dto);
-	
 }
